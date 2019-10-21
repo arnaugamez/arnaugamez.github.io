@@ -1,0 +1,13 @@
+main:
+  - title: "blog"
+    url: /
+#  - title: "archive"
+#    url: /posts/
+  - title: "talks"
+    url: /talks/
+#  - title: "categories"
+#    url: /categories/
+#  - title: "tags"
+#    url: /tags/
+  - title: "about"
+    url: /about/

@@ -1,0 +1,672 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.17.1 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>[HackUPC2019 - TheGame] Solving LMFAO stego challenge | Arnau Gàmez i Montolio</title>
+<meta name="description" content="Last week I attended the HackUPC at Barcelona. They were running a 24h CTF-like competition with different challenges focused on algorithms, programming and some hacking. I wasn’t planning to play, but some friends got me involved in the last moment and I somehow managed to win the competition by completing all challenges and getting max score, along with Yuva.">
+
+
+  <meta name="author" content="Arnau Gàmez i Montolio">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Arnau Gàmez i Montolio">
+<meta property="og:title" content="[HackUPC2019 - TheGame] Solving LMFAO stego challenge">
+<meta property="og:url" content="http://localhost:4000/blog/2019/10/21/hackupc-lmfao-writeup/">
+
+
+  <meta property="og:description" content="Last week I attended the HackUPC at Barcelona. They were running a 24h CTF-like competition with different challenges focused on algorithms, programming and some hacking. I wasn’t planning to play, but some friends got me involved in the last moment and I somehow managed to win the competition by completing all challenges and getting max score, along with Yuva.">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/posts/LMFAO.png">
+
+
+
+
+
+  <meta property="article:published_time" content="2019-10-21T00:00:00+02:00">
+
+
+
+
+
+
+<link rel="canonical" href="http://localhost:4000/blog/2019/10/21/hackupc-lmfao-writeup/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Arnau Gàmez i Montolio Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+<link rel="manifest" href="/assets/favicon/site.webmanifest">
+<link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#5bbad5">
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico">
+<meta name="msapplication-TileColor" content="#00aba9">
+<meta name="msapplication-config" content="/assets/favicon/browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/images/logo.png" alt=""></a>
+        
+        <a class="site-title" href="/">
+          ~/
+          <span class="site-subtitle">Hack all the things</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/" >blog</a>
+            </li><li class="masthead__menu-item">
+              <a href="/talks/" >talks</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/" >about</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/images/avatar.jpg" alt="Arnau Gàmez i Montolio" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Arnau Gàmez i Montolio</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p><strong>—</strong><br /><em>Maths</em> &amp; <em>computer science</em> student.<br /><br />Mainly interested in <em>reverse engineering</em> and its applications.<br /><strong>—</strong></p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="https://twitter.com/arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+          
+        
+          
+            <li><a href="https://github.com/arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+          
+            <li><a href="mailto:contact [AT] [thisdomain] [DOT] com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Mail</a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="[HackUPC2019 - TheGame] Solving LMFAO stego challenge">
+    <meta itemprop="description" content="Last week I attended the HackUPC at Barcelona. They were running a 24h CTF-like competition with different challenges focused on algorithms, programming and some hacking. I wasn’t planning to play, but some friends got me involved in the last moment and I somehow managed to win the competition by completing all challenges and getting max score, along with Yuva.">
+    <meta itemprop="datePublished" content="October 21, 2019">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">[HackUPC2019 - TheGame] Solving LMFAO stego challenge
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  4 minute read
+
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> Table of Contents</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#description">Description</a></li>
+  <li><a href="#analysis">Analysis</a></li>
+  <li><a href="#recover-original-image">Recover original image</a>
+    <ul>
+      <li><a href="#read-image-and-extract-color-channels">Read image and extract color channels</a></li>
+      <li><a href="#read-and-parse-data-extracted-previously">Read and parse data extracted previously</a></li>
+      <li><a href="#apply-transformations-in-reverse-order">Apply transformations in reverse order</a></li>
+      <li><a href="#putting-all-together">Putting all together</a></li>
+    </ul>
+  </li>
+  <li><a href="#solve">Solve</a></li>
+</ul>
+            </nav>
+          </aside>
+        
+        <p>Last week I attended the <a href="https://hackupc.com/">HackUPC</a> at Barcelona. They were running a 24h CTF-like competition with different challenges focused on algorithms, programming and some hacking. I wasn’t planning to play, but some friends got me involved in the last moment and I somehow managed to win the competition by completing all challenges and getting max score, along with Yuva.</p>
+
+<p><img src="/assets/images/posts/TheGame_HOF.jpg" alt="The Game - Hall of Fame" class="align-center" /></p>
+
+<p>Here you will find my writeup for the <em>LMFAO</em> steganography challenge.</p>
+
+<h2 id="description">Description</h2>
+
+<p>We are just provided the following image and random footer:</p>
+
+<figure class="align-center" style="width: 300px">
+    <a href="/assets/images/posts/LMFAO.png"><img src="/assets/images/posts/LMFAO.png" /></a>
+    <figcaption>I like eggs for breakfast</figcaption>
+</figure>
+
+<p>It seems pretty clear that this image has been scrambled somehow from an original one. Thus, our goal will be to recover the original image.</p>
+
+<p>We will need some information before starting to randomly move pixels around.</p>
+
+<h2 id="analysis">Analysis</h2>
+
+<p>Let’s start by applying some filters to the image in order to see if we can find something suspicious. For this, we will use <a href="http://www.caesum.com/handbook/Stegsolve.jar">Stegsolve.jar</a> utility.</p>
+
+<figure class="align-center" style="width:300px">
+    <a href="/assets/images/posts/LMFAO_stegsolve_1.gif"><img src="/assets/images/posts/LMFAO_stegsolve_1.gif" /></a>
+    <figcaption>Apply filters with Stegsolve</figcaption>
+</figure>
+
+<p>Observe that the filters corresponding to masking with bit 0 (Least Significant Bit) for the three color channels, clearly show that something is encoded on the upper part of the image in those bits. We can explore it and extract the data with Stegsolve itself.</p>
+
+<p>Going to <code class="highlighter-rouge">Analyse -&gt; Data Extract</code>we can play with its values. We are interested in bit 0 from RGB channels. If we select those bits and with default Order settings, we will find the following data:</p>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/LMFAO_stegsolve_2.png"><img src="/assets/images/posts/LMFAO_stegsolve_2.png" /></a>
+    <figcaption>Extract data with Stegsolve (w/o hexdump)</figcaption>
+</figure>
+
+<p>Now it’s obvious that this data is indicating us how the image was scrambled. We assume V stands for Vertical (columns) and H for Horizontal (rows). Also the following two numbers meaning the rows/columns swapped. Therefore, we have that:</p>
+
+<p><code class="highlighter-rouge">V 236 39</code> means swapping columns 236 and 39</p>
+
+<p><code class="highlighter-rouge">H 262 7</code> means swapping rows 262 and 7</p>
+
+<p>and so on…</p>
+
+<p>Finally we will save the data as text clicking <code class="highlighter-rouge">Save Text</code> button to get a textfile ready to be loaded.</p>
+
+<h2 id="recover-original-image">Recover original image</h2>
+
+<p>Now that we know how the image was scrambled, it is just a matter of transforming what we have into the original image by scrambling back the image that we are given, i.e. applying the swapping operations found in reverse order.</p>
+
+<p>We can do this easily with python. Let’s see how:</p>
+
+<h3 id="read-image-and-extract-color-channels">Read image and extract color channels</h3>
+
+<p>We will use the <code class="highlighter-rouge">io</code> subpackage from <code class="highlighter-rouge">skimage</code> library in order to read the image:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">skimage</span> <span class="kn">import</span> <span class="n">io</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">"LMFAO.png"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Then we will need to get each color channel in order to apply the transformations to all of them afterwards</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">r</span> <span class="o">=</span> <span class="n">im</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">im</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">im</span><span class="p">[:,:,</span><span class="mi">2</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="read-and-parse-data-extracted-previously">Read and parse data extracted previously</h3>
+
+<p>Now we will read the file <code class="highlighter-rouge">moves.txt</code> that we saved before, containing the extracted data, and will create a list containing all the required information with the form: <code class="highlighter-rouge">['V', '236', '39', 'H', '262', '7', ...]</code></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">"moves.txt"</span><span class="p">,</span> <span class="s">'r'</span><span class="p">)</span>
+<span class="n">moves</span> <span class="o">=</span> <span class="s">''</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span><span class="o">+</span><span class="n">x</span><span class="p">[</span><span class="mi">9</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()[:</span><span class="mi">581</span><span class="p">]])[:</span><span class="o">-</span><span class="mi">15</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>In order to get a clean list from the input data as we wanted, we needed to slightly massage it:</p>
+
+<p><code class="highlighter-rouge">x[:8]+x[9:-1]</code>gets rid of a space on position 8th of each line, as well as removing newline <code class="highlighter-rouge">\n</code> character.</p>
+
+<p><code class="highlighter-rouge">[:581]</code> gets rid of lines 582 ongoing, as they do not contain more data</p>
+
+<p><code class="highlighter-rouge">[:-15]</code> removes last 15 characters from obtained string, as the last line (n. 581) has only one meaningful character (8, at the very beginning)</p>
+
+<h3 id="apply-transformations-in-reverse-order">Apply transformations in reverse order</h3>
+
+<p>We will traverse the generated list from end to beginning and apply the transformations in that order. Let’s see the code to do this:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">l</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">moves</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+    <span class="n">p1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">moves</span><span class="p">[</span><span class="n">l</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">p2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">moves</span><span class="p">[</span><span class="n">l</span> <span class="o">-</span> <span class="n">i</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">moves</span><span class="p">[</span><span class="n">l</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s">"H"</span><span class="p">:</span>
+        <span class="n">r</span><span class="p">[[</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">],</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">r</span><span class="p">[[</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">],</span> <span class="p">:]</span>
+        <span class="n">g</span><span class="p">[[</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">],</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">g</span><span class="p">[[</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">],</span> <span class="p">:]</span>
+        <span class="n">b</span><span class="p">[[</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">],</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">b</span><span class="p">[[</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">],</span> <span class="p">:]</span>
+    
+    <span class="k">if</span> <span class="n">moves</span><span class="p">[</span><span class="n">l</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s">"V"</span><span class="p">:</span>
+        <span class="n">r</span><span class="p">[:,</span> <span class="p">[</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">]]</span> <span class="o">=</span> <span class="n">r</span><span class="p">[:,</span> <span class="p">[</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">]]</span>
+        <span class="n">g</span><span class="p">[:,</span> <span class="p">[</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">]]</span> <span class="o">=</span> <span class="n">g</span><span class="p">[:,</span> <span class="p">[</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">]]</span>
+        <span class="n">b</span><span class="p">[:,</span> <span class="p">[</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">]]</span> <span class="o">=</span> <span class="n">b</span><span class="p">[:,</span> <span class="p">[</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">]]</span>
+</code></pre></div></div>
+
+<p>We simply assign <code class="highlighter-rouge">p1</code> to the first operand and <code class="highlighter-rouge">p2</code> to the second one. Then if we find an <code class="highlighter-rouge">H</code> will mean that it is an horizontal swap, i.e. swapping rows, and if we find a <code class="highlighter-rouge">V</code> will mean that it is a vertical swap, i.e. swapping columns. Performing the transformation is easily achieved just by list indexing as shown in code.</p>
+
+<h3 id="putting-all-together">Putting all together</h3>
+
+<p>After all, we get to the following complete code:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">skimage</span> <span class="kn">import</span> <span class="n">io</span>
+
+<span class="c"># Read image and extract color channels</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">"LMFAO.png"</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">im</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">im</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">im</span><span class="p">[:,:,</span><span class="mi">2</span><span class="p">]</span>
+
+<span class="c"># Read and parse txt output from Stegsolve</span>
+<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">"moves.txt"</span><span class="p">,</span> <span class="s">'r'</span><span class="p">)</span>
+<span class="n">moves</span> <span class="o">=</span> <span class="s">''</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span><span class="o">+</span><span class="n">x</span><span class="p">[</span><span class="mi">9</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()[:</span><span class="mi">581</span><span class="p">]])[:</span><span class="o">-</span><span class="mi">15</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+<span class="c"># Apply transformations in reverse order</span>
+<span class="n">l</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">moves</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+    <span class="n">p1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">moves</span><span class="p">[</span><span class="n">l</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">p2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">moves</span><span class="p">[</span><span class="n">l</span> <span class="o">-</span> <span class="n">i</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">moves</span><span class="p">[</span><span class="n">l</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s">"H"</span><span class="p">:</span>
+        <span class="n">r</span><span class="p">[[</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">],</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">r</span><span class="p">[[</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">],</span> <span class="p">:]</span>
+        <span class="n">g</span><span class="p">[[</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">],</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">g</span><span class="p">[[</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">],</span> <span class="p">:]</span>
+        <span class="n">b</span><span class="p">[[</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">],</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">b</span><span class="p">[[</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">],</span> <span class="p">:]</span>
+    
+    <span class="k">if</span> <span class="n">moves</span><span class="p">[</span><span class="n">l</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s">"V"</span><span class="p">:</span>
+        <span class="n">r</span><span class="p">[:,</span> <span class="p">[</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">]]</span> <span class="o">=</span> <span class="n">r</span><span class="p">[:,</span> <span class="p">[</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">]]</span>
+        <span class="n">g</span><span class="p">[:,</span> <span class="p">[</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">]]</span> <span class="o">=</span> <span class="n">g</span><span class="p">[:,</span> <span class="p">[</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">]]</span>
+        <span class="n">b</span><span class="p">[:,</span> <span class="p">[</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">]]</span> <span class="o">=</span> <span class="n">b</span><span class="p">[:,</span> <span class="p">[</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">]]</span>
+
+<span class="c"># Save resulting image</span>
+<span class="n">io</span><span class="o">.</span><span class="n">imsave</span><span class="p">(</span><span class="s">"LMFAO_solved.png"</span><span class="p">,</span> <span class="n">im</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Observe that we have just added the final line in order to save the resulting image into an actual file.</p>
+
+<h2 id="solve">Solve</h2>
+
+<p>Now if we just run the code <code class="highlighter-rouge">python lmfao.py</code> it will produce the resulting image file <code class="highlighter-rouge">LMFAO_solved.png</code> from where we can extract the flag:</p>
+
+<figure class="align-center" style="width: 300px">
+    <a href="/assets/images/posts/LMFAO_solved.png"><img src="/assets/images/posts/LMFAO_solved.png" /></a>
+    <figcaption>Recovered original image</figcaption>
+</figure>
+
+<p>As we can see, we get the solution<code class="highlighter-rouge">flag{se_biene_bien_duro}</code></p>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2019-10-21T00:00:00+02:00">October 21, 2019</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%5BHackUPC2019+-+TheGame%5D+Solving+LMFAO+stego+challenge%20http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2019%2F10%2F21%2Fhackupc-lmfao-writeup%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2019%2F10%2F21%2Fhackupc-lmfao-writeup%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2019%2F10%2F21%2Fhackupc-lmfao-writeup%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/blog/2019/07/29/digging-deeper-gmail-urls/" class="pagination--pager" title="Digging Deeper into Gmail URLs
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://arsenalrecon.com/2019/07/digging-deeper-into-gmail-urls-introducing-gmail-url-decoder/">Digging Deeper into Gmail URLs
+</a> <a href="/blog/2019/07/29/digging-deeper-gmail-urls/" rel="permalink"><i class="fas fa-link" aria-hidden="true" title="permalink"></i><span class="sr-only">Permalink</span></a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Find my published research on extracting timestamps and other information from Gmail URLs with the accompanying tool Gmail URL Decoder that I developed.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/blog/2019/07/25/hello-world/" rel="permalink">Hello world!
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Hello world!
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow" style="text-align:center">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://twitter.com/arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+        
+      
+        
+          <li><a href="https://github.com/arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="mailto:contact [AT] [thisdomain] [DOT] com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Mail</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright" style="text-align:center">
+
+2019 &copy; Arnau Gàmez i Montolio.
+
+<br>
+
+<small><i>
+Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a> | Icon made by <a href="https://www.freepik.com/home">Freepik</a> from <a href="https://flaticon.com">flaticon.com</a>
+</i></small>
+</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>
