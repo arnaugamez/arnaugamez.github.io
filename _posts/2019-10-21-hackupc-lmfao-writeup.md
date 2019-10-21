@@ -1,5 +1,6 @@
 ---
 title: "[HackUPC2019 - TheGame] Solving LMFAO stego challenge"
+comments: true
 
 categories:
   - Blog
@@ -17,6 +18,7 @@ toc_sticky: true
 
 header:
   teaser: /assets/images/posts/LMFAO.png
+
 ---
 
 Last week I attended the [HackUPC](https://hackupc.com/) at Barcelona. They were running a 24h CTF-like competition with different challenges focused on algorithms, programming and some hacking. I wasn't planning to play, but some friends got me involved in the last moment and I somehow managed to win the competition by completing all challenges and getting max score, along with Yuva.

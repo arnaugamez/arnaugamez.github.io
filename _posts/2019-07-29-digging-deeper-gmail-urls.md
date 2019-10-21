@@ -1,5 +1,7 @@
 ---
 title: "Digging Deeper into Gmail URLs"
+comments: true
+
 categories:
   - Blog
 tags:
