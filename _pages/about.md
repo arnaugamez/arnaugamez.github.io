@@ -8,10 +8,10 @@ Hi there! My name is Arnau Gàmez i Montolio, from lovely Barcelona. I am curren
 
 Passionate about hacking and information security since I can remember. Recently I have been particularly interested in the field of reverse (code) engineering, including but not limited to:
 
-- Malware analysis
-- Vulnerability research and exploit development
-- Binary formats
 - Code (de)obfuscation
+- Malware analysis
+- Binary formats
+- Vulnerability research and exploit development
 
 I am also associated with the following groups
 
@@ -21,7 +21,7 @@ I am also associated with the following groups
      alt="Hacking Lliure logo"
      width="35%" height="35%">{: .align-center}
 
-Co-founder and president of Hacking Lliure, a catalan non-profit hacking association founded in late 2017 and focused in:
+Co-founder and president of Hacking Lliure, a catalan non-profit hacking association founded in late 2016 and focused in:
 
 - Free software promotion and development
 - Digital rights: net neutrality, privacy and anonymity

@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-  Minimal Mistakes Jekyll Theme 4.17.1 by Michael Rose
+  Minimal Mistakes Jekyll Theme 4.19.1 by Michael Rose
   Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
   Free for personal and commercial use under the MIT license
   https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
@@ -10,7 +10,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>[HackUPC2019 - TheGame] Solving LMFAO stego challenge | Arnau Gàmez i Montolio</title>
-<meta name="description" content="Last week I attended the HackUPC at Barcelona. They were running a 24h CTF-like competition with different challenges focused on algorithms, programming and some hacking. I wasn’t planning to play, but some friends got me involved in the last moment and I somehow managed to win the competition by completing all challenges and getting max score, along with Yuva.">
+<meta name="description" content="Last week I attended the HackUPC at Barcelona. They were running a 24h CTF-like competition with different challenges focused on algorithms, programming and some hacking. I wasn’t planning to play, but some friends got me involved in the last moment and I somehow managed to win the competition by completing all challenges and getting max score, along with Yuva.  ">
 
 
   <meta name="author" content="Arnau Gàmez i Montolio">
@@ -23,7 +23,7 @@
 <meta property="og:url" content="http://localhost:4000/blog/2019/10/21/hackupc-lmfao-writeup/">
 
 
-  <meta property="og:description" content="Last week I attended the HackUPC at Barcelona. They were running a 24h CTF-like competition with different challenges focused on algorithms, programming and some hacking. I wasn’t planning to play, but some friends got me involved in the last moment and I somehow managed to win the competition by completing all challenges and getting max score, along with Yuva.">
+  <meta property="og:description" content="Last week I attended the HackUPC at Barcelona. They were running a 24h CTF-like competition with different challenges focused on algorithms, programming and some hacking. I wasn’t planning to play, but some friends got me involved in the last moment and I somehow managed to win the competition by completing all challenges and getting max score, along with Yuva.  ">
 
 
 
@@ -138,11 +138,11 @@
           <span class="site-subtitle">Hack all the things</span>
         </a>
         <ul class="visible-links"><li class="masthead__menu-item">
-              <a href="/" >blog</a>
+              <a href="/">blog</a>
             </li><li class="masthead__menu-item">
-              <a href="/talks/" >talks</a>
+              <a href="/talks/">talks</a>
             </li><li class="masthead__menu-item">
-              <a href="/about/" >about</a>
+              <a href="/about/">about</a>
             </li></ul>
         
         <button class="search__toggle" type="button">
@@ -178,8 +178,6 @@
 
   
     <div class="author__avatar">
-      
-
       
         <img src="/assets/images/avatar.jpg" alt="Arnau Gàmez i Montolio" itemprop="image">
       
@@ -282,10 +280,11 @@
   </div>
 
 
+
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="[HackUPC2019 - TheGame] Solving LMFAO stego challenge">
     <meta itemprop="description" content="Last week I attended the HackUPC at Barcelona. They were running a 24h CTF-like competition with different challenges focused on algorithms, programming and some hacking. I wasn’t planning to play, but some friends got me involved in the last moment and I somehow managed to win the competition by completing all challenges and getting max score, along with Yuva.">
-    <meta itemprop="datePublished" content="October 21, 2019">
+    <meta itemprop="datePublished" content="2019-10-21T00:00:00+02:00">
     
 
     <div class="page__inner-wrap">
@@ -324,6 +323,7 @@
   </li>
   <li><a href="#solve">Solve</a></li>
 </ul>
+
             </nav>
           </aside>
         
@@ -357,7 +357,7 @@
 
 <p>Observe that the filters corresponding to masking with bit 0 (Least Significant Bit) for the three color channels, clearly show that something is encoded on the upper part of the image in those bits. We can explore it and extract the data with Stegsolve itself.</p>
 
-<p>Going to <code class="highlighter-rouge">Analyse -&gt; Data Extract</code>we can play with its values. We are interested in bit 0 from RGB channels. If we select those bits and with default Order settings, we will find the following data:</p>
+<p>Going to <code class="language-plaintext highlighter-rouge">Analyse -&gt; Data Extract</code>we can play with its values. We are interested in bit 0 from RGB channels. If we select those bits and with default Order settings, we will find the following data:</p>
 
 <figure class="align-center">
     <a href="/assets/images/posts/LMFAO_stegsolve_2.png"><img src="/assets/images/posts/LMFAO_stegsolve_2.png" /></a>
@@ -366,13 +366,13 @@
 
 <p>Now it’s obvious that this data is indicating us how the image was scrambled. We assume V stands for Vertical (columns) and H for Horizontal (rows). Also the following two numbers meaning the rows/columns swapped. Therefore, we have that:</p>
 
-<p><code class="highlighter-rouge">V 236 39</code> means swapping columns 236 and 39</p>
+<p><code class="language-plaintext highlighter-rouge">V 236 39</code> means swapping columns 236 and 39</p>
 
-<p><code class="highlighter-rouge">H 262 7</code> means swapping rows 262 and 7</p>
+<p><code class="language-plaintext highlighter-rouge">H 262 7</code> means swapping rows 262 and 7</p>
 
 <p>and so on…</p>
 
-<p>Finally we will save the data as text clicking <code class="highlighter-rouge">Save Text</code> button to get a textfile ready to be loaded.</p>
+<p>Finally we will save the data as text clicking <code class="language-plaintext highlighter-rouge">Save Text</code> button to get a textfile ready to be loaded.</p>
 
 <h2 id="recover-original-image">Recover original image</h2>
 
@@ -382,7 +382,7 @@
 
 <h3 id="read-image-and-extract-color-channels">Read image and extract color channels</h3>
 
-<p>We will use the <code class="highlighter-rouge">io</code> subpackage from <code class="highlighter-rouge">skimage</code> library in order to read the image:</p>
+<p>We will use the <code class="language-plaintext highlighter-rouge">io</code> subpackage from <code class="language-plaintext highlighter-rouge">skimage</code> library in order to read the image:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">skimage</span> <span class="kn">import</span> <span class="n">io</span>
 <span class="n">im</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">"LMFAO.png"</span><span class="p">)</span>
@@ -397,7 +397,7 @@
 
 <h3 id="read-and-parse-data-extracted-previously">Read and parse data extracted previously</h3>
 
-<p>Now we will read the file <code class="highlighter-rouge">moves.txt</code> that we saved before, containing the extracted data, and will create a list containing all the required information with the form: <code class="highlighter-rouge">['V', '236', '39', 'H', '262', '7', ...]</code></p>
+<p>Now we will read the file <code class="language-plaintext highlighter-rouge">moves.txt</code> that we saved before, containing the extracted data, and will create a list containing all the required information with the form: <code class="language-plaintext highlighter-rouge">['V', '236', '39', 'H', '262', '7', ...]</code></p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">"moves.txt"</span><span class="p">,</span> <span class="s">'r'</span><span class="p">)</span>
 <span class="n">moves</span> <span class="o">=</span> <span class="s">''</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span><span class="o">+</span><span class="n">x</span><span class="p">[</span><span class="mi">9</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()[:</span><span class="mi">581</span><span class="p">]])[:</span><span class="o">-</span><span class="mi">15</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
@@ -405,11 +405,11 @@
 
 <p>In order to get a clean list from the input data as we wanted, we needed to slightly massage it:</p>
 
-<p><code class="highlighter-rouge">x[:8]+x[9:-1]</code>gets rid of a space on position 8th of each line, as well as removing newline <code class="highlighter-rouge">\n</code> character.</p>
+<p><code class="language-plaintext highlighter-rouge">x[:8]+x[9:-1]</code>gets rid of a space on position 8th of each line, as well as removing newline <code class="language-plaintext highlighter-rouge">\n</code> character.</p>
 
-<p><code class="highlighter-rouge">[:581]</code> gets rid of lines 582 ongoing, as they do not contain more data</p>
+<p><code class="language-plaintext highlighter-rouge">[:581]</code> gets rid of lines 582 ongoing, as they do not contain more data</p>
 
-<p><code class="highlighter-rouge">[:-15]</code> removes last 15 characters from obtained string, as the last line (n. 581) has only one meaningful character (8, at the very beginning)</p>
+<p><code class="language-plaintext highlighter-rouge">[:-15]</code> removes last 15 characters from obtained string, as the last line (n. 581) has only one meaningful character (8, at the very beginning)</p>
 
 <h3 id="apply-transformations-in-reverse-order">Apply transformations in reverse order</h3>
 
@@ -431,7 +431,7 @@
         <span class="n">b</span><span class="p">[:,</span> <span class="p">[</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">]]</span> <span class="o">=</span> <span class="n">b</span><span class="p">[:,</span> <span class="p">[</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">]]</span>
 </code></pre></div></div>
 
-<p>We simply assign <code class="highlighter-rouge">p1</code> to the first operand and <code class="highlighter-rouge">p2</code> to the second one. Then if we find an <code class="highlighter-rouge">H</code> will mean that it is an horizontal swap, i.e. swapping rows, and if we find a <code class="highlighter-rouge">V</code> will mean that it is a vertical swap, i.e. swapping columns. Performing the transformation is easily achieved just by list indexing as shown in code.</p>
+<p>We simply assign <code class="language-plaintext highlighter-rouge">p1</code> to the first operand and <code class="language-plaintext highlighter-rouge">p2</code> to the second one. Then if we find an <code class="language-plaintext highlighter-rouge">H</code> will mean that it is an horizontal swap, i.e. swapping rows, and if we find a <code class="language-plaintext highlighter-rouge">V</code> will mean that it is a vertical swap, i.e. swapping columns. Performing the transformation is easily achieved just by list indexing as shown in code.</p>
 
 <h3 id="putting-all-together">Putting all together</h3>
 
@@ -473,14 +473,14 @@
 
 <h2 id="solve">Solve</h2>
 
-<p>Now if we just run the code <code class="highlighter-rouge">python lmfao.py</code> it will produce the resulting image file <code class="highlighter-rouge">LMFAO_solved.png</code> from where we can extract the flag:</p>
+<p>Now if we just run the code <code class="language-plaintext highlighter-rouge">python lmfao.py</code> it will produce the resulting image file <code class="language-plaintext highlighter-rouge">LMFAO_solved.png</code> from where we can extract the flag:</p>
 
 <figure class="align-center" style="width: 300px">
     <a href="/assets/images/posts/LMFAO_solved.png"><img src="/assets/images/posts/LMFAO_solved.png" /></a>
     <figcaption>Recovered original image</figcaption>
 </figure>
 
-<p>As we can see, we get the solution<code class="highlighter-rouge">flag{se_biene_bien_duro}</code></p>
+<p>As we can see, we get the solution<code class="language-plaintext highlighter-rouge">flag{se_biene_bien_duro}</code></p>
 
 
         
@@ -639,7 +639,7 @@
 
 <div class="page__footer-copyright" style="text-align:center">
 
-2019 &copy; Arnau Gàmez i Montolio.
+2020 &copy; Arnau Gàmez i Montolio.
 
 <br>
 
@@ -668,10 +668,10 @@ Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a hre
     
   <script>
     var disqus_config = function () {
-      this.page.url = "http://localhost:4000/blog/2019/10/21/hackupc-lmfao-writeup/";  // Replace PAGE_URL with your page's canonical URL variable
-      this.page.identifier = "/blog/2019/10/21/hackupc-lmfao-writeup"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+      this.page.url = "http://localhost:4000/blog/2019/10/21/hackupc-lmfao-writeup/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/blog/2019/10/21/hackupc-lmfao-writeup"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
     };
-    (function() { // DON'T EDIT BELOW THIS LINE
+    (function() { /* DON'T EDIT BELOW THIS LINE */
       var d = document, s = d.createElement('script');
       s.src = 'https://arnaugamez.disqus.com/embed.js';
       s.setAttribute('data-timestamp', +new Date());
