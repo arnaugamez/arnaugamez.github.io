@@ -1,0 +1,920 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.19.1 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>[HackUPC2019 - TheGame] Solving sonda reversing challenge with radare2 | Arnau Gàmez i Montolio</title>
+<meta name="description" content="Description  ">
+
+
+  <meta name="author" content="Arnau Gàmez i Montolio">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Arnau Gàmez i Montolio">
+<meta property="og:title" content="[HackUPC2019 - TheGame] Solving sonda reversing challenge with radare2">
+<meta property="og:url" content="http://localhost:4000/blog/2020/04/01/hackupc-sonda-writeup/">
+
+
+  <meta property="og:description" content="Description  ">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-04-01T00:00:00+02:00">
+
+
+
+
+
+
+<link rel="canonical" href="http://localhost:4000/blog/2020/04/01/hackupc-sonda-writeup/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Arnau Gàmez i Montolio Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+<link rel="manifest" href="/assets/favicon/site.webmanifest">
+<link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#5bbad5">
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico">
+<meta name="msapplication-TileColor" content="#00aba9">
+<meta name="msapplication-config" content="/assets/favicon/browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/images/logo.png" alt=""></a>
+        
+        <a class="site-title" href="/">
+          ~/
+          <span class="site-subtitle">Hacking · Reverse Engineering · Maths</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/">blog</a>
+            </li><li class="masthead__menu-item">
+              <a href="/talks/">talks</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">about</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/images/avatar.jpg" alt="Arnau Gàmez i Montolio" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Arnau Gàmez i Montolio</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p><strong>—</strong><br /><em>Maths</em> &amp; <em>computer science</em> student.<br /><br />Mainly interested in <em>reverse engineering</em> and its applications.<br /><strong>—</strong></p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="https://twitter.com/arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i><span class="label">Twitter</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+            <li><a href="mailto:contact [AT] [thisdomain] [DOT] com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Mail</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="[HackUPC2019 - TheGame] Solving sonda reversing challenge with radare2">
+    <meta itemprop="description" content="Description">
+    <meta itemprop="datePublished" content="2020-04-01T00:00:00+02:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">[HackUPC2019 - TheGame] Solving sonda reversing challenge with radare2
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  12 minute read
+
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> Table of Contents</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#description">Description</a></li>
+  <li><a href="#basic-analysis">Basic analysis</a></li>
+  <li><a href="#obtaining-the-magic-number">Obtaining the magic number</a>
+    <ul>
+      <li><a href="#understand-the-problem">Understand the problem</a></li>
+      <li><a href="#emulation-idea">Emulation idea</a></li>
+      <li><a href="#scripting-with-r2pipe-to-perform-the-bruteforce">Scripting with r2pipe to perform the bruteforce</a></li>
+    </ul>
+  </li>
+  <li><a href="#obtaining-the-actual-flag">Obtaining the actual flag</a>
+    <ul>
+      <li><a href="#flag-information">Flag information</a></li>
+      <li><a href="#retrieve-flag-with-debugging">Retrieve flag with debugging</a></li>
+      <li><a href="#automate-flag-extraction-with-r2pipe">Automate flag extraction with r2pipe</a></li>
+    </ul>
+  </li>
+</ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="description">Description</h2>
+
+<p>We are encouraged to download a file named <a href="/assets/files/posts/sonda">sonda</a> referred as SONDA.EXE so it seems it will be an executable file.</p>
+
+<p>If we run it we are asked for a magic number. We can try to throw some random values just to observe that it shows a “BAD…” message and exits the program.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./sonda
+Give me the magic number: 1234
+BAD...
+</code></pre></div></div>
+
+<p>It is clear that first thing we will need is to get the correct magic number value.</p>
+
+<p>Let’s fire up our beloved <a href="https://github.com/radareorg/radare2">radare2</a> and start analysing it.</p>
+
+<blockquote>
+  <p><strong>Disclaimer</strong>: although I might include some brief explanations, this is not intended to be a tutorial on how does radare2 work. If you are new to radare2 you might want to take a look at the materials (video/slides/github) from my 2h introduction to radare2 from Hack In The Box 2019. Check it out under <a href="/talks">talks</a> section.</p>
+</blockquote>
+
+<h2 id="basic-analysis">Basic analysis</h2>
+
+<p>We open sonda file with r2 and use <code class="language-plaintext highlighter-rouge">iq</code> command to get quick <strong>i</strong>nformation about the file in <strong>q</strong>uiet (reduced) form.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ r2 sonda
+[0x000007c0]&gt; iq
+arch x86
+bits 64
+os linux
+endian little
+minopsz 1
+maxopsz 16
+pcalign 0
+</code></pre></div></div>
+
+<p>As we can see, we are dealing with a x86-64 linux (ELF64) executable. If you are interested you can explore different options for information extraction with in-line help of information command using <code class="language-plaintext highlighter-rouge">i?</code>.</p>
+
+<p>Now we will check strings on the binary using <code class="language-plaintext highlighter-rouge">iz</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[0x000007c0]&gt; iz
+[Strings]
+Num Paddr      Vaddr      Len Size Section  Type  String
+000 0x00000bd4 0x00000bd4  26  27 (.rodata) ascii Give me the magic number: 
+001 0x00000bf2 0x00000bf2   6   7 (.rodata) ascii BAD...
+002 0x00000bf9 0x00000bf9  14  15 (.rodata) ascii Tell me more: 
+003 0x00000c0b 0x00000c0b  20  21 (.rodata) ascii WTF is wrong with u?
+004 0x00000c20 0x00000c20  20  21 (.rodata) ascii NOOB! Keep trying...
+005 0x00000c35 0x00000c35   9  10 (.rodata) ascii flag{\%s}\n
+</code></pre></div></div>
+
+<p>Just from here without even running the executable, we can guess the flow of the binary: it looks like it will ask for a “magic number”. If we provide the correct input, then will ask us for more input, make some checking again and, if correct, will print us the flag we are looking for.</p>
+
+<p>Let’s now use <code class="language-plaintext highlighter-rouge">aaa</code> (<strong>a</strong>nalyse <strong>a</strong>ll <strong>a</strong>utoname) to let radare2 make some of its magic with automatic analysis of the binary (check <code class="language-plaintext highlighter-rouge">a?</code> and <code class="language-plaintext highlighter-rouge">aa?</code> for more information). Now we can list the functions found with <code class="language-plaintext highlighter-rouge">afl</code> (<strong>a</strong>nalysis <strong>f</strong>unctions <strong>l</strong>ist)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[0x000007c0]&gt; afl
+0x000007c0    1 42           entry0
+0x000007f0    4 50   -&gt; 40   sym.deregister_tm_clones
+0x00000830    4 66   -&gt; 57   sym.register_tm_clones
+0x00000880    5 58   -&gt; 51   entry.fini0
+0x000008c0    1 10           entry.init0
+0x00000bc0    1 2            sym.__libc_csu_fini
+0x00000bc4    1 9            sym._fini
+0x00000b50    4 101          sym.__libc_csu_init
+0x000008ca   20 642          main
+0x000006f0    3 23           sym._init
+0x00000720    1 6            sym.imp.free
+0x00000730    1 6            sym.imp.puts
+0x00000740    1 6            sym.imp.strlen
+0x00000750    1 6            sym.imp.__stack_chk_fail
+0x00000760    1 6            sym.imp.printf
+0x00000000    2 25           loc.imp._ITM_deregisterTMCloneTable
+0x00000770    1 6            sym.imp.srand
+0x00000780    1 6            sym.imp.malloc
+0x00000790    1 6            sym.imp.__isoc99_scanf
+0x000007a0    1 6            sym.imp.rand
+</code></pre></div></div>
+
+<p>We can see a bunch of imported functions, but looks like the more interesting (and biggest) is the main function, so we will start digging in there.</p>
+
+<p>Now the funny part starts. Let’s disassemble the main function. We can do it in many different ways, but the most useful in this case would be to check the graph view of the function. This is done with <code class="language-plaintext highlighter-rouge">VV</code> command, and we can specify a temporary seek for the main address with <code class="language-plaintext highlighter-rouge">@</code> (otherwise we would have to <strong>s</strong>eek at main offset with <code class="language-plaintext highlighter-rouge">s main</code> before using <code class="language-plaintext highlighter-rouge">VV</code>).</p>
+
+<p>Once in the graph view, we can repeatedly press <code class="language-plaintext highlighter-rouge">p</code> in order to change the amount/form of information displayed on it. If we just press one time it will show us the memory address for every instruction, which will come handy.</p>
+
+<p>Here we have the big picture of the main function as a graph view, that we will be exploring by parts afterwards.</p>
+
+<figure class="align-center" style="width:385px">
+    <a href="/assets/images/posts/sonda_graph_zoom_out.png"><img src="/assets/images/posts/sonda_graph_zoom_out.png" /></a>
+    <figcaption>Graph view of main function (zoomed out)</figcaption>
+</figure>
+<h2 id="obtaining-the-magic-number">Obtaining the magic number</h2>
+
+<h3 id="understand-the-problem">Understand the problem</h3>
+
+<p>If we observe the flow at the end of first basic block of main function we can see that the input value we provided through the first scanf (remember, the “magic number”) is copied into eax at <code class="language-plaintext highlighter-rouge">0x92a</code> (it was before copied into ecx) and it is compared to the value in <code class="language-plaintext highlighter-rouge">edx</code> that will contain the result of the previous operations.</p>
+
+<figure class="align-center" style="width:385px">
+    <a href="/assets/images/posts/sonda_bb_main_1.png"><img src="/assets/images/posts/sonda_bb_main_1.png" /></a>
+    <figcaption>Graph view of main first basic blocks</figcaption>
+</figure>
+
+<p>The comparison is done by subtracting edx from eax on <code class="language-plaintext highlighter-rouge">0x92c</code> and then using the <code class="language-plaintext highlighter-rouge">test eax, eax</code> instruction, which will make an <code class="language-plaintext highlighter-rouge">AND</code> logic operation into eax and set zero flag if result is zero. That basically means that zero flag will be set only if <code class="language-plaintext highlighter-rouge">eax</code> (which contains our input value) and <code class="language-plaintext highlighter-rouge">edx</code> have the same value.</p>
+
+<p>So we need to obtain the value that gets into <code class="language-plaintext highlighter-rouge">edx</code> for the comparison but… not that fast. Observe that the input value will be used for the computations that will affect the value at the end stored at <code class="language-plaintext highlighter-rouge">edx</code> so we can’t just debug it, place a breakpoint before comparison, give a random input number and retrieve value at <code class="language-plaintext highlighter-rouge">edx</code>. We can proceed in two different ways:</p>
+
+<ul>
+  <li>
+    <p>Statically decode/understand the process that manipulates input value, mixes and plays with it in different ways and stores value in <code class="language-plaintext highlighter-rouge">edx</code></p>
+  </li>
+  <li>
+    <p>Bruteforce it</p>
+  </li>
+</ul>
+
+<p>First approach would be fairly easy in this case. Indeed, if you know just a little of x86 and how usual and simple code constructs map to it, you already recognize this sequence, but for today, let’s explore the second option of bruteforcing it, motivated by two reasons:</p>
+
+<ul>
+  <li>Show you how we can leverage code emulation with ESIL using the bruteforce approach as an excuse for a practical example.</li>
+  <li>If you observe the basic block that follows the false branch of the comparison (in this case as we have a <code class="language-plaintext highlighter-rouge">jne</code> the false branch will actually be when the zero flag was set, i.e. when <code class="language-plaintext highlighter-rouge">eax</code> and <code class="language-plaintext highlighter-rouge">edx</code> had same value as we are looking for) you will see that if makes an extra check on the input value to <em>lower or equal</em> than 0x14 in order to continue to the meaningful part of the program and not go to show bad message and exit. This basically means that the input magic number will be at most 0x14, so bruteforce should go very quick.</li>
+</ul>
+
+<h3 id="emulation-idea">Emulation idea</h3>
+
+<p>The basic idea for bruteforce the needed input value with emulation will be as follows (note that emulation options are under <strong>ae</strong> (sub)commands, standing for <strong>a</strong>nalysis <strong>e</strong>sil):</p>
+
+<ol>
+  <li>Initialize ESIL VM state with <code class="language-plaintext highlighter-rouge">aei</code></li>
+  <li>Set <code class="language-plaintext highlighter-rouge">ecx</code> to 0 (in the context of the emulation engine VM; we are not actually running the program!) with <code class="language-plaintext highlighter-rouge">aer ecx = 0</code></li>
+  <li>Seek to 0x90e where the snipped of code computing the desired value starts with <code class="language-plaintext highlighter-rouge">s 0x90e</code></li>
+  <li>Set instruction pointer for ESIL to current seeked position with <code class="language-plaintext highlighter-rouge">aeip</code></li>
+  <li>Emulate (stepping) until 0x92c before the subtraction is done with <code class="language-plaintext highlighter-rouge">aesu 0x92c</code></li>
+  <li>Compare values of <code class="language-plaintext highlighter-rouge">eax</code> (gets loaded from <code class="language-plaintext highlighter-rouge">ecx</code> where our input is stored) and <code class="language-plaintext highlighter-rouge">edx</code></li>
+  <li>Id they are equal, we found a valid number input</li>
+  <li>Increment <code class="language-plaintext highlighter-rouge">ecx</code></li>
+  <li>Repeat from 2 until <code class="language-plaintext highlighter-rouge">ecx</code> is less or equal than 0x14 = 20</li>
+</ol>
+
+<h3 id="scripting-with-r2pipe-to-perform-the-bruteforce">Scripting with r2pipe to perform the bruteforce</h3>
+
+<p>We will use r2pipe API to script on top of r2 with python and do the bruteforce more easily, as it is extremely simple to use yet very powerful. r2pipe API consists of 4 methods:</p>
+
+<ul>
+  <li><strong><em>open</em></strong></li>
+  <li><strong><em>cmd</em></strong>: input a r2 command and get r2 output as output</li>
+  <li><strong><em>cmdj</em></strong>: input a r2 command with <strong><em>j</em></strong> suffix that returns json output, it will deserialize into native object.</li>
+  <li><strong><em>quit</em></strong></li>
+</ul>
+
+<p>With that in mind we can create this simple script that will iterate over possible values and print when there is a possible candidate:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">r2pipe</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="n">r2</span><span class="o">.</span><span class="nb">open</span><span class="p">(</span><span class="s">"./sonda"</span><span class="p">)</span>
+
+<span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"aei"</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mh">0x14</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"aer ecx = "</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span>
+    <span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"s 0x90e"</span><span class="p">)</span>
+    <span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"aeip"</span><span class="p">)</span>
+    <span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"aesu 0x92c"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"aer eax"</span><span class="p">)</span> <span class="o">==</span> <span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"aer edx"</span><span class="p">)):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">"Candidate magic number: "</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span>
+        
+<span class="n">r2</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>We can run this script and get:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ python3 brute_magic.py
+Candidate magic number: 0
+Candidate magic number: 17
+</code></pre></div></div>
+
+<p>As we can see we have two possible candidates. If you look at the basic block we arrive for valid magic number input, you can see that it uses that value as the size for a <em>malloc</em> call, so it is reasonable to make the educated guess that the actual <strong>correct</strong> magic number is intended to be 17, as a malloc of size 0 would not make much sense.</p>
+
+<blockquote>
+  <p>If you are interested in how emulation with ESIL is implemented and works, you might want to take a look at my talk about emulation with ESIL at past r2con2019. Check it out under <a href="/talks">talks</a> section.</p>
+</blockquote>
+
+<h2 id="obtaining-the-actual-flag">Obtaining the actual flag</h2>
+
+<p>If we run the program and use as magic number the value 17 we just got, we can observe that it asks for another input.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./sonda 
+Give me the magic number: 17
+Tell me more: asdf
+NOOB! Keep trying...
+</code></pre></div></div>
+
+<h3 id="flag-information">Flag information</h3>
+
+<p>Let’s check the code where we land after the first check for magic number is successfully passed:</p>
+
+<figure class="align-center" style="width:385px">
+    <a href="/assets/images/posts/sonda_bb_main_2.png"><img src="/assets/images/posts/sonda_bb_main_2.png" /></a>
+    <figcaption>Graph view of main basic block after correct magic number</figcaption>
+</figure>
+
+<p>We can see that the false branch will be taken if the result of a call to the <em>strlen</em> imported function, using the second input that we are asked as argument, returns a value greater than the magic number we introduced, leading us to another angry message and will exit the program. So this basically means that the second input has to have length at most 17. You can try to throw more than 17 chars on second input and will get the WTF message:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./sonda 
+Give me the magic number: 17
+Tell me more: AAAAAAAAAAAAAAAAAAAAAAAAA
+WTF is wrong with u?
+</code></pre></div></div>
+
+<p>Another important thing to note is that the pointer returned by the malloc in this basic block is the same as the pointer that will be accessed to print its value on the basic block that will display the flag value (near the end of main function):</p>
+
+<figure class="align-center" style="width:385px">
+    <a href="/assets/images/posts/sonda_bb_main_flag.png"><img src="/assets/images/posts/sonda_bb_main_flag.png" /></a>
+    <figcaption>Graph view of main basic block that will print flag</figcaption>
+</figure>
+
+<p>What this is telling us is that the string we will need to use as input now is going to be the actual flag, so only when we reconstruct the flag content, we will be able to use it as input and therefore the basic block that will print us back the flag will be reached.</p>
+
+<p>You might have noticed that there is only one path to the basic block printing the flag. It will only be reached if the value stored at <code class="language-plaintext highlighter-rouge">var_34h</code> is less than our input value (observe that radare2 was smart enough to automatically rename it to <em>size</em> when we performed the initial analysis).</p>
+
+<p>After some digging and skipping some messing that we are not interested in, we can see the last few basic blocks before exiting.</p>
+
+<figure class="align-center" style="width:385px">
+    <a href="/assets/images/posts/sonda_bb_main_3.png"><img src="/assets/images/posts/sonda_bb_main_3.png" /></a>
+    <figcaption>Graph view of main basic blocks reaching end of function</figcaption>
+</figure>
+
+<p>Notice that the <code class="language-plaintext highlighter-rouge">var_34h</code> that was used before for the check into flag’s basic block is indeed a counter, as can be seen in the one-line basic block at the right. It is already safe to assume (and it is this way indeed, if you take a closer look to the code above) that the correct flag will be checking char by char against our second input. The actual char comparison is actually happening on <code class="language-plaintext highlighter-rouge">0xac8</code>.  If the char is correct, then it will increase the <code class="language-plaintext highlighter-rouge">var_34h</code> counter and proceed with next char.</p>
+
+<p>[EXPLAIN ACCUMULATIVE CHARS]</p>
+
+<p>I encourage you to take a closer look by yourself navigating through the code and trying to understand this loop construction of comparing element by element, increasing a counter until some fixed value, as it is quite common and you will encounter it continuously in you reversing adventures.</p>
+
+<h3 id="retrieve-flag-with-debugging">Retrieve flag with debugging</h3>
+
+<p>Our strategy to obtain the flag will be based on debugging the binary and retrieve each char individually. To do so, we will first need to open the binary on debug mode with <code class="language-plaintext highlighter-rouge">-d</code> flag. This will of course change the addresses we view, as now we are looking at addresses of process memory, instead of the memory layout of the file in disk (starting at offset 0).</p>
+
+<p>We will use a <a href="https://radare.gitbooks.io/radare2book/tools/rarun2/intro.html">rarun2</a> directive in order to disable aslr for the process, so we can reuse address references if needed. Note that we can inline rarun2 directives when spawning the r2 debug shell with <code class="language-plaintext highlighter-rouge">-R</code> flag, instead of creating a rarun2 file. Thus, to open the binary in debug mode with specified rarun2 directive we do:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ r2 -d -R aslr=no sonda
+</code></pre></div></div>
+
+<p>Now the procedure will be as follows (note that <strong>d</strong>ebug options are under <strong>d</strong> (sub)commands):</p>
+
+<ol>
+  <li>Locate the comparison described before. It will be trivial to found by just following the main function’s graph.</li>
+  <li>Place a breakpoint in that address with <code class="language-plaintext highlighter-rouge">db address</code></li>
+  <li>Continue program until it breaks with <code class="language-plaintext highlighter-rouge">dc</code></li>
+  <li>Get <code class="language-plaintext highlighter-rouge">eax</code> value. This can be done with <code class="language-plaintext highlighter-rouge">dr rax</code> […]</li>
+  <li>Patch instruction pointer <code class="language-plaintext highlighter-rouge">rip</code> with value as if comparison has been successful with <code class="language-plaintext highlighter-rouge">dr rip = 0x555555554af8</code></li>
+  <li>Repeat from 2 until flag message is printed (it will be after 17 steps, as is is controlled by the counter described previously that gets compared to the first input value).</li>
+</ol>
+
+<p>Now we have the cumulative […]</p>
+
+<h3 id="automate-flag-extraction-with-r2pipe">Automate flag extraction with r2pipe</h3>
+
+<p>[…]</p>
+
+<p>The input.txt file will contain the following:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cat input.txt
+17
+AAAAAAAAAAAAAAAAA
+
+</code></pre></div></div>
+
+<p>That is the magic number 17 and then this number of A’s. Those will be passed when program asks for input from stdin through scanf function calls.</p>
+
+<p>[…]</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">r2pipe</span>
+
+<span class="n">flag</span> <span class="o">=</span> <span class="s">""</span>
+<span class="n">pre</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">r2</span> <span class="o">=</span> <span class="n">r2pipe</span><span class="o">.</span><span class="nb">open</span><span class="p">(</span><span class="s">"./sonda"</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="p">[</span><span class="s">'-d'</span><span class="p">,</span> <span class="s">'-R'</span><span class="p">,</span> <span class="s">'stdin=input.txt'</span><span class="p">,</span> <span class="s">'-R'</span><span class="p">,</span> <span class="s">'aslr=no'</span><span class="p">])</span>
+<span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"db 0x555555554ac8"</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">17</span><span class="p">):</span>
+    <span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"dc"</span><span class="p">)</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"dr rax"</span><span class="p">),</span> <span class="mi">16</span><span class="p">)</span>
+    <span class="n">flag</span> <span class="o">+=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">cur</span> <span class="o">-</span> <span class="n">pre</span><span class="p">)</span>
+    <span class="n">pre</span> <span class="o">=</span> <span class="n">cur</span>
+    <span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"dr rip = 0x555555554af8"</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"Flag obtained -&gt; "</span> <span class="o">+</span> <span class="n">flag</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>[…]</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ python solve_sonda.py
+Process with PID 806 started...
+= attach 806 806
+bin.baddr 0x555555554000
+Using 0x555555554000
+asm.bits 64
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+Flag obtained -&gt; 6n|L0V"6&gt;f\$JE{uY
+</code></pre></div></div>
+
+<p>[…]</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./sonda
+Give me the magic number: 17
+Tell me more: 6n|L0V"6&gt;f\$JE{uY
+flag{6n|L0V"6&gt;f\$JE{uY}
+</code></pre></div></div>
+
+<p>[…]</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-04-01T00:00:00+02:00">April 1, 2020</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%5BHackUPC2019+-+TheGame%5D+Solving+sonda+reversing+challenge+with+radare2%20http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F04%2F01%2Fhackupc-sonda-writeup%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F04%2F01%2Fhackupc-sonda-writeup%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F04%2F01%2Fhackupc-sonda-writeup%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/blog/2019/10/21/hackupc-lmfao-writeup/" class="pagination--pager" title="[HackUPC2019 - TheGame] Solving LMFAO stego challenge
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/LMFAO.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/blog/2019/10/21/hackupc-lmfao-writeup/" rel="permalink">[HackUPC2019 - TheGame] Solving LMFAO stego challenge
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  4 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Last week I attended the HackUPC at Barcelona. They were running a 24h CTF-like competition with different challenges focused on algorithms, programming and ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/blog/2019/08/30/pwning-router-wol-arp/" rel="permalink">Pwning F@st 5655v2AC router
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Long story short: I set up a computer lab at home and wanted to enable Wake-on-Lan so I could power on the machine remotely whenever I needed it. Looked like...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://arsenalrecon.com/2019/07/digging-deeper-into-gmail-urls-introducing-gmail-url-decoder/">Digging Deeper into Gmail URLs
+</a> <a href="/blog/2019/07/29/digging-deeper-gmail-urls/" rel="permalink"><i class="fas fa-link" aria-hidden="true" title="permalink"></i><span class="sr-only">Permalink</span></a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Find my published research on extracting timestamps and other information from Gmail URLs with the accompanying tool Gmail URL Decoder that I developed.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/blog/2019/07/25/hello-world/" rel="permalink">Hello world!
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Hello world!
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow" style="text-align:center">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://twitter.com/arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+        
+      
+        
+          <li><a href="https://github.com/arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="mailto:contact [AT] [thisdomain] [DOT] com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Mail</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright" style="text-align:center">
+
+2020 &copy; Arnau Gàmez i Montolio.
+
+<br>
+
+<small><i>
+Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a> | Icon made by <a href="https://www.freepik.com/home">Freepik</a> from <a href="https://flaticon.com">flaticon.com</a>
+</i></small>
+</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/blog/2020/04/01/hackupc-sonda-writeup/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/blog/2020/04/01/hackupc-sonda-writeup"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://arnaugamez.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>
