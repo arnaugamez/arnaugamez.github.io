@@ -424,10 +424,11 @@ Num Paddr      Vaddr      Len Size Section  Type  String
 
 <p>Here we have the big picture of the main function as a graph view of its basic blocks content and interaction, that we will be exploring by parts.</p>
 
-<figure class="align-center" style="width:385px">
+<figure class="align-center" style="width:300px">
     <a href="/assets/images/posts/sonda_graph_zoom_out.png"><img src="/assets/images/posts/sonda_graph_zoom_out.png" /></a>
     <figcaption>Graph view of main function (zoomed out)</figcaption>
 </figure>
+
 <p>Note that while we are on graph view, we should use colon <code class="language-plaintext highlighter-rouge">:</code> to be able to input r2 commands, as happens with the visual modes that radare2 offers.</p>
 
 <h2 id="obtaining-the-magic-number">Obtaining the magic number</h2>
@@ -436,7 +437,7 @@ Num Paddr      Vaddr      Len Size Section  Type  String
 
 <p>If we observe the flow at the end of first basic block of main function we can see that the input value we provided through the first scanf (remember, the “magic number”) is copied from <code class="language-plaintext highlighter-rouge">ecx</code> into <code class="language-plaintext highlighter-rouge">eax</code> at <code class="language-plaintext highlighter-rouge">0x92a</code> (it was copied before into <code class="language-plaintext highlighter-rouge">ecx</code> after returning from scanf call) and it is compared to the value in <code class="language-plaintext highlighter-rouge">edx</code> that will contain the result of the previous operations.</p>
 
-<figure class="align-center" style="width:385px">
+<figure class="align-center" style="width:300px">
     <a href="/assets/images/posts/sonda_bb_main_1.png"><img src="/assets/images/posts/sonda_bb_main_1.png" /></a>
     <figcaption>Graph view of main first basic blocks</figcaption>
 </figure>
@@ -535,7 +536,7 @@ NOOB! Keep trying...
 
 <p>Let’s continue by checking the code where we land after the first check for magic number is successfully passed:</p>
 
-<figure class="align-center" style="width:385px">
+<figure class="align-center" style="width:300px">
     <a href="/assets/images/posts/sonda_bb_main_2.png"><img src="/assets/images/posts/sonda_bb_main_2.png" /></a>
     <figcaption>Graph view of main basic block after correct magic number</figcaption>
 </figure>
@@ -550,7 +551,7 @@ WTF is wrong with u?
 
 <p>Another important thing to note is that the pointer returned by the malloc in this basic block is the same as the pointer that will be accessed to print its value on the basic block that will display the flag value (near the end of main function). Note that the pointer has been automatically renamed to <code class="language-plaintext highlighter-rouge">ptr</code> by radare2 magic applied on the analysis:</p>
 
-<figure class="align-center" style="width:385px">
+<figure class="align-center" style="width:300px">
     <a href="/assets/images/posts/sonda_bb_main_flag.png"><img src="/assets/images/posts/sonda_bb_main_flag.png" /></a>
     <figcaption>Graph view of main basic block that will print flag</figcaption>
 </figure>
@@ -561,7 +562,7 @@ WTF is wrong with u?
 
 <p>We will now explore the last few basic blocks before exiting. Those will be the meaningful ones to be able to discover the appropriate input to get to the flag, as the previous ones after the second input are just setting up some values that will be used later in here.</p>
 
-<figure class="align-center" style="width:385px">
+<figure class="align-center" style="width:300px">
     <a href="/assets/images/posts/sonda_bb_main_3.png"><img src="/assets/images/posts/sonda_bb_main_3.png" /></a>
     <figcaption>Graph view of main basic blocks reaching end of function</figcaption>
 </figure>

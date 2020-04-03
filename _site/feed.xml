@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-04-03T10:54:25+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Arnau Gàmez i Montolio</title><subtitle>Arnau Gàmez i Montolio's (@arnaugamez) personal blog. Hacking, maths and reverse engineering.</subtitle><author><name>Arnau Gàmez i Montolio</name></author><entry><title type="html">Solving sonda reversing challenge with radare2</title><link href="http://localhost:4000/blog/2020/04/03/hackupc-sonda-writeup/" rel="alternate" type="text/html" title="Solving sonda reversing challenge with radare2" /><published>2020-04-03T00:00:00+02:00</published><updated>2020-04-03T00:00:00+02:00</updated><id>http://localhost:4000/blog/2020/04/03/hackupc-sonda-writeup</id><content type="html" xml:base="http://localhost:4000/blog/2020/04/03/hackupc-sonda-writeup/">&lt;p&gt;This was the reversing challenge from the HackUPC &lt;em&gt;TheGame&lt;/em&gt; CTF-like competition. A slightly modified version has also been used recently during the &lt;em&gt;Advent of Corona&lt;/em&gt; running platform of challenges during the 2020 covid19 confinement.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-04-03T11:42:25+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Arnau Gàmez i Montolio</title><subtitle>Arnau Gàmez i Montolio's (@arnaugamez) personal blog. Hacking, maths and reverse engineering.</subtitle><author><name>Arnau Gàmez i Montolio</name></author><entry><title type="html">Solving sonda reversing challenge with radare2</title><link href="http://localhost:4000/blog/2020/04/03/hackupc-sonda-writeup/" rel="alternate" type="text/html" title="Solving sonda reversing challenge with radare2" /><published>2020-04-03T00:00:00+02:00</published><updated>2020-04-03T00:00:00+02:00</updated><id>http://localhost:4000/blog/2020/04/03/hackupc-sonda-writeup</id><content type="html" xml:base="http://localhost:4000/blog/2020/04/03/hackupc-sonda-writeup/">&lt;p&gt;This was the reversing challenge from the HackUPC &lt;em&gt;TheGame&lt;/em&gt; CTF-like competition. A slightly modified version has also been used recently during the &lt;em&gt;Advent of Corona&lt;/em&gt; running platform of challenges during the 2020 covid19 confinement.&lt;/p&gt;
 
 &lt;h2 id=&quot;description&quot;&gt;Description&lt;/h2&gt;
 
@@ -91,10 +91,11 @@ Num Paddr      Vaddr      Len Size Section  Type  String
 
 &lt;p&gt;Here we have the big picture of the main function as a graph view of its basic blocks content and interaction, that we will be exploring by parts.&lt;/p&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width:385px&quot;&gt;
+&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/sonda_graph_zoom_out.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/sonda_graph_zoom_out.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Graph view of main function (zoomed out)&lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Note that while we are on graph view, we should use colon &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;:&lt;/code&gt; to be able to input r2 commands, as happens with the visual modes that radare2 offers.&lt;/p&gt;
 
 &lt;h2 id=&quot;obtaining-the-magic-number&quot;&gt;Obtaining the magic number&lt;/h2&gt;
@@ -103,7 +104,7 @@ Num Paddr      Vaddr      Len Size Section  Type  String
 
 &lt;p&gt;If we observe the flow at the end of first basic block of main function we can see that the input value we provided through the first scanf (remember, the “magic number”) is copied from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ecx&lt;/code&gt; into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eax&lt;/code&gt; at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x92a&lt;/code&gt; (it was copied before into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ecx&lt;/code&gt; after returning from scanf call) and it is compared to the value in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;edx&lt;/code&gt; that will contain the result of the previous operations.&lt;/p&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width:385px&quot;&gt;
+&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/sonda_bb_main_1.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/sonda_bb_main_1.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Graph view of main first basic blocks&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -202,7 +203,7 @@ NOOB! Keep trying...
 
 &lt;p&gt;Let’s continue by checking the code where we land after the first check for magic number is successfully passed:&lt;/p&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width:385px&quot;&gt;
+&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/sonda_bb_main_2.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/sonda_bb_main_2.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Graph view of main basic block after correct magic number&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -217,7 +218,7 @@ WTF is wrong with u?
 
 &lt;p&gt;Another important thing to note is that the pointer returned by the malloc in this basic block is the same as the pointer that will be accessed to print its value on the basic block that will display the flag value (near the end of main function). Note that the pointer has been automatically renamed to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ptr&lt;/code&gt; by radare2 magic applied on the analysis:&lt;/p&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width:385px&quot;&gt;
+&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/sonda_bb_main_flag.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/sonda_bb_main_flag.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Graph view of main basic block that will print flag&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -228,7 +229,7 @@ WTF is wrong with u?
 
 &lt;p&gt;We will now explore the last few basic blocks before exiting. Those will be the meaningful ones to be able to discover the appropriate input to get to the flag, as the previous ones after the second input are just setting up some values that will be used later in here.&lt;/p&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width:385px&quot;&gt;
+&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/sonda_bb_main_3.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/sonda_bb_main_3.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Graph view of main basic blocks reaching end of function&lt;/figcaption&gt;
 &lt;/figure&gt;
