@@ -14,3 +14,5 @@ link: https://arsenalrecon.com/2019/07/digging-deeper-into-gmail-urls-introducin
 
 Find my published research on extracting timestamps and other information from Gmail URLs with the accompanying tool ***Gmail URL Decoder*** that I developed.
 
+[![Twitter Follow](https://img.shields.io/twitter/follow/arnaugamez?style=social)](https://twitter.com/intent/follow?screen_name=arnaugamez)
+

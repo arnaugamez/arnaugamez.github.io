@@ -1,4 +1,417 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-04-03T10:16:34+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Arnau Gàmez i Montolio</title><subtitle>Arnau Gàmez i Montolio's (@arnaugamez) personal blog. Hacking, maths and reverse engineering.</subtitle><author><name>Arnau Gàmez i Montolio</name></author><entry><title type="html">Solving LMFAO stego challenge</title><link href="http://localhost:4000/blog/2019/10/21/hackupc-lmfao-writeup/" rel="alternate" type="text/html" title="Solving LMFAO stego challenge" /><published>2019-10-21T00:00:00+02:00</published><updated>2019-10-21T00:00:00+02:00</updated><id>http://localhost:4000/blog/2019/10/21/hackupc-lmfao-writeup</id><content type="html" xml:base="http://localhost:4000/blog/2019/10/21/hackupc-lmfao-writeup/">&lt;p&gt;Last week I attended the &lt;a href=&quot;https://hackupc.com/&quot;&gt;HackUPC&lt;/a&gt; at Barcelona. They were running a 24h CTF-like competition with different challenges focused on algorithms, programming and some hacking. I wasn’t planning to play, but some friends got me involved in the last moment and I somehow managed to win the competition by completing all challenges and getting max score, along with Yuva.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-04-03T10:54:25+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Arnau Gàmez i Montolio</title><subtitle>Arnau Gàmez i Montolio's (@arnaugamez) personal blog. Hacking, maths and reverse engineering.</subtitle><author><name>Arnau Gàmez i Montolio</name></author><entry><title type="html">Solving sonda reversing challenge with radare2</title><link href="http://localhost:4000/blog/2020/04/03/hackupc-sonda-writeup/" rel="alternate" type="text/html" title="Solving sonda reversing challenge with radare2" /><published>2020-04-03T00:00:00+02:00</published><updated>2020-04-03T00:00:00+02:00</updated><id>http://localhost:4000/blog/2020/04/03/hackupc-sonda-writeup</id><content type="html" xml:base="http://localhost:4000/blog/2020/04/03/hackupc-sonda-writeup/">&lt;p&gt;This was the reversing challenge from the HackUPC &lt;em&gt;TheGame&lt;/em&gt; CTF-like competition. A slightly modified version has also been used recently during the &lt;em&gt;Advent of Corona&lt;/em&gt; running platform of challenges during the 2020 covid19 confinement.&lt;/p&gt;
+
+&lt;h2 id=&quot;description&quot;&gt;Description&lt;/h2&gt;
+
+&lt;p&gt;We are encouraged to download a file named &lt;a href=&quot;/assets/files/posts/sonda&quot;&gt;sonda&lt;/a&gt; referred as SONDA.EXE, so it seems it will be an executable file. We can easily observe that the file is a typical linux executable using file utility&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ file sonda
+sonda: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=5d07808273b712ed8fa47fa8205e11d6926784b3, not stripped
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;If we run it we are asked for a magic number. We can try to throw some random values just to observe that it shows a “BAD…” message and exits the program.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ./sonda
+Give me the magic number: 1234
+BAD...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;It is clear that first thing we will need is to get the correct magic number value.&lt;/p&gt;
+
+&lt;p&gt;Let’s fire up our beloved &lt;a href=&quot;https://github.com/radareorg/radare2&quot;&gt;radare2&lt;/a&gt; and start analysing it.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Disclaimer&lt;/strong&gt;: although I have included some explanations, if you are new to radare2 and/or want a review of capabilities and some more practical usage, you might want to take a look at the materials (video/slides/github) from my 2h introduction to radare2 from Hack In The Box 2019. Check it out under &lt;a href=&quot;/talks&quot;&gt;talks&lt;/a&gt; section.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;basic-analysis&quot;&gt;Basic analysis&lt;/h2&gt;
+
+&lt;p&gt;We open sonda file with r2 and use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;iq&lt;/code&gt; command to get quick &lt;strong&gt;i&lt;/strong&gt;nformation about the file in &lt;strong&gt;q&lt;/strong&gt;uiet (reduced) form.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ r2 sonda
+[0x000007c0]&amp;gt; iq
+arch x86
+bits 64
+os linux
+endian little
+minopsz 1
+maxopsz 16
+pcalign 0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We can see that radare2 reports that we are dealing with a x86-64 linux (ELF64) executable, as we already knew. If you are interested you can explore different options for information extraction with in-line help of &lt;strong&gt;i&lt;/strong&gt;nformation command using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;i?&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now we will check strings on the binary using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;iz&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[0x000007c0]&amp;gt; iz
+[Strings]
+Num Paddr      Vaddr      Len Size Section  Type  String
+000 0x00000bd4 0x00000bd4  26  27 (.rodata) ascii Give me the magic number: 
+001 0x00000bf2 0x00000bf2   6   7 (.rodata) ascii BAD...
+002 0x00000bf9 0x00000bf9  14  15 (.rodata) ascii Tell me more: 
+003 0x00000c0b 0x00000c0b  20  21 (.rodata) ascii WTF is wrong with u?
+004 0x00000c20 0x00000c20  20  21 (.rodata) ascii NOOB! Keep trying...
+005 0x00000c35 0x00000c35   9  10 (.rodata) ascii flag{\%s}\n
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Just from here without even running the executable, we can guess the flow of the binary: it looks like it will ask for a “magic number”. If we provide the correct input, then will ask us for more input, make some checking again and, if correct, will print us the flag we are looking for.&lt;/p&gt;
+
+&lt;p&gt;Let’s now use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;aaa&lt;/code&gt; (&lt;strong&gt;a&lt;/strong&gt;nalyse &lt;strong&gt;a&lt;/strong&gt;ll &lt;strong&gt;a&lt;/strong&gt;utoname) to let radare2 make some of its magic with automatic analysis of the binary (check &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;a?&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;aa?&lt;/code&gt; for more information). Now we can list the functions found with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;afl&lt;/code&gt; (&lt;strong&gt;a&lt;/strong&gt;nalysis &lt;strong&gt;f&lt;/strong&gt;unctions &lt;strong&gt;l&lt;/strong&gt;ist)&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[0x000007c0]&amp;gt; afl
+0x000007c0    1 42           entry0
+0x000007f0    4 50   -&amp;gt; 40   sym.deregister_tm_clones
+0x00000830    4 66   -&amp;gt; 57   sym.register_tm_clones
+0x00000880    5 58   -&amp;gt; 51   entry.fini0
+0x000008c0    1 10           entry.init0
+0x00000bc0    1 2            sym.__libc_csu_fini
+0x00000bc4    1 9            sym._fini
+0x00000b50    4 101          sym.__libc_csu_init
+0x000008ca   20 642          main
+0x000006f0    3 23           sym._init
+0x00000720    1 6            sym.imp.free
+0x00000730    1 6            sym.imp.puts
+0x00000740    1 6            sym.imp.strlen
+0x00000750    1 6            sym.imp.__stack_chk_fail
+0x00000760    1 6            sym.imp.printf
+0x00000000    2 25           loc.imp._ITM_deregisterTMCloneTable
+0x00000770    1 6            sym.imp.srand
+0x00000780    1 6            sym.imp.malloc
+0x00000790    1 6            sym.imp.__isoc99_scanf
+0x000007a0    1 6            sym.imp.rand
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We can see a bunch of different functions, including some familiar imported ones. However, it looks like the more interesting (and biggest) is the main function, so we will start digging in there.&lt;/p&gt;
+
+&lt;p&gt;Now the funny part starts. Let’s disassemble the main function. We can do it in many different ways, but the most useful in this case would probably be to check the graph view of the function. This is done with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;VV&lt;/code&gt; command, and we can specify a temporary seek for the main address with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@&lt;/code&gt; (otherwise we would have to &lt;strong&gt;s&lt;/strong&gt;eek at main offset with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;s main&lt;/code&gt; before using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;VV&lt;/code&gt;).&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[0x000007c0]&amp;gt; VV @ main
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Once in the graph view, we can repeatedly press &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;p&lt;/code&gt; in order to change the amount/form of information displayed on it. If we just press one time it will show us the memory address for every instruction, which will come handy.&lt;/p&gt;
+
+&lt;p&gt;Here we have the big picture of the main function as a graph view of its basic blocks content and interaction, that we will be exploring by parts.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot; style=&quot;width:385px&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/sonda_graph_zoom_out.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/sonda_graph_zoom_out.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Graph view of main function (zoomed out)&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;Note that while we are on graph view, we should use colon &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;:&lt;/code&gt; to be able to input r2 commands, as happens with the visual modes that radare2 offers.&lt;/p&gt;
+
+&lt;h2 id=&quot;obtaining-the-magic-number&quot;&gt;Obtaining the magic number&lt;/h2&gt;
+
+&lt;h3 id=&quot;understand-the-problem&quot;&gt;Understand the problem&lt;/h3&gt;
+
+&lt;p&gt;If we observe the flow at the end of first basic block of main function we can see that the input value we provided through the first scanf (remember, the “magic number”) is copied from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ecx&lt;/code&gt; into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eax&lt;/code&gt; at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x92a&lt;/code&gt; (it was copied before into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ecx&lt;/code&gt; after returning from scanf call) and it is compared to the value in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;edx&lt;/code&gt; that will contain the result of the previous operations.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot; style=&quot;width:385px&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/sonda_bb_main_1.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/sonda_bb_main_1.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Graph view of main first basic blocks&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;The comparison is done by subtracting &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;edx&lt;/code&gt; from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eax&lt;/code&gt; on &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x92c&lt;/code&gt; and then using the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;test eax, eax&lt;/code&gt; instruction, which will make an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AND&lt;/code&gt; logic operation on &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eax&lt;/code&gt; and set zero flag if result is zero. That basically means that zero flag will be set only if &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eax&lt;/code&gt; (which contains our input value) and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;edx&lt;/code&gt; contained the same value before the subtraction.&lt;/p&gt;
+
+&lt;p&gt;So we need to obtain the value that gets into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;edx&lt;/code&gt; for the comparison but… not that fast. Observe that the input value (the magic number) will be used for the computations that will affect the value at the end stored at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;edx&lt;/code&gt; so we can’t just debug it, place a breakpoint before comparison, give a random input number and retrieve value at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;edx&lt;/code&gt;. We can proceed in two different ways:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Statically decode/understand the process that manipulates input value, mixes and plays with it in different ways and stores value in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;edx&lt;/code&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Bruteforce it&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;First approach would be fairly easy in this case. Indeed, if you know just a little of x86 assembly and how usual and simple code constructs map to it, you probably already recognize this sequence. But for today, let’s explore the second option of bruteforcing it, motivated by two reasons:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Show you how we can leverage radare2’s code emulation with ESIL by using the bruteforce approach as an excuse for a practical example.&lt;/li&gt;
+  &lt;li&gt;If you observe the basic block that follows the false branch of the comparison (in this case as we have a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jne&lt;/code&gt; the false branch will actually be taken when the zero flag was set, i.e. when &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eax&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;edx&lt;/code&gt; had same value as we are looking for) you will see that it makes an extra check on the input value to be &lt;em&gt;lower or equal&lt;/em&gt; than &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x14&lt;/code&gt; in order to continue to the meaningful part of the program and not to show bad message and exit. This basically means that the input magic number will be at most &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x14 = 20&lt;/code&gt;, so bruteforce should go very quick.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;emulation-idea&quot;&gt;Emulation idea&lt;/h3&gt;
+
+&lt;p&gt;The basic idea for bruteforce the needed input value with emulation will be as follows (note that emulation options are under &lt;strong&gt;ae&lt;/strong&gt; (sub)commands, standing for &lt;strong&gt;a&lt;/strong&gt;nalysis &lt;strong&gt;e&lt;/strong&gt;sil. Check them with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ae?&lt;/code&gt;):&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Initialize ESIL VM state with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;aei&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Set &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ecx&lt;/code&gt; to 0 (in the context of the emulation engine VM; remember we are not actually running the program!) with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;aer ecx = 0&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Seek to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x90e&lt;/code&gt; (where the snippet of code computing the desired value starts) with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;s 0x90e&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Set instruction pointer for ESIL to current seeked position with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;aeip&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Emulate execution (stepping) until &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x92c&lt;/code&gt; (just before the subtraction is done) with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;aesu 0x92c&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Compare values of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eax&lt;/code&gt; (gets loaded from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ecx&lt;/code&gt; where our input is stored) and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;edx&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;If they are equal, we found a valid number input&lt;/li&gt;
+  &lt;li&gt;Increment &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ecx&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Repeat from 2 until &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ecx&lt;/code&gt; is less or equal than &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x14 = 20&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;scripting-with-r2pipe-to-perform-the-bruteforce&quot;&gt;Scripting with r2pipe to perform the bruteforce&lt;/h3&gt;
+
+&lt;p&gt;We will use r2pipe API to script on top of r2 with python and do the bruteforce more easily, as it is extremely simple to use yet very powerful. As a super quick introduction, it is worth mentioning that r2pipe API consists of 4 methods:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;em&gt;open&lt;/em&gt;&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;em&gt;cmd&lt;/em&gt;&lt;/strong&gt;: input a r2 command and get r2 output as output&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;em&gt;cmdj&lt;/em&gt;&lt;/strong&gt;: input a r2 command with &lt;strong&gt;&lt;em&gt;j&lt;/em&gt;&lt;/strong&gt; suffix that returns json output, it will deserialize into native object.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;em&gt;quit&lt;/em&gt;&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;With that in mind we can create this simple script that will iterate over possible values and print when there is a possible candidate:&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;r2pipe&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;r2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;./sonda&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;r2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cmd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;aei&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x14&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;r2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cmd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;aer ecx = &quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;r2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cmd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;s 0x90e&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;r2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cmd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;aeip&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;r2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cmd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;aesu 0x92c&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cmd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;aer eax&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cmd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;aer edx&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)):&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Candidate magic number: &quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        
+&lt;span class=&quot;n&quot;&gt;r2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;quit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We can run this script and get:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ python3 brute_magic.py
+Candidate magic number: 0
+Candidate magic number: 17
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;As we can see we have two possible candidates. If you look at the basic block we arrive for valid magic number input (in the screenshot above), you can see that it uses that value as the size for a &lt;em&gt;malloc&lt;/em&gt; call, so it is reasonable to make the educated guess that the actual &lt;strong&gt;correct&lt;/strong&gt; magic number is intended to be 17, as a malloc of size 0 would not make much sense.&lt;/p&gt;
+
+&lt;p&gt;By the way, the operation being performed is exactly a &lt;em&gt;mod 17&lt;/em&gt;, so basically is checking if &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;magic_number % 17 == 0&lt;/code&gt;. That explains why 0 is valid as well. Also you might notice that other multiples of 17 would work as well for the first check, but they won’t pass the second check to be less than 20.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;If you are interested in how emulation with ESIL is implemented and works, you might want to take a look at my talk about emulation with ESIL at past r2con2019. Check it out under &lt;a href=&quot;/talks&quot;&gt;talks&lt;/a&gt; section.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;obtaining-the-actual-flag&quot;&gt;Obtaining the actual flag&lt;/h2&gt;
+
+&lt;p&gt;If we run the program and use as magic number the value 17 we just got, we can observe that it asks for another input.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ./sonda 
+Give me the magic number: 17
+Tell me more: asdf
+NOOB! Keep trying...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;flag-information&quot;&gt;Flag information&lt;/h3&gt;
+
+&lt;p&gt;Let’s continue by checking the code where we land after the first check for magic number is successfully passed:&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot; style=&quot;width:385px&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/sonda_bb_main_2.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/sonda_bb_main_2.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Graph view of main basic block after correct magic number&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;We can see that the false branch will be taken if the result of a call to the &lt;em&gt;strlen&lt;/em&gt; imported function, using the second input that we are asked as argument, returns a value greater than the magic number we introduced, leading us to another angry message and exiting the program. So this basically means that the second input has to have length at most 17. You can try to throw more than 17 chars on second input and will get the WTF message:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ./sonda 
+Give me the magic number: 17
+Tell me more: AAAAAAAAAAAAAAAAAAAAAAAAA
+WTF is wrong with u?
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Another important thing to note is that the pointer returned by the malloc in this basic block is the same as the pointer that will be accessed to print its value on the basic block that will display the flag value (near the end of main function). Note that the pointer has been automatically renamed to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ptr&lt;/code&gt; by radare2 magic applied on the analysis:&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot; style=&quot;width:385px&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/sonda_bb_main_flag.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/sonda_bb_main_flag.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Graph view of main basic block that will print flag&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;What this is telling us is that the string we will need to use as input now is going to be the actual flag, so only when we reconstruct the flag content, we will be able to use it as input and therefore the basic block that will print us back the flag will be reached.&lt;/p&gt;
+
+&lt;p&gt;You might have noticed that there is only one path to the basic block printing the flag. Indeed, it will only be reached if the value stored at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;var_34h&lt;/code&gt; is less than our first input value, the magic number (observe that radare2 was smart enough to automatically rename it to &lt;em&gt;size&lt;/em&gt; when we performed the initial analysis).&lt;/p&gt;
+
+&lt;p&gt;We will now explore the last few basic blocks before exiting. Those will be the meaningful ones to be able to discover the appropriate input to get to the flag, as the previous ones after the second input are just setting up some values that will be used later in here.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot; style=&quot;width:385px&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/sonda_bb_main_3.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/sonda_bb_main_3.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Graph view of main basic blocks reaching end of function&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Notice that the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;var_34h&lt;/code&gt; that was used before for the check into flag’s basic block is indeed a counter, as can be seen in the one-line basic block at the right. It is already safe to assume (and it is this way indeed, if you take a closer look to the code above) that the correct flag will be somehow checking char by char against our second input. The actual comparison is actually happening on &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0xac8&lt;/code&gt;.  If the char is correct, then it will increase the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;var_34h&lt;/code&gt; counter and proceed with next char.&lt;/p&gt;
+
+&lt;p&gt;To be more precise, observe that what is being compared is not actually the current char value, but the accumulated sum of the current char value with the previous ones. I encourage you to take a closer look by yourself navigating through this part of the code and trying to understand this loop construction of comparing the accumulated sum element by element, increasing a counter until some fixed value, as it is quite common and you will encounter it continuously in you reversing adventures.&lt;/p&gt;
+
+&lt;h3 id=&quot;retrieve-flag-with-debugging&quot;&gt;Retrieve flag with debugging&lt;/h3&gt;
+
+&lt;p&gt;Our strategy to obtain the flag will be based on debugging the binary and retrieve each value individually in the moment of the comparison. To do so, we will first need to open the binary on debug mode with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-d&lt;/code&gt; flag. This will of course change the addresses we view, as starting now we will be looking at addresses of process memory, instead of the memory layout of the file in disk which starts at offset 0.&lt;/p&gt;
+
+&lt;p&gt;We will use a &lt;a href=&quot;https://radare.gitbooks.io/radare2book/tools/rarun2/intro.html&quot;&gt;rarun2&lt;/a&gt; directive in order to disable &lt;a href=&quot;https://en.wikipedia.org/wiki/Address_space_layout_randomization&quot;&gt;aslr&lt;/a&gt; for the process, so we can reuse explicit address references if needed. Note that we can inline rarun2 directives when spawning the r2 debug shell with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-R&lt;/code&gt; flag, instead of creating a rarun2 file. Thus, to open the binary in debug mode with specified rarun2 directive we do:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ r2 -d -R aslr=no sonda
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Please note that the &lt;a href=&quot;https://en.wikipedia.org/wiki/Base_address&quot;&gt;base address&lt;/a&gt; being used for the debugging session of the binary is &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x555555554000&lt;/code&gt; by default, as aslr has been disabled. You can check its value with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ob&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now the procedure will be as follows (note that &lt;strong&gt;d&lt;/strong&gt;ebug options are under &lt;strong&gt;d&lt;/strong&gt; (sub)commands. Check them with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;d?&lt;/code&gt;):&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Locate the comparison described before. It will be trivial to found by just following the main function’s graph.&lt;/li&gt;
+  &lt;li&gt;Patch conditional jump &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;je&lt;/code&gt; after comparison for an unconditional jump &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jmp&lt;/code&gt;  that will always take us to next loop cycle despite our input value being wrong (so the comparison condition failing) with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wa jmp 0x555555554af8 @ 0x555555554acb&lt;/code&gt; (&lt;strong&gt;w&lt;/strong&gt;rite &lt;strong&gt;a&lt;/strong&gt;ssembly ASM at ADDRESS).&lt;/li&gt;
+  &lt;li&gt;Place a &lt;strong&gt;b&lt;/strong&gt;reakpoint in that address with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;db 0x555555554ac8&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;C&lt;/strong&gt;ontinue program until it breaks with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dc&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;Get &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eax&lt;/code&gt; &lt;strong&gt;r&lt;/strong&gt;egister value. This can be done with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dr rax&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;Repeat steps 4 and 5 until flag message is printed (it will be after 17 steps, as is is controlled by the counter described previously that gets compared to the first input value).&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Instead of patching the jump after the comparison, we could have followed some other strategies that would have led us to same results, for example patching instruction pointer &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rip&lt;/code&gt; with value as if comparison had been successful with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dr rip = 0x555555554af8&lt;/code&gt; every time after we reach the breakpoint.&lt;/p&gt;
+
+&lt;p&gt;Feel free to experiment this other alternative and any other you could think of. The result will still be the same, and we will be able to retrieve the flag.&lt;/p&gt;
+
+&lt;p&gt;Please note that as we are on a debug session, when we are applying those memory patches, they are applied into the process memory, but no modification is made to the file in disk.&lt;/p&gt;
+
+&lt;p&gt;For practical reasons we will combine steps 4 and 5 by just using a semicolon between them &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dc; dr rax&lt;/code&gt;. Indeed, we can combine any number of r2 commands in a single line by just separating them with a semicolon.&lt;/p&gt;
+
+&lt;p&gt;Moreover, we will define a &lt;a href=&quot;https://radare.gitbooks.io/radare2book/scripting/macros.html&quot;&gt;macro&lt;/a&gt; that will make exactly that, so we can call it directly and any number of times. A macro can be defined as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;(macro_name; cmd1; cmd2; cmd3 ...)&lt;/code&gt; and then called with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.(macro_name)&lt;/code&gt;. We can prefix it with the number of times p&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;N&lt;/code&gt; to be called, so it will be &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;N.(macro_name)&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Let’s take a look at what we get after all the steps described:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[0x7ffff7fd1100]&amp;gt; wa jmp 0x555555554af8 @ 0x555555554acb
+Written 2 byte(s) (jmp 0x555555554af8) = wx eb2b
+[0x7ffff7fd1100]&amp;gt; db 0x555555554ac8
+[0x7ffff7fd1100]&amp;gt; (loop; dc; dr rax)
+[0x7ffff7fd1100]&amp;gt; 17.(loop)
+Give me the magic number: 17
+Tell me more: asdf
+hit breakpoint at: 555555554ac8
+0x00000036
+hit breakpoint at: 555555554ac8
+0x000000a4
+hit breakpoint at: 555555554ac8
+0x00000120
+hit breakpoint at: 555555554ac8
+0x0000016c
+hit breakpoint at: 555555554ac8
+0x0000019c
+hit breakpoint at: 555555554ac8
+0x000001f2
+hit breakpoint at: 555555554ac8
+0x00000214
+hit breakpoint at: 555555554ac8
+0x0000024a
+hit breakpoint at: 555555554ac8
+0x00000288
+hit breakpoint at: 555555554ac8
+0x000002ee
+hit breakpoint at: 555555554ac8
+0x0000034a
+hit breakpoint at: 555555554ac8
+0x0000036e
+hit breakpoint at: 555555554ac8
+0x000003b8
+hit breakpoint at: 555555554ac8
+0x000003fd
+hit breakpoint at: 555555554ac8
+0x00000478
+hit breakpoint at: 555555554ac8
+0x000004ed
+hit breakpoint at: 555555554ac8
+0x00000546
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We can check that we reached the last comparison by continuing program with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dc&lt;/code&gt; and observe that it will print us the flag message. Of course it won’t be the correct flag, as it will only load our input and display it wrapped inside &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;flag{}&lt;/code&gt;. You might wonder why is the flag message being printed at all. Basically, as we patched the jump instruction after comparison to be always treated as if it was successful, the program will act as if the flag was correct so it will print us back our input, which, as we explained before, will actually the flag content that we need to reconstruct.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[0x555555554ac8]&amp;gt; dc
+flag{asdf}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now we have all the values of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rax&lt;/code&gt; at each step, which will contain the accumulated sum of the chars for the actual flag. So starting from 2nd value, we basically need to subtract the previous value from the current and we will get the flag char by char:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x36 = 54 = '6'&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0xa4 - 0x36 = 110 = 'n'&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x120 - 0xa4 = 124 = '|'&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;…&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So boring to do it manually, right? Of course you can get the output and parse with your favorite shell utilities and/or scripting language to make it for you. We will demonstrate again the use of the r2pipe python API to automate this process by directly manipulating the r2 output for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rax&lt;/code&gt; at each step.&lt;/p&gt;
+
+&lt;h3 id=&quot;automate-flag-extraction-with-r2pipe&quot;&gt;Automate flag extraction with r2pipe&lt;/h3&gt;
+
+&lt;p&gt;In order to do it completely automatic, we will define another rarun2 directive that will specify a file that will serve to feed the stdin of the program. We create a plain text file that will contain the following to feed both inputs:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cat input.txt
+17
+asdf
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;That is the magic number 17 and then the second input, which can be totally random (provided it is at most 17 chars long so it does not throw us to the WTF message), as all the checks on it will be bypassed by the jump patch. Those will be passed when program asks for input from stdin through scanf function calls.&lt;/p&gt;
+
+&lt;p&gt;As we are now scripting with python, we don’t need to define a macro at all. Indeed, it will be better just to iterate 17 times and store the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rax&lt;/code&gt; value and subtract it from previous one to get the correct char of the flag at each step. Afterwards we will simply print the obtained flag.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;r2pipe&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;r2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r2pipe&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;./sonda&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flags&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'-d'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'-R'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'stdin=input.txt'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'-R'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'aslr=no'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;flag&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;pre&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;r2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cmd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;wa jmp 0x555555554af8 @ 0x555555554acb&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;r2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cmd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;db 0x555555554ac8&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;17&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;r2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cmd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dc&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;cur&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cmd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;dr rax&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;16&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;flag&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;chr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cur&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pre&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;pre&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cur&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;---&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;Flag obtained -&amp;gt; &quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Let’s run this script and chill while it does all the work for us.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ python3 solve_sonda.py
+Process with PID 806 started...
+= attach 806 806
+bin.baddr 0x555555554000
+Using 0x555555554000
+asm.bits 64
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+hit breakpoint at: 555555554ac8
+
+---
+Flag obtained -&amp;gt; 6n|L0V&quot;6&amp;gt;f\$JE{uY
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Eureka! Here we have our beloved flag. Let’s try it to verify it.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ./sonda
+Give me the magic number: 17
+Tell me more: 6n|L0V&quot;6&amp;gt;f\$JE{uY
+flag{6n|L0V&quot;6&amp;gt;f\$JE{uY}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;So, that will be it. We obtained the solution &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;flag{6n|L0V&quot;6&amp;gt;f\$JE{uY}&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;some-final-random-thoughts&quot;&gt;Some final &lt;em&gt;random&lt;/em&gt; thoughts&lt;/h2&gt;
+
+&lt;p&gt;You might wonder why the flag is so &lt;em&gt;weird&lt;/em&gt;. I wondered too, so I took a deeper look.&lt;/p&gt;
+
+&lt;p&gt;We previously skipped a couple of basic blocks that were not essential to investigate, as all the information needed to retrieve the flag during the comparison was already prepared when reaching it. If you take a closer look at those, you will notice that the flag generation depends on the outcome of the random number generator (RNG) that was initialized using the &lt;em&gt;magic number&lt;/em&gt; input as its seed.&lt;/p&gt;
+
+&lt;p&gt;It is safe to assume that the author of the challenge just decided that the flag would be of size 17, then initialized the RNG with this seed and observed the outcome of the performed mangling on top of the values thrown by this RNG and directly used that as a flag. It would have been quite tedious (not impossible at all, maybe just not worth or time-effective) to create a more personalized flag while relying on the RNG output.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://twitter.com/intent/follow?screen_name=arnaugamez&quot;&gt;&lt;img src=&quot;https://img.shields.io/twitter/follow/arnaugamez?style=social&quot; alt=&quot;Twitter Follow&quot; /&gt;&lt;/a&gt;&lt;/p&gt;</content><author><name>Arnau Gàmez i Montolio</name></author><category term="thegame" /><category term="sonda" /><category term="hackupc" /><category term="radare2" /><category term="esil" /><category term="emulation" /><category term="reversing" /><category term="r2pipe" /><summary type="html">This was the reversing challenge from the HackUPC TheGame CTF-like competition. A slightly modified version has also been used recently during the Advent of Corona running platform of challenges during the 2020 covid19 confinement.</summary></entry><entry><title type="html">Solving LMFAO stego challenge</title><link href="http://localhost:4000/blog/2019/10/21/hackupc-lmfao-writeup/" rel="alternate" type="text/html" title="Solving LMFAO stego challenge" /><published>2019-10-21T00:00:00+02:00</published><updated>2019-10-21T00:00:00+02:00</updated><id>http://localhost:4000/blog/2019/10/21/hackupc-lmfao-writeup</id><content type="html" xml:base="http://localhost:4000/blog/2019/10/21/hackupc-lmfao-writeup/">&lt;p&gt;Last week I attended the &lt;a href=&quot;https://hackupc.com/&quot;&gt;HackUPC&lt;/a&gt; at Barcelona. They were running a 24h CTF-like competition with different challenges focused on algorithms, programming and some hacking. I wasn’t planning to play, but some friends got me involved in the last moment and I somehow managed to win the competition by completing all challenges and getting max score, along with Yuva.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/assets/images/posts/TheGame_HOF.jpg&quot; alt=&quot;The Game - Hall of Fame&quot; class=&quot;align-center&quot; /&gt;&lt;/p&gt;
 
@@ -150,5 +563,8 @@
     &lt;a href=&quot;/assets/images/posts/LMFAO_solved.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/LMFAO_solved.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Recovered original image&lt;/figcaption&gt;
 &lt;/figure&gt;
+&lt;p&gt;As we can see, we get the solution&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;flag{se_biene_bien_duro}&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;As we can see, we get the solution&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;flag{se_biene_bien_duro}&lt;/code&gt;&lt;/p&gt;</content><author><name>Arnau Gàmez i Montolio</name></author><category term="hackupc" /><category term="writeup" /><category term="stego" /><category term="steganography" /><category term="thegame" /><summary type="html">Last week I attended the HackUPC at Barcelona. They were running a 24h CTF-like competition with different challenges focused on algorithms, programming and some hacking. I wasn’t planning to play, but some friends got me involved in the last moment and I somehow managed to win the competition by completing all challenges and getting max score, along with Yuva.</summary></entry><entry><title type="html">Digging Deeper into Gmail URLs</title><link href="http://localhost:4000/blog/2019/07/29/digging-deeper-gmail-urls/" rel="alternate" type="text/html" title="Digging Deeper into Gmail URLs" /><published>2019-07-29T00:00:00+02:00</published><updated>2019-07-29T00:00:00+02:00</updated><id>http://localhost:4000/blog/2019/07/29/digging-deeper-gmail-urls</id><content type="html" xml:base="http://localhost:4000/blog/2019/07/29/digging-deeper-gmail-urls/">&lt;p&gt;Find my published research on extracting timestamps and other information from Gmail URLs with the accompanying tool &lt;strong&gt;&lt;em&gt;Gmail URL Decoder&lt;/em&gt;&lt;/strong&gt; that I developed.&lt;/p&gt;</content><author><name>Arnau Gàmez i Montolio</name></author><category term="DFIR" /><category term="gmail" /><category term="URL" /><summary type="html">Find my published research on extracting timestamps and other information from Gmail URLs with the accompanying tool Gmail URL Decoder that I developed.</summary></entry><entry><title type="html">Hello world!</title><link href="http://localhost:4000/blog/2019/07/25/hello-world/" rel="alternate" type="text/html" title="Hello world!" /><published>2019-07-25T00:00:00+02:00</published><updated>2019-07-25T00:00:00+02:00</updated><id>http://localhost:4000/blog/2019/07/25/hello-world</id><content type="html" xml:base="http://localhost:4000/blog/2019/07/25/hello-world/">&lt;p&gt;Hello world!&lt;/p&gt;</content><author><name>Arnau Gàmez i Montolio</name></author><category term="Hello" /><summary type="html">Hello world!</summary></entry></feed>
+&lt;p&gt;&lt;a href=&quot;https://twitter.com/intent/follow?screen_name=arnaugamez&quot;&gt;&lt;img src=&quot;https://img.shields.io/twitter/follow/arnaugamez?style=social&quot; alt=&quot;Twitter Follow&quot; /&gt;&lt;/a&gt;&lt;/p&gt;</content><author><name>Arnau Gàmez i Montolio</name></author><category term="hackupc" /><category term="writeup" /><category term="stego" /><category term="steganography" /><category term="thegame" /><summary type="html">Last week I attended the HackUPC at Barcelona. They were running a 24h CTF-like competition with different challenges focused on algorithms, programming and some hacking. I wasn’t planning to play, but some friends got me involved in the last moment and I somehow managed to win the competition by completing all challenges and getting max score, along with Yuva.</summary></entry><entry><title type="html">Digging Deeper into Gmail URLs</title><link href="http://localhost:4000/blog/2019/07/29/digging-deeper-gmail-urls/" rel="alternate" type="text/html" title="Digging Deeper into Gmail URLs" /><published>2019-07-29T00:00:00+02:00</published><updated>2019-07-29T00:00:00+02:00</updated><id>http://localhost:4000/blog/2019/07/29/digging-deeper-gmail-urls</id><content type="html" xml:base="http://localhost:4000/blog/2019/07/29/digging-deeper-gmail-urls/">&lt;p&gt;Find my published research on extracting timestamps and other information from Gmail URLs with the accompanying tool &lt;strong&gt;&lt;em&gt;Gmail URL Decoder&lt;/em&gt;&lt;/strong&gt; that I developed.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://twitter.com/intent/follow?screen_name=arnaugamez&quot;&gt;&lt;img src=&quot;https://img.shields.io/twitter/follow/arnaugamez?style=social&quot; alt=&quot;Twitter Follow&quot; /&gt;&lt;/a&gt;&lt;/p&gt;</content><author><name>Arnau Gàmez i Montolio</name></author><category term="DFIR" /><category term="gmail" /><category term="URL" /><summary type="html">Find my published research on extracting timestamps and other information from Gmail URLs with the accompanying tool Gmail URL Decoder that I developed.</summary></entry><entry><title type="html">Hello world!</title><link href="http://localhost:4000/blog/2019/07/25/hello-world/" rel="alternate" type="text/html" title="Hello world!" /><published>2019-07-25T00:00:00+02:00</published><updated>2019-07-25T00:00:00+02:00</updated><id>http://localhost:4000/blog/2019/07/25/hello-world</id><content type="html" xml:base="http://localhost:4000/blog/2019/07/25/hello-world/">&lt;p&gt;Hello world!&lt;/p&gt;</content><author><name>Arnau Gàmez i Montolio</name></author><category term="Hello" /><summary type="html">Hello world!</summary></entry></feed>

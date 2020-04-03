@@ -6,7 +6,7 @@ var store = [{
         "teaser": null
       },{
         "title": "Digging Deeper into Gmail URLs",
-        "excerpt":"Find my published research on extracting timestamps and other information from Gmail URLs with the accompanying tool Gmail URL Decoder that I developed.   ","categories": ["Blog"],
+        "excerpt":"Find my published research on extracting timestamps and other information from Gmail URLs with the accompanying tool Gmail URL Decoder that I developed.      ","categories": ["Blog"],
         "tags": ["DFIR","gmail","URL"],
         "url": "http://localhost:4000/blog/2019/07/29/digging-deeper-gmail-urls/",
         "teaser": null
@@ -26,6 +26,6 @@ var store = [{
         "title": "Solving sonda reversing challenge with radare2",
         "excerpt":"This was the reversing challenge from the HackUPC TheGame CTF-like competition. A slightly modified version has also been used recently during the Advent of Corona running platform of challenges during the 2020 covid19 confinement. Description We are encouraged to download a file named sonda referred as SONDA.EXE, so it seems...","categories": ["Blog"],
         "tags": ["thegame","sonda","hackupc","radare2","esil","emulation","reversing","r2pipe"],
-        "url": "http://localhost:4000/blog/2020/04/01/hackupc-sonda-writeup/",
+        "url": "http://localhost:4000/blog/2020/04/03/hackupc-sonda-writeup/",
         "teaser": null
       }]
