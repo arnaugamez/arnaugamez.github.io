@@ -601,7 +601,7 @@ WTF is wrong with u?
 
 <p>For practical reasons we will combine steps 4 and 5 by just using a semicolon between them <code class="language-plaintext highlighter-rouge">dc; dr rax</code>. Indeed, we can combine any number of r2 commands in a single line by just separating them with a semicolon.</p>
 
-<p>Moreover, we will define a <a href="https://radare.gitbooks.io/radare2book/scripting/macros.html">macro</a> that will make exactly that, so we can call it directly and any number of times. A macro can be defined as <code class="language-plaintext highlighter-rouge">(macro_name; cmd1; cmd2; cmd3 ...)</code> and then called with <code class="language-plaintext highlighter-rouge">.(macro_name)</code>. We can prefix it with the number of times p<code class="language-plaintext highlighter-rouge">N</code> to be called, so it will be <code class="language-plaintext highlighter-rouge">N.(macro_name)</code></p>
+<p>Moreover, we will define a <a href="https://radare.gitbooks.io/radare2book/scripting/macros.html">macro</a> that will make exactly that, so we can call it directly and any number of times. A macro can be defined as <code class="language-plaintext highlighter-rouge">(macro_name; cmd1; cmd2; cmd3 ...)</code> and then called with <code class="language-plaintext highlighter-rouge">.(macro_name)</code>. We can prefix it with the number of times <code class="language-plaintext highlighter-rouge">N</code> to be called, so it will be <code class="language-plaintext highlighter-rouge">N.(macro_name)</code></p>
 
 <p>Let’s take a look at what we get after all the steps described:</p>
 

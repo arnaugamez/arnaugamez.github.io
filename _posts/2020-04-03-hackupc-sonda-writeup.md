@@ -289,7 +289,7 @@ Please note that as we are on a debug session, when we are applying those memory
 
 For practical reasons we will combine steps 4 and 5 by just using a semicolon between them `dc; dr rax`. Indeed, we can combine any number of r2 commands in a single line by just separating them with a semicolon.
 
-Moreover, we will define a [macro](https://radare.gitbooks.io/radare2book/scripting/macros.html) that will make exactly that, so we can call it directly and any number of times. A macro can be defined as `(macro_name; cmd1; cmd2; cmd3 ...)` and then called with `.(macro_name)`. We can prefix it with the number of times p`N` to be called, so it will be `N.(macro_name)`
+Moreover, we will define a [macro](https://radare.gitbooks.io/radare2book/scripting/macros.html) that will make exactly that, so we can call it directly and any number of times. A macro can be defined as `(macro_name; cmd1; cmd2; cmd3 ...)` and then called with `.(macro_name)`. We can prefix it with the number of times `N` to be called, so it will be `N.(macro_name)`
 
 Let's take a look at what we get after all the steps described:
 
