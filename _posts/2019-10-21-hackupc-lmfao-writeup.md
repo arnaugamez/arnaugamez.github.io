@@ -1,5 +1,5 @@
 ---
-title: "[HackUPC2019 - TheGame] Solving LMFAO stego challenge"
+title: "Solving LMFAO stego challenge"
 comments: true
 
 categories:

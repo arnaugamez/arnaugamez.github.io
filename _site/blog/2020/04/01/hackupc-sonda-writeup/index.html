@@ -9,8 +9,8 @@
   <head>
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>[HackUPC2019 - TheGame] Solving sonda reversing challenge with radare2 | Arnau Gàmez i Montolio</title>
-<meta name="description" content="Description  ">
+<!-- begin _includes/seo.html --><title>Solving sonda reversing challenge with radare2 | Arnau Gàmez i Montolio</title>
+<meta name="description" content="This was the reversing challenge from the HackUPC TheGame CTF-like competition. A slightly modified version has also been used recently during the Advent of Corona running platform of challenges during the 2020 covid19 confinement.  ">
 
 
   <meta name="author" content="Arnau Gàmez i Montolio">
@@ -19,11 +19,11 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="Arnau Gàmez i Montolio">
-<meta property="og:title" content="[HackUPC2019 - TheGame] Solving sonda reversing challenge with radare2">
+<meta property="og:title" content="Solving sonda reversing challenge with radare2">
 <meta property="og:url" content="http://localhost:4000/blog/2020/04/01/hackupc-sonda-writeup/">
 
 
-  <meta property="og:description" content="Description  ">
+  <meta property="og:description" content="This was the reversing challenge from the HackUPC TheGame CTF-like competition. A slightly modified version has also been used recently during the Advent of Corona running platform of challenges during the 2020 covid19 confinement.  ">
 
 
 
@@ -280,15 +280,15 @@
 
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
-    <meta itemprop="headline" content="[HackUPC2019 - TheGame] Solving sonda reversing challenge with radare2">
-    <meta itemprop="description" content="Description">
+    <meta itemprop="headline" content="Solving sonda reversing challenge with radare2">
+    <meta itemprop="description" content="This was the reversing challenge from the HackUPC TheGame CTF-like competition. A slightly modified version has also been used recently during the Advent of Corona running platform of challenges during the 2020 covid19 confinement.">
     <meta itemprop="datePublished" content="2020-04-01T00:00:00+02:00">
     
 
     <div class="page__inner-wrap">
       
         <header>
-          <h1 id="page-title" class="page__title" itemprop="headline">[HackUPC2019 - TheGame] Solving sonda reversing challenge with radare2
+          <h1 id="page-title" class="page__title" itemprop="headline">Solving sonda reversing challenge with radare2
 </h1>
           
             <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
@@ -296,7 +296,7 @@
 
 
 
-  12 minute read
+  18 minute read
 
 </p>
           
@@ -325,14 +325,21 @@
       <li><a href="#automate-flag-extraction-with-r2pipe">Automate flag extraction with r2pipe</a></li>
     </ul>
   </li>
+  <li><a href="#some-final-random-thoughts">Some final random thoughts</a></li>
 </ul>
 
             </nav>
           </aside>
         
-        <h2 id="description">Description</h2>
+        <p>This was the reversing challenge from the HackUPC <em>TheGame</em> CTF-like competition. A slightly modified version has also been used recently during the <em>Advent of Corona</em> running platform of challenges during the 2020 covid19 confinement.</p>
 
-<p>We are encouraged to download a file named <a href="/assets/files/posts/sonda">sonda</a> referred as SONDA.EXE so it seems it will be an executable file.</p>
+<h2 id="description">Description</h2>
+
+<p>We are encouraged to download a file named <a href="/assets/files/posts/sonda">sonda</a> referred as SONDA.EXE, so it seems it will be an executable file. We can easily observe that the file is a typical linux executable using file utility</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ file sonda
+sonda: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=5d07808273b712ed8fa47fa8205e11d6926784b3, not stripped
+</code></pre></div></div>
 
 <p>If we run it we are asked for a magic number. We can try to throw some random values just to observe that it shows a “BAD…” message and exits the program.</p>
 
@@ -346,7 +353,7 @@ BAD...
 <p>Let’s fire up our beloved <a href="https://github.com/radareorg/radare2">radare2</a> and start analysing it.</p>
 
 <blockquote>
-  <p><strong>Disclaimer</strong>: although I might include some brief explanations, this is not intended to be a tutorial on how does radare2 work. If you are new to radare2 you might want to take a look at the materials (video/slides/github) from my 2h introduction to radare2 from Hack In The Box 2019. Check it out under <a href="/talks">talks</a> section.</p>
+  <p><strong>Disclaimer</strong>: although I have included some explanations, if you are new to radare2 and/or want a review of capabilities and some more practical usage, you might want to take a look at the materials (video/slides/github) from my 2h introduction to radare2 from Hack In The Box 2019. Check it out under <a href="/talks">talks</a> section.</p>
 </blockquote>
 
 <h2 id="basic-analysis">Basic analysis</h2>
@@ -364,7 +371,7 @@ maxopsz 16
 pcalign 0
 </code></pre></div></div>
 
-<p>As we can see, we are dealing with a x86-64 linux (ELF64) executable. If you are interested you can explore different options for information extraction with in-line help of information command using <code class="language-plaintext highlighter-rouge">i?</code>.</p>
+<p>We can see that radare2 reports that we are dealing with a x86-64 linux (ELF64) executable, as we already knew. If you are interested you can explore different options for information extraction with in-line help of <strong>i</strong>nformation command using <code class="language-plaintext highlighter-rouge">i?</code>.</p>
 
 <p>Now we will check strings on the binary using <code class="language-plaintext highlighter-rouge">iz</code>.</p>
 
@@ -406,32 +413,37 @@ Num Paddr      Vaddr      Len Size Section  Type  String
 0x000007a0    1 6            sym.imp.rand
 </code></pre></div></div>
 
-<p>We can see a bunch of imported functions, but looks like the more interesting (and biggest) is the main function, so we will start digging in there.</p>
+<p>We can see a bunch of different functions, including some familiar imported ones. However, it looks like the more interesting (and biggest) is the main function, so we will start digging in there.</p>
 
-<p>Now the funny part starts. Let’s disassemble the main function. We can do it in many different ways, but the most useful in this case would be to check the graph view of the function. This is done with <code class="language-plaintext highlighter-rouge">VV</code> command, and we can specify a temporary seek for the main address with <code class="language-plaintext highlighter-rouge">@</code> (otherwise we would have to <strong>s</strong>eek at main offset with <code class="language-plaintext highlighter-rouge">s main</code> before using <code class="language-plaintext highlighter-rouge">VV</code>).</p>
+<p>Now the funny part starts. Let’s disassemble the main function. We can do it in many different ways, but the most useful in this case would probably be to check the graph view of the function. This is done with <code class="language-plaintext highlighter-rouge">VV</code> command, and we can specify a temporary seek for the main address with <code class="language-plaintext highlighter-rouge">@</code> (otherwise we would have to <strong>s</strong>eek at main offset with <code class="language-plaintext highlighter-rouge">s main</code> before using <code class="language-plaintext highlighter-rouge">VV</code>).</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[0x000007c0]&gt; VV @ main
+</code></pre></div></div>
 
 <p>Once in the graph view, we can repeatedly press <code class="language-plaintext highlighter-rouge">p</code> in order to change the amount/form of information displayed on it. If we just press one time it will show us the memory address for every instruction, which will come handy.</p>
 
-<p>Here we have the big picture of the main function as a graph view, that we will be exploring by parts afterwards.</p>
+<p>Here we have the big picture of the main function as a graph view of its basic blocks content and interaction, that we will be exploring by parts.</p>
 
 <figure class="align-center" style="width:385px">
     <a href="/assets/images/posts/sonda_graph_zoom_out.png"><img src="/assets/images/posts/sonda_graph_zoom_out.png" /></a>
     <figcaption>Graph view of main function (zoomed out)</figcaption>
 </figure>
+<p>Note that while we are on graph view, we should use colon <code class="language-plaintext highlighter-rouge">:</code> to be able to input r2 commands, as happens with the visual modes that radare2 offers.</p>
+
 <h2 id="obtaining-the-magic-number">Obtaining the magic number</h2>
 
 <h3 id="understand-the-problem">Understand the problem</h3>
 
-<p>If we observe the flow at the end of first basic block of main function we can see that the input value we provided through the first scanf (remember, the “magic number”) is copied into eax at <code class="language-plaintext highlighter-rouge">0x92a</code> (it was before copied into ecx) and it is compared to the value in <code class="language-plaintext highlighter-rouge">edx</code> that will contain the result of the previous operations.</p>
+<p>If we observe the flow at the end of first basic block of main function we can see that the input value we provided through the first scanf (remember, the “magic number”) is copied from <code class="language-plaintext highlighter-rouge">ecx</code> into <code class="language-plaintext highlighter-rouge">eax</code> at <code class="language-plaintext highlighter-rouge">0x92a</code> (it was copied before into <code class="language-plaintext highlighter-rouge">ecx</code> after returning from scanf call) and it is compared to the value in <code class="language-plaintext highlighter-rouge">edx</code> that will contain the result of the previous operations.</p>
 
 <figure class="align-center" style="width:385px">
     <a href="/assets/images/posts/sonda_bb_main_1.png"><img src="/assets/images/posts/sonda_bb_main_1.png" /></a>
     <figcaption>Graph view of main first basic blocks</figcaption>
 </figure>
 
-<p>The comparison is done by subtracting edx from eax on <code class="language-plaintext highlighter-rouge">0x92c</code> and then using the <code class="language-plaintext highlighter-rouge">test eax, eax</code> instruction, which will make an <code class="language-plaintext highlighter-rouge">AND</code> logic operation into eax and set zero flag if result is zero. That basically means that zero flag will be set only if <code class="language-plaintext highlighter-rouge">eax</code> (which contains our input value) and <code class="language-plaintext highlighter-rouge">edx</code> have the same value.</p>
+<p>The comparison is done by subtracting <code class="language-plaintext highlighter-rouge">edx</code> from <code class="language-plaintext highlighter-rouge">eax</code> on <code class="language-plaintext highlighter-rouge">0x92c</code> and then using the <code class="language-plaintext highlighter-rouge">test eax, eax</code> instruction, which will make an <code class="language-plaintext highlighter-rouge">AND</code> logic operation on <code class="language-plaintext highlighter-rouge">eax</code> and set zero flag if result is zero. That basically means that zero flag will be set only if <code class="language-plaintext highlighter-rouge">eax</code> (which contains our input value) and <code class="language-plaintext highlighter-rouge">edx</code> contained the same value before the subtraction.</p>
 
-<p>So we need to obtain the value that gets into <code class="language-plaintext highlighter-rouge">edx</code> for the comparison but… not that fast. Observe that the input value will be used for the computations that will affect the value at the end stored at <code class="language-plaintext highlighter-rouge">edx</code> so we can’t just debug it, place a breakpoint before comparison, give a random input number and retrieve value at <code class="language-plaintext highlighter-rouge">edx</code>. We can proceed in two different ways:</p>
+<p>So we need to obtain the value that gets into <code class="language-plaintext highlighter-rouge">edx</code> for the comparison but… not that fast. Observe that the input value (the magic number) will be used for the computations that will affect the value at the end stored at <code class="language-plaintext highlighter-rouge">edx</code> so we can’t just debug it, place a breakpoint before comparison, give a random input number and retrieve value at <code class="language-plaintext highlighter-rouge">edx</code>. We can proceed in two different ways:</p>
 
 <ul>
   <li>
@@ -442,32 +454,32 @@ Num Paddr      Vaddr      Len Size Section  Type  String
   </li>
 </ul>
 
-<p>First approach would be fairly easy in this case. Indeed, if you know just a little of x86 and how usual and simple code constructs map to it, you already recognize this sequence, but for today, let’s explore the second option of bruteforcing it, motivated by two reasons:</p>
+<p>First approach would be fairly easy in this case. Indeed, if you know just a little of x86 assembly and how usual and simple code constructs map to it, you probably already recognize this sequence. But for today, let’s explore the second option of bruteforcing it, motivated by two reasons:</p>
 
 <ul>
-  <li>Show you how we can leverage code emulation with ESIL using the bruteforce approach as an excuse for a practical example.</li>
-  <li>If you observe the basic block that follows the false branch of the comparison (in this case as we have a <code class="language-plaintext highlighter-rouge">jne</code> the false branch will actually be when the zero flag was set, i.e. when <code class="language-plaintext highlighter-rouge">eax</code> and <code class="language-plaintext highlighter-rouge">edx</code> had same value as we are looking for) you will see that if makes an extra check on the input value to <em>lower or equal</em> than 0x14 in order to continue to the meaningful part of the program and not go to show bad message and exit. This basically means that the input magic number will be at most 0x14, so bruteforce should go very quick.</li>
+  <li>Show you how we can leverage radare2’s code emulation with ESIL by using the bruteforce approach as an excuse for a practical example.</li>
+  <li>If you observe the basic block that follows the false branch of the comparison (in this case as we have a <code class="language-plaintext highlighter-rouge">jne</code> the false branch will actually be taken when the zero flag was set, i.e. when <code class="language-plaintext highlighter-rouge">eax</code> and <code class="language-plaintext highlighter-rouge">edx</code> had same value as we are looking for) you will see that it makes an extra check on the input value to be <em>lower or equal</em> than <code class="language-plaintext highlighter-rouge">0x14</code> in order to continue to the meaningful part of the program and not to show bad message and exit. This basically means that the input magic number will be at most <code class="language-plaintext highlighter-rouge">0x14 = 20</code>, so bruteforce should go very quick.</li>
 </ul>
 
 <h3 id="emulation-idea">Emulation idea</h3>
 
-<p>The basic idea for bruteforce the needed input value with emulation will be as follows (note that emulation options are under <strong>ae</strong> (sub)commands, standing for <strong>a</strong>nalysis <strong>e</strong>sil):</p>
+<p>The basic idea for bruteforce the needed input value with emulation will be as follows (note that emulation options are under <strong>ae</strong> (sub)commands, standing for <strong>a</strong>nalysis <strong>e</strong>sil. Check them with <code class="language-plaintext highlighter-rouge">ae?</code>):</p>
 
 <ol>
   <li>Initialize ESIL VM state with <code class="language-plaintext highlighter-rouge">aei</code></li>
-  <li>Set <code class="language-plaintext highlighter-rouge">ecx</code> to 0 (in the context of the emulation engine VM; we are not actually running the program!) with <code class="language-plaintext highlighter-rouge">aer ecx = 0</code></li>
-  <li>Seek to 0x90e where the snipped of code computing the desired value starts with <code class="language-plaintext highlighter-rouge">s 0x90e</code></li>
+  <li>Set <code class="language-plaintext highlighter-rouge">ecx</code> to 0 (in the context of the emulation engine VM; remember we are not actually running the program!) with <code class="language-plaintext highlighter-rouge">aer ecx = 0</code></li>
+  <li>Seek to <code class="language-plaintext highlighter-rouge">0x90e</code> (where the snippet of code computing the desired value starts) with <code class="language-plaintext highlighter-rouge">s 0x90e</code></li>
   <li>Set instruction pointer for ESIL to current seeked position with <code class="language-plaintext highlighter-rouge">aeip</code></li>
-  <li>Emulate (stepping) until 0x92c before the subtraction is done with <code class="language-plaintext highlighter-rouge">aesu 0x92c</code></li>
+  <li>Emulate execution (stepping) until <code class="language-plaintext highlighter-rouge">0x92c</code> (just before the subtraction is done) with <code class="language-plaintext highlighter-rouge">aesu 0x92c</code></li>
   <li>Compare values of <code class="language-plaintext highlighter-rouge">eax</code> (gets loaded from <code class="language-plaintext highlighter-rouge">ecx</code> where our input is stored) and <code class="language-plaintext highlighter-rouge">edx</code></li>
-  <li>Id they are equal, we found a valid number input</li>
+  <li>If they are equal, we found a valid number input</li>
   <li>Increment <code class="language-plaintext highlighter-rouge">ecx</code></li>
-  <li>Repeat from 2 until <code class="language-plaintext highlighter-rouge">ecx</code> is less or equal than 0x14 = 20</li>
+  <li>Repeat from 2 until <code class="language-plaintext highlighter-rouge">ecx</code> is less or equal than <code class="language-plaintext highlighter-rouge">0x14 = 20</code></li>
 </ol>
 
 <h3 id="scripting-with-r2pipe-to-perform-the-bruteforce">Scripting with r2pipe to perform the bruteforce</h3>
 
-<p>We will use r2pipe API to script on top of r2 with python and do the bruteforce more easily, as it is extremely simple to use yet very powerful. r2pipe API consists of 4 methods:</p>
+<p>We will use r2pipe API to script on top of r2 with python and do the bruteforce more easily, as it is extremely simple to use yet very powerful. As a super quick introduction, it is worth mentioning that r2pipe API consists of 4 methods:</p>
 
 <ul>
   <li><strong><em>open</em></strong></li>
@@ -501,7 +513,9 @@ Candidate magic number: 0
 Candidate magic number: 17
 </code></pre></div></div>
 
-<p>As we can see we have two possible candidates. If you look at the basic block we arrive for valid magic number input, you can see that it uses that value as the size for a <em>malloc</em> call, so it is reasonable to make the educated guess that the actual <strong>correct</strong> magic number is intended to be 17, as a malloc of size 0 would not make much sense.</p>
+<p>As we can see we have two possible candidates. If you look at the basic block we arrive for valid magic number input (in the screenshot above), you can see that it uses that value as the size for a <em>malloc</em> call, so it is reasonable to make the educated guess that the actual <strong>correct</strong> magic number is intended to be 17, as a malloc of size 0 would not make much sense.</p>
+
+<p>By the way, the operation being performed is exactly a <em>mod 17</em>, so basically is checking if <code class="language-plaintext highlighter-rouge">magic_number % 17 == 0</code>. That explains why 0 is valid as well. Also you might notice that other multiples of 17 would work as well for the first check, but they won’t pass the second check to be less than 20.</p>
 
 <blockquote>
   <p>If you are interested in how emulation with ESIL is implemented and works, you might want to take a look at my talk about emulation with ESIL at past r2con2019. Check it out under <a href="/talks">talks</a> section.</p>
@@ -519,14 +533,14 @@ NOOB! Keep trying...
 
 <h3 id="flag-information">Flag information</h3>
 
-<p>Let’s check the code where we land after the first check for magic number is successfully passed:</p>
+<p>Let’s continue by checking the code where we land after the first check for magic number is successfully passed:</p>
 
 <figure class="align-center" style="width:385px">
     <a href="/assets/images/posts/sonda_bb_main_2.png"><img src="/assets/images/posts/sonda_bb_main_2.png" /></a>
     <figcaption>Graph view of main basic block after correct magic number</figcaption>
 </figure>
 
-<p>We can see that the false branch will be taken if the result of a call to the <em>strlen</em> imported function, using the second input that we are asked as argument, returns a value greater than the magic number we introduced, leading us to another angry message and will exit the program. So this basically means that the second input has to have length at most 17. You can try to throw more than 17 chars on second input and will get the WTF message:</p>
+<p>We can see that the false branch will be taken if the result of a call to the <em>strlen</em> imported function, using the second input that we are asked as argument, returns a value greater than the magic number we introduced, leading us to another angry message and exiting the program. So this basically means that the second input has to have length at most 17. You can try to throw more than 17 chars on second input and will get the WTF message:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./sonda 
 Give me the magic number: 17
@@ -534,7 +548,7 @@ Tell me more: AAAAAAAAAAAAAAAAAAAAAAAAA
 WTF is wrong with u?
 </code></pre></div></div>
 
-<p>Another important thing to note is that the pointer returned by the malloc in this basic block is the same as the pointer that will be accessed to print its value on the basic block that will display the flag value (near the end of main function):</p>
+<p>Another important thing to note is that the pointer returned by the malloc in this basic block is the same as the pointer that will be accessed to print its value on the basic block that will display the flag value (near the end of main function). Note that the pointer has been automatically renamed to <code class="language-plaintext highlighter-rouge">ptr</code> by radare2 magic applied on the analysis:</p>
 
 <figure class="align-center" style="width:385px">
     <a href="/assets/images/posts/sonda_bb_main_flag.png"><img src="/assets/images/posts/sonda_bb_main_flag.png" /></a>
@@ -543,65 +557,134 @@ WTF is wrong with u?
 
 <p>What this is telling us is that the string we will need to use as input now is going to be the actual flag, so only when we reconstruct the flag content, we will be able to use it as input and therefore the basic block that will print us back the flag will be reached.</p>
 
-<p>You might have noticed that there is only one path to the basic block printing the flag. It will only be reached if the value stored at <code class="language-plaintext highlighter-rouge">var_34h</code> is less than our input value (observe that radare2 was smart enough to automatically rename it to <em>size</em> when we performed the initial analysis).</p>
+<p>You might have noticed that there is only one path to the basic block printing the flag. Indeed, it will only be reached if the value stored at <code class="language-plaintext highlighter-rouge">var_34h</code> is less than our first input value, the magic number (observe that radare2 was smart enough to automatically rename it to <em>size</em> when we performed the initial analysis).</p>
 
-<p>After some digging and skipping some messing that we are not interested in, we can see the last few basic blocks before exiting.</p>
+<p>We will now explore the last few basic blocks before exiting. Those will be the meaningful ones to be able to discover the appropriate input to get to the flag, as the previous ones after the second input are just setting up some values that will be used later in here.</p>
 
 <figure class="align-center" style="width:385px">
     <a href="/assets/images/posts/sonda_bb_main_3.png"><img src="/assets/images/posts/sonda_bb_main_3.png" /></a>
     <figcaption>Graph view of main basic blocks reaching end of function</figcaption>
 </figure>
 
-<p>Notice that the <code class="language-plaintext highlighter-rouge">var_34h</code> that was used before for the check into flag’s basic block is indeed a counter, as can be seen in the one-line basic block at the right. It is already safe to assume (and it is this way indeed, if you take a closer look to the code above) that the correct flag will be checking char by char against our second input. The actual char comparison is actually happening on <code class="language-plaintext highlighter-rouge">0xac8</code>.  If the char is correct, then it will increase the <code class="language-plaintext highlighter-rouge">var_34h</code> counter and proceed with next char.</p>
+<p>Notice that the <code class="language-plaintext highlighter-rouge">var_34h</code> that was used before for the check into flag’s basic block is indeed a counter, as can be seen in the one-line basic block at the right. It is already safe to assume (and it is this way indeed, if you take a closer look to the code above) that the correct flag will be somehow checking char by char against our second input. The actual comparison is actually happening on <code class="language-plaintext highlighter-rouge">0xac8</code>.  If the char is correct, then it will increase the <code class="language-plaintext highlighter-rouge">var_34h</code> counter and proceed with next char.</p>
 
-<p>[EXPLAIN ACCUMULATIVE CHARS]</p>
-
-<p>I encourage you to take a closer look by yourself navigating through the code and trying to understand this loop construction of comparing element by element, increasing a counter until some fixed value, as it is quite common and you will encounter it continuously in you reversing adventures.</p>
+<p>To be more precise, observe that what is being compared is not actually the current char value, but the accumulated sum of the current char value with the previous ones. I encourage you to take a closer look by yourself navigating through this part of the code and trying to understand this loop construction of comparing the accumulated sum element by element, increasing a counter until some fixed value, as it is quite common and you will encounter it continuously in you reversing adventures.</p>
 
 <h3 id="retrieve-flag-with-debugging">Retrieve flag with debugging</h3>
 
-<p>Our strategy to obtain the flag will be based on debugging the binary and retrieve each char individually. To do so, we will first need to open the binary on debug mode with <code class="language-plaintext highlighter-rouge">-d</code> flag. This will of course change the addresses we view, as now we are looking at addresses of process memory, instead of the memory layout of the file in disk (starting at offset 0).</p>
+<p>Our strategy to obtain the flag will be based on debugging the binary and retrieve each value individually in the moment of the comparison. To do so, we will first need to open the binary on debug mode with <code class="language-plaintext highlighter-rouge">-d</code> flag. This will of course change the addresses we view, as starting now we will be looking at addresses of process memory, instead of the memory layout of the file in disk which starts at offset 0.</p>
 
-<p>We will use a <a href="https://radare.gitbooks.io/radare2book/tools/rarun2/intro.html">rarun2</a> directive in order to disable aslr for the process, so we can reuse address references if needed. Note that we can inline rarun2 directives when spawning the r2 debug shell with <code class="language-plaintext highlighter-rouge">-R</code> flag, instead of creating a rarun2 file. Thus, to open the binary in debug mode with specified rarun2 directive we do:</p>
+<p>We will use a <a href="https://radare.gitbooks.io/radare2book/tools/rarun2/intro.html">rarun2</a> directive in order to disable <a href="https://en.wikipedia.org/wiki/Address_space_layout_randomization">aslr</a> for the process, so we can reuse explicit address references if needed. Note that we can inline rarun2 directives when spawning the r2 debug shell with <code class="language-plaintext highlighter-rouge">-R</code> flag, instead of creating a rarun2 file. Thus, to open the binary in debug mode with specified rarun2 directive we do:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ r2 -d -R aslr=no sonda
 </code></pre></div></div>
 
-<p>Now the procedure will be as follows (note that <strong>d</strong>ebug options are under <strong>d</strong> (sub)commands):</p>
+<p>Please note that the <a href="https://en.wikipedia.org/wiki/Base_address">base address</a> being used for the debugging session of the binary is <code class="language-plaintext highlighter-rouge">0x555555554000</code> by default, as aslr has been disabled. You can check its value with <code class="language-plaintext highlighter-rouge">ob</code>.</p>
+
+<p>Now the procedure will be as follows (note that <strong>d</strong>ebug options are under <strong>d</strong> (sub)commands. Check them with <code class="language-plaintext highlighter-rouge">d?</code>):</p>
 
 <ol>
   <li>Locate the comparison described before. It will be trivial to found by just following the main function’s graph.</li>
-  <li>Place a breakpoint in that address with <code class="language-plaintext highlighter-rouge">db address</code></li>
-  <li>Continue program until it breaks with <code class="language-plaintext highlighter-rouge">dc</code></li>
-  <li>Get <code class="language-plaintext highlighter-rouge">eax</code> value. This can be done with <code class="language-plaintext highlighter-rouge">dr rax</code> […]</li>
-  <li>Patch instruction pointer <code class="language-plaintext highlighter-rouge">rip</code> with value as if comparison has been successful with <code class="language-plaintext highlighter-rouge">dr rip = 0x555555554af8</code></li>
-  <li>Repeat from 2 until flag message is printed (it will be after 17 steps, as is is controlled by the counter described previously that gets compared to the first input value).</li>
+  <li>Patch conditional jump <code class="language-plaintext highlighter-rouge">je</code> after comparison for an unconditional jump <code class="language-plaintext highlighter-rouge">jmp</code>  that will always take us to next loop cycle despite our input value being wrong (so the comparison condition failing) with <code class="language-plaintext highlighter-rouge">wa jmp 0x555555554af8 @ 0x555555554acb</code> (<strong>w</strong>rite <strong>a</strong>ssembly ASM at ADDRESS).</li>
+  <li>Place a <strong>b</strong>reakpoint in that address with <code class="language-plaintext highlighter-rouge">db 0x555555554ac8</code>.</li>
+  <li><strong>C</strong>ontinue program until it breaks with <code class="language-plaintext highlighter-rouge">dc</code>.</li>
+  <li>Get <code class="language-plaintext highlighter-rouge">eax</code> <strong>r</strong>egister value. This can be done with <code class="language-plaintext highlighter-rouge">dr rax</code>.</li>
+  <li>Repeat steps 4 and 5 until flag message is printed (it will be after 17 steps, as is is controlled by the counter described previously that gets compared to the first input value).</li>
 </ol>
 
-<p>Now we have the cumulative […]</p>
+<p>Instead of patching the jump after the comparison, we could have followed some other strategies that would have led us to same results, for example patching instruction pointer <code class="language-plaintext highlighter-rouge">rip</code> with value as if comparison had been successful with <code class="language-plaintext highlighter-rouge">dr rip = 0x555555554af8</code> every time after we reach the breakpoint.</p>
+
+<p>Feel free to experiment this other alternative and any other you could think of. The result will still be the same, and we will be able to retrieve the flag.</p>
+
+<p>Please note that as we are on a debug session, when we are applying those memory patches, they are applied into the process memory, but no modification is made to the file in disk.</p>
+
+<p>For practical reasons we will combine steps 4 and 5 by just using a semicolon between them <code class="language-plaintext highlighter-rouge">dc; dr rax</code>. Indeed, we can combine any number of r2 commands in a single line by just separating them with a semicolon.</p>
+
+<p>Moreover, we will define a <a href="https://radare.gitbooks.io/radare2book/scripting/macros.html">macro</a> that will make exactly that, so we can call it directly and any number of times. A macro can be defined as <code class="language-plaintext highlighter-rouge">(macro_name; cmd1; cmd2; cmd3 ...)</code> and then called with <code class="language-plaintext highlighter-rouge">.(macro_name)</code>. We can prefix it with the number of times p<code class="language-plaintext highlighter-rouge">N</code> to be called, so it will be <code class="language-plaintext highlighter-rouge">N.(macro_name)</code></p>
+
+<p>Let’s take a look at what we get after all the steps described:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[0x7ffff7fd1100]&gt; wa jmp 0x555555554af8 @ 0x555555554acb
+Written 2 byte(s) (jmp 0x555555554af8) = wx eb2b
+[0x7ffff7fd1100]&gt; db 0x555555554ac8
+[0x7ffff7fd1100]&gt; (loop; dc; dr rax)
+[0x7ffff7fd1100]&gt; 17.(loop)
+Give me the magic number: 17
+Tell me more: asdf
+hit breakpoint at: 555555554ac8
+0x00000036
+hit breakpoint at: 555555554ac8
+0x000000a4
+hit breakpoint at: 555555554ac8
+0x00000120
+hit breakpoint at: 555555554ac8
+0x0000016c
+hit breakpoint at: 555555554ac8
+0x0000019c
+hit breakpoint at: 555555554ac8
+0x000001f2
+hit breakpoint at: 555555554ac8
+0x00000214
+hit breakpoint at: 555555554ac8
+0x0000024a
+hit breakpoint at: 555555554ac8
+0x00000288
+hit breakpoint at: 555555554ac8
+0x000002ee
+hit breakpoint at: 555555554ac8
+0x0000034a
+hit breakpoint at: 555555554ac8
+0x0000036e
+hit breakpoint at: 555555554ac8
+0x000003b8
+hit breakpoint at: 555555554ac8
+0x000003fd
+hit breakpoint at: 555555554ac8
+0x00000478
+hit breakpoint at: 555555554ac8
+0x000004ed
+hit breakpoint at: 555555554ac8
+0x00000546
+</code></pre></div></div>
+
+<p>We can check that we reached the last comparison by continuing program with <code class="language-plaintext highlighter-rouge">dc</code> and observe that it will print us the flag message. Of course it won’t be the correct flag, as it will only load our input and display it wrapped inside <code class="language-plaintext highlighter-rouge">flag{}</code>. You might wonder why is the flag message being printed at all. Basically, as we patched the jump instruction after comparison to be always treated as if it was successful, the program will act as if the flag was correct so it will print us back our input, which, as we explained before, will actually the flag content that we need to reconstruct.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[0x555555554ac8]&gt; dc
+flag{asdf}
+</code></pre></div></div>
+
+<p>Now we have all the values of <code class="language-plaintext highlighter-rouge">rax</code> at each step, which will contain the accumulated sum of the chars for the actual flag. So starting from 2nd value, we basically need to subtract the previous value from the current and we will get the flag char by char:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">0x36 = 54 = '6'</code></li>
+  <li><code class="language-plaintext highlighter-rouge">0xa4 - 0x36 = 110 = 'n'</code></li>
+  <li><code class="language-plaintext highlighter-rouge">0x120 - 0xa4 = 124 = '|'</code></li>
+  <li>…</li>
+</ul>
+
+<p>So boring to do it manually, right? Of course you can get the output and parse with your favorite shell utilities and/or scripting language to make it for you. We will demonstrate again the use of the r2pipe python API to automate this process by directly manipulating the r2 output for <code class="language-plaintext highlighter-rouge">rax</code> at each step.</p>
 
 <h3 id="automate-flag-extraction-with-r2pipe">Automate flag extraction with r2pipe</h3>
 
-<p>[…]</p>
-
-<p>The input.txt file will contain the following:</p>
+<p>In order to do it completely automatic, we will define another rarun2 directive that will specify a file that will serve to feed the stdin of the program. We create a plain text file that will contain the following to feed both inputs:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cat input.txt
 17
-AAAAAAAAAAAAAAAAA
+asdf
 
 </code></pre></div></div>
 
-<p>That is the magic number 17 and then this number of A’s. Those will be passed when program asks for input from stdin through scanf function calls.</p>
+<p>That is the magic number 17 and then the second input, which can be totally random (provided it is at most 17 chars long so it does not throw us to the WTF message), as all the checks on it will be bypassed by the jump patch. Those will be passed when program asks for input from stdin through scanf function calls.</p>
 
-<p>[…]</p>
+<p>As we are now scripting with python, we don’t need to define a macro at all. Indeed, it will be better just to iterate 17 times and store the <code class="language-plaintext highlighter-rouge">rax</code> value and subtract it from previous one to get the correct char of the flag at each step. Afterwards we will simply print the obtained flag.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">r2pipe</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="n">r2pipe</span><span class="o">.</span><span class="nb">open</span><span class="p">(</span><span class="s">"./sonda"</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="p">[</span><span class="s">'-d'</span><span class="p">,</span> <span class="s">'-R'</span><span class="p">,</span> <span class="s">'stdin=input.txt'</span><span class="p">,</span> <span class="s">'-R'</span><span class="p">,</span> <span class="s">'aslr=no'</span><span class="p">])</span>
 
 <span class="n">flag</span> <span class="o">=</span> <span class="s">""</span>
 <span class="n">pre</span> <span class="o">=</span> <span class="mi">0</span>
 
-<span class="n">r2</span> <span class="o">=</span> <span class="n">r2pipe</span><span class="o">.</span><span class="nb">open</span><span class="p">(</span><span class="s">"./sonda"</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="p">[</span><span class="s">'-d'</span><span class="p">,</span> <span class="s">'-R'</span><span class="p">,</span> <span class="s">'stdin=input.txt'</span><span class="p">,</span> <span class="s">'-R'</span><span class="p">,</span> <span class="s">'aslr=no'</span><span class="p">])</span>
+<span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"wa jmp 0x555555554af8 @ 0x555555554acb"</span><span class="p">)</span>
 <span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"db 0x555555554ac8"</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">17</span><span class="p">):</span>
@@ -609,14 +692,13 @@ AAAAAAAAAAAAAAAAA
     <span class="n">cur</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"dr rax"</span><span class="p">),</span> <span class="mi">16</span><span class="p">)</span>
     <span class="n">flag</span> <span class="o">+=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">cur</span> <span class="o">-</span> <span class="n">pre</span><span class="p">)</span>
     <span class="n">pre</span> <span class="o">=</span> <span class="n">cur</span>
-    <span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"dr rip = 0x555555554af8"</span><span class="p">)</span>
 
-<span class="k">print</span><span class="p">(</span><span class="s">"Flag obtained -&gt; "</span> <span class="o">+</span> <span class="n">flag</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">---</span><span class="se">\n</span><span class="s">Flag obtained -&gt; "</span> <span class="o">+</span> <span class="n">flag</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>[…]</p>
+<p>Let’s run this script and chill while it does all the work for us.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ python solve_sonda.py
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ python3 solve_sonda.py
 Process with PID 806 started...
 = attach 806 806
 bin.baddr 0x555555554000
@@ -639,10 +721,12 @@ hit breakpoint at: 555555554ac8
 hit breakpoint at: 555555554ac8
 hit breakpoint at: 555555554ac8
 hit breakpoint at: 555555554ac8
+
+---
 Flag obtained -&gt; 6n|L0V"6&gt;f\$JE{uY
 </code></pre></div></div>
 
-<p>[…]</p>
+<p>Eureka! Here we have our beloved flag. Let’s try it to verify it.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./sonda
 Give me the magic number: 17
@@ -650,7 +734,15 @@ Tell me more: 6n|L0V"6&gt;f\$JE{uY
 flag{6n|L0V"6&gt;f\$JE{uY}
 </code></pre></div></div>
 
-<p>[…]</p>
+<p>So, that will be it. We obtained the solution <code class="language-plaintext highlighter-rouge">flag{6n|L0V"6&gt;f\$JE{uY}</code></p>
+
+<h2 id="some-final-random-thoughts">Some final <em>random</em> thoughts</h2>
+
+<p>You might wonder why the flag is so <em>weird</em>. I wondered too, so I took a deeper look.</p>
+
+<p>We previously skipped a couple of basic blocks that were not essential to investigate, as all the information needed to retrieve the flag during the comparison was already prepared when reaching it. If you take a closer look at those, you will notice that the flag generation depends on the outcome of the random number generator (RNG) that was initialized using the <em>magic number</em> input as its seed.</p>
+
+<p>It is safe to assume that the author of the challenge just decided that the flag would be of size 17, then initialized the RNG with this seed and observed the outcome of the performed mangling on top of the values thrown by this RNG and directly used that as a flag. It would have been quite tedious (not impossible at all, maybe just not worth or time-effective) to create a more personalized flag while relying on the RNG output.</p>
 
         
       </section>
@@ -668,7 +760,7 @@ flag{6n|L0V"6&gt;f\$JE{uY}
       <section class="page__share">
   
 
-  <a href="https://twitter.com/intent/tweet?text=%5BHackUPC2019+-+TheGame%5D+Solving+sonda+reversing+challenge+with+radare2%20http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F04%2F01%2Fhackupc-sonda-writeup%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=Solving+sonda+reversing+challenge+with+radare2%20http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F04%2F01%2Fhackupc-sonda-writeup%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
   <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F04%2F01%2Fhackupc-sonda-writeup%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
@@ -679,7 +771,7 @@ flag{6n|L0V"6&gt;f\$JE{uY}
       
   <nav class="pagination">
     
-      <a href="/blog/2019/10/21/hackupc-lmfao-writeup/" class="pagination--pager" title="[HackUPC2019 - TheGame] Solving LMFAO stego challenge
+      <a href="/blog/2019/10/21/hackupc-lmfao-writeup/" class="pagination--pager" title="Solving LMFAO stego challenge
 ">Previous</a>
     
     
@@ -711,7 +803,7 @@ flag{6n|L0V"6&gt;f\$JE{uY}
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="/blog/2019/10/21/hackupc-lmfao-writeup/" rel="permalink">[HackUPC2019 - TheGame] Solving LMFAO stego challenge
+        <a href="/blog/2019/10/21/hackupc-lmfao-writeup/" rel="permalink">Solving LMFAO stego challenge
 </a>
       
     </h2>
