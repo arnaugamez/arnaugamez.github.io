@@ -19,6 +19,8 @@ toc_label: "Table of Contents"
 toc_icon: "file-alt"
 toc_sticky: true
 
+header:
+  teaser: /assets/images/posts/sonda_bb_main_3.png
 ---
 
 This was the reversing challenge from the HackUPC *TheGame* CTF-like competition. A slightly modified version has also been used recently during the *Advent of Corona* running platform of challenges during the 2020 covid19 confinement.
