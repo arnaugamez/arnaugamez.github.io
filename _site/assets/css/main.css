@@ -1066,7 +1066,7 @@ body { display: -webkit-box; display: -ms-flexbox; display: flex; min-height: 10
 @media (min-width: 80em) { .archive { width: calc(100% - 300px); padding-right: 300px; } }
 
 .archive__item { position: relative; }
-.archive__item a { position: relative; z-index: 10; }
+.archive__item a { position: relative; z-index: 10; text-decoration: none; }
 .archive__item a[rel="permalink"] { position: static; }
 
 .archive__subtitle { margin: 1.414em 0 0; padding-bottom: 0.5em; font-size: 1em; color: #646769; border-bottom: 1px solid #f2f3f3; }
