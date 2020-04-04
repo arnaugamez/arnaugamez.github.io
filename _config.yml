@@ -96,7 +96,7 @@ defaults:
       layout: single
       author_profile: true
       read_time: true
-      z	comments: true
+      comments: true
       share: true
       related: true
   # _pages
