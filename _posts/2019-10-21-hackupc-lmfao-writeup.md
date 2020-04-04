@@ -178,11 +178,5 @@ Now if we just run the code `python lmfao.py` it will produce the resulting imag
     <a href="/assets/images/posts/LMFAO_solved.png"><img src="/assets/images/posts/LMFAO_solved.png"></a>
     <figcaption>Recovered original image</figcaption>
 </figure>
-As we can see, we get the solution`flag{se_biene_bien_duro}` 
-
-[![Twitter Follow](https://img.shields.io/twitter/follow/arnaugamez?style=social)](https://twitter.com/intent/follow?screen_name=arnaugamez)
-
-
-
-
+As we can see, we get the solution `flag{se_biene_bien_duro}` 
 

@@ -438,5 +438,3 @@ You might wonder why the flag is so *weird*. I wondered too, so I took a deeper 
 We previously skipped a couple of basic blocks that were not essential to investigate, as all the information needed to retrieve the flag during the comparison was already prepared when reaching it. If you take a closer look at those, you will notice that the flag generation depends on the outcome of the random number generator (RNG) that was initialized using the *magic number* input as its seed.
 
 It is safe to assume that the author of the challenge just decided that the flag would be of size 17, then initialized the RNG with this seed and observed the outcome of the performed mangling on top of the values thrown by this RNG and directly used that as a flag. It would have been quite tedious (not impossible at all, maybe just not worth or time-effective) to create a more personalized flag while relying on the RNG output.
-
-[![Twitter Follow](https://img.shields.io/twitter/follow/arnaugamez?style=social)](https://twitter.com/intent/follow?screen_name=arnaugamez)

@@ -27,7 +27,7 @@
 
     <p class="page__meta">
       {% if post.date %}
-        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %d, %Y " }}</time>&emsp;
+        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %d, %Y " }}</time>&emsp;
       {% endif %}
       {% if post.read_time %}
         <i class="far fa-clock" aria-hidden="true"></i> {% include read-time.html %}

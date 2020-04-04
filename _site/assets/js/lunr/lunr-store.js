@@ -6,10 +6,10 @@ var store = [{
         "teaser": null
       },{
         "title": "Digging Deeper into Gmail URLs",
-        "excerpt":"Find my published research on extracting timestamps and other information from Gmail URLs with the accompanying tool Gmail URL Decoder that I developed.      ","categories": ["Blog"],
+        "excerpt":"Find my published research on extracting timestamps and other information from Gmail URLs with the accompanying tool Gmail URL Decoder that I developed during my DFIR internship at Arsenal.  ","categories": ["Blog"],
         "tags": ["DFIR","gmail","URL"],
         "url": "http://localhost:4000/blog/2019/07/29/digging-deeper-gmail-urls/",
-        "teaser": null
+        "teaser": "http://localhost:4000/assets/images/posts/GmailURLdecoder.jpg"
       },{
         "title": "Solving LMFAO stego challenge",
         "excerpt":"Last week I attended the HackUPC at Barcelona. They were running a 24h CTF-like competition with different challenges focused on algorithms, programming and some hacking. I wasn’t planning to play, but some friends got me involved in the last moment and I somehow managed to win the competition by completing...","categories": ["Blog"],

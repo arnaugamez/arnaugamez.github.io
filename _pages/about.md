@@ -13,6 +13,8 @@ Passionate about hacking and information security since I can remember. Recently
 - Binary formats
 - Vulnerability research and exploit development
 
+[![Twitter Follow @arnaugamez](https://img.shields.io/twitter/follow/arnaugamez?style=social)](https://twitter.com/intent/follow?screen_name=arnaugamez)
+
 I am also associated with the following groups
 
 ### Hacking Lliure
@@ -27,7 +29,7 @@ Co-founder and president of Hacking Lliure, a catalan non-profit hacking associa
 - Digital rights: net neutrality, privacy and anonymity
 - Information security research and knowledge sharing
 
-To know more: [Twitter](https://twitter.com/HackingLliure)
+[![Twitter Follow @HackingLliure](https://img.shields.io/twitter/follow/HackingLliure?style=social)](https://twitter.com/intent/follow?screen_name=HackingLliure)
 
 ### Radare2
 
@@ -39,5 +41,4 @@ Involved in radare2 community since 2017, mainly trying to make it accessible to
 
 Also helping to organize r2con, the radare2 congress, held every year in early Septemeber @ Barcelona.
 
-To know more: [Twitter](https://twitter.com/radareorg) - [Website](https://rada.re) - [R2CON](https://rada.re/con)
-
+[![Twitter Follow @radareorg](https://img.shields.io/twitter/follow/radareorg?style=social)](https://twitter.com/intent/follow?screen_name=radareorg)
