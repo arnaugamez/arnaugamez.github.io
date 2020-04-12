@@ -1,4 +1,234 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-04-04T19:41:08+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Arnau Gàmez i Montolio</title><subtitle>Arnau Gàmez i Montolio's (@arnaugamez) personal blog. Hacking, Reverse Engineering and Mathematics</subtitle><author><name>Arnau Gàmez i Montolio</name></author><entry><title type="html">Solving sonda reversing challenge with radare2</title><link href="http://localhost:4000/blog/2020/04/03/hackupc-sonda-writeup/" rel="alternate" type="text/html" title="Solving sonda reversing challenge with radare2" /><published>2020-04-03T00:00:00+02:00</published><updated>2020-04-03T00:00:00+02:00</updated><id>http://localhost:4000/blog/2020/04/03/hackupc-sonda-writeup</id><content type="html" xml:base="http://localhost:4000/blog/2020/04/03/hackupc-sonda-writeup/">&lt;p&gt;This was the reversing challenge from the HackUPC &lt;em&gt;TheGame&lt;/em&gt; CTF-like competition. A slightly modified version has also been used recently during the &lt;em&gt;Advent of Corona&lt;/em&gt; running platform of challenges during the 2020 covid19 confinement.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-04-12T20:27:05+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Arnau Gàmez i Montolio</title><subtitle>Arnau Gàmez i Montolio's (@arnaugamez) personal blog. Hacking, Reverse Engineering and Mathematics</subtitle><author><name>Arnau Gàmez i Montolio</name></author><entry><title type="html">Solving lagrange reversing challenge with Cutter</title><link href="http://localhost:4000/blog/2020/04/12/advent-solve-lagrange-cutter/" rel="alternate" type="text/html" title="Solving lagrange reversing challenge with Cutter" /><published>2020-04-12T00:00:00+02:00</published><updated>2020-04-12T00:00:00+02:00</updated><id>http://localhost:4000/blog/2020/04/12/advent-solve-lagrange-cutter</id><content type="html" xml:base="http://localhost:4000/blog/2020/04/12/advent-solve-lagrange-cutter/">&lt;p&gt;The Lagrange reversing challenge was the 6th problem included in the &lt;a href=&quot;https://adventofcorona.hackersatupc.org&quot;&gt;&lt;em&gt;Advent of Corona&lt;/em&gt;&lt;/a&gt; CTF platform. The platform was uploading challenges during the first weeks of covid19 confinement, and it is still up if you want to take a look and play.&lt;/p&gt;
+
+&lt;h2 id=&quot;description&quot;&gt;Description&lt;/h2&gt;
+
+&lt;p&gt;We download the binary file &lt;a href=&quot;/assets/files/posts/lagrange_baby&quot;&gt;lagrange_baby&lt;/a&gt; from the platform, which includes the following statement for the challenge:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Lagrange would be proud, maybe even Newton…&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;We can check that it is, indeed, a 64-bit Linux ELF executable:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ file lagrange_baby
+lagrange_baby: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=57b67fb4328e4f7989c7453333bb77c112105f0f, not stripped
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;If we run it, looks like it just waits for an input. We provide some random input to observe the outcome:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ./lagrange_baby
+1234
+noup
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ./lagrange_baby
+asdf
+noup
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This time we will be using &lt;a href=&quot;https://cutter.re&quot;&gt;Cutter&lt;/a&gt;, the official radare2 GUI. Let’s load our file into it and select default options for analysis:&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/lagrange_cutter_1.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_1.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Load binary on cutter with default analysis options&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;It will take no time to analyse it and prompt us with its pretty UI (notice that the specific windows layout can be different from your default one. You can adapt it to your needs and preferences).&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/lagrange_cutter_2.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_2.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Cutter main view&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h2 id=&quot;obtaining-first-input&quot;&gt;Obtaining first input&lt;/h2&gt;
+
+&lt;h3 id=&quot;strings-and-references&quot;&gt;Strings and references&lt;/h3&gt;
+
+&lt;p&gt;Let’s take a look at the strings on the .rodata section to see if they offer some hints:&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/lagrange_cutter_3.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_3.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Strings on .rodata section&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;From the strings found, we can assume that it will make three different checks on our input (or inputs). If all of them succeed it will print the correct flag, which does not appear to be explicitly hard-coded.&lt;/p&gt;
+
+&lt;p&gt;The first string found is the one printed back to us when we tried some random inputs previously. We now select it and press &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;X&lt;/code&gt; to show cross-references to it.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/lagrange_cutter_4.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_4.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Cross references to &quot;noup&quot; string&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Lucky us, there is only one reference to this string. To show it on the graph view, let’s do &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Right click -&amp;gt; Show in -&amp;gt; Graph (main)&lt;/code&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/lagrange_cutter_5.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_5.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;&quot;noup&quot; appearance in Graph view on main function&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h3 id=&quot;understand-initial-loop-1st-check&quot;&gt;Understand initial loop (1st check)&lt;/h3&gt;
+
+&lt;p&gt;Observe in the graph overview that we reach this block if the comparison in the previous block was unsuccessful. The comparison on this previous block depends on computations done in the previous three basic blocks that are in a row. You can easily observe that there is a loop involving those three basic blocks, and the outcome of this loop will be checked (presumably against our input) to proceed to next check, or to exit passing through the “noup” printing message.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/lagrange_cutter_6.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_6.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Graph overview on main function&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;To understand this loop we will take advantage of the integrated Ghidra decompiler. First we will fix some mismatching types between ghidra-dec and r2 analysis to avoid variable overlapping and so the decompiler output will be a little bit cleaner. Also we will change their names to describe more precisely their meaning. To do so we just need to select the desired variable on the disassembly listing on the graph view itself and press &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Y&lt;/code&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Change &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;size&lt;/code&gt; variable to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;int32_t&lt;/code&gt;. Also change its name to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;input_1&lt;/code&gt; as this will hold the value from the first input.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/lagrange_cutter_7.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_7.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Change size varible type and name&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Change &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;var_2ch&lt;/code&gt; to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;uint32_t&lt;/code&gt; . Also change its name to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;counter_1&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/lagrange_cutter_8.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_8.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Change var_2ch varible type and name&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;After those changes, we can observe that the described loop maps to the following pseudocode obtained from the decompiler.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/lagrange_cutter_9.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_9.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Decompilation of first loop&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h3 id=&quot;bruteforce-first-input&quot;&gt;Bruteforce first input&lt;/h3&gt;
+
+&lt;p&gt;Observe that we included the check that is made just after the loop. This is the check that will lead us to the “noup” message if it fails. As we can see, for the check to be successful, we need our input to be equal to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;iVar3&lt;/code&gt; that results from the previous loop computations. Let’s just bruteforce it’s value by reproducing the loop on a quick python script.&lt;/p&gt;
+
+&lt;p&gt;Note that the challenge author has been kind enough to keep symbols, so we can just assume that the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sym.isprime&lt;/code&gt; function does exactly what one expects it to do; checking it the parameter passed is a prime number.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;sympy&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isprime&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;counter_1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0xd&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#13
+&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isprime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;counter_1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isprime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;counter_1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;iVar3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;counter_1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;iVar3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;iVar3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;iVar3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x1f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;iVar3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x1f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;iVar3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;
+      
+  &lt;span class=&quot;n&quot;&gt;counter_1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;If we run it, it will give us the solution to be the number &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;6&lt;/code&gt;. Therefore, we have now the correct value for the first required input.&lt;/p&gt;
+
+&lt;h2 id=&quot;obtaining-second-input-flag&quot;&gt;Obtaining second input (flag)&lt;/h2&gt;
+
+&lt;h3 id=&quot;length-of-second-input-2nd-check&quot;&gt;Length of second input (2nd check)&lt;/h3&gt;
+
+&lt;p&gt;Now we can take a look at the coming flow after the first check has been passed successfully.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/lagrange_cutter_10.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_10.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Second input and check&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;As you can see, it makes a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;malloc&lt;/code&gt; of the number of bytes corresponding to the first input value. So it will be a malloc of 6 bytes. Then is asks for a second input with the call to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;scanf&lt;/code&gt; function, storing the value into the memory address pointed by string pointer &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ptr&lt;/code&gt;. After that, it checks the length of this second input to be equal as the first input number &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;6&lt;/code&gt;.  If the check fails, it will go to print us another error message “still noup” (remember it from the strings listing we have seen before).&lt;/p&gt;
+
+&lt;h3 id=&quot;understand-last-loop-3rd-check&quot;&gt;Understand last loop (3rd check)&lt;/h3&gt;
+
+&lt;p&gt;If we provide a as second input a string of length 6 it will then go through the last part of the main function that can be seen here:&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/lagrange_cutter_11.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_11.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Last part of the main function&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;It is obvious that the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;var_28h&lt;/code&gt; is another counter for a loop. It gets initialized with 0. Then it is compared against the first input, which, as we have just seen, it should be the length of the second input string, i.e. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;6&lt;/code&gt;. While the value of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;var_28h&lt;/code&gt; is less than &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;6&lt;/code&gt; it will perform some computations and another comparison. If the comparison succeeds, its value will  be incremented by 1 and loop back to the comparison against first input.&lt;/p&gt;
+
+&lt;p&gt;(Feel free to rename the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;var_28h&lt;/code&gt; variable to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;counter_2&lt;/code&gt; for example. This can be done as before: select it and press &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Y&lt;/code&gt;)&lt;/p&gt;
+
+&lt;p&gt;If the check within this loop fails at any iteration, the program will go to print us the “aaaaaaaaand still noup” string and exit. Therefore, it is clear that all checks must be passed (a total of 6) and then the flag will be printed to us.&lt;/p&gt;
+
+&lt;p&gt;Observe that the pointer that is passed for the flag printing is &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ptr&lt;/code&gt;. This is the same pointer to our second input string. This fact reveals that our second input should actually be the correct flag.&lt;/p&gt;
+
+&lt;p&gt;Let’s take a look into the basic block responsible for the comparison in the loop.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/lagrange_cutter_12.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_12.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Loop comparison for flag&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;It is clear that it compares each byte (char) from our second input string to the result obtained from calling the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sym.epic_function&lt;/code&gt;. We don’t really need to dig into this function, as we are only interested in its output at each iteration. This output will essentially represent the &lt;em&gt;i-th&lt;/em&gt; character of the correct flag.&lt;/p&gt;
+
+&lt;h3 id=&quot;debug-to-get-the-flag-char-by-char&quot;&gt;Debug to get the flag char by char&lt;/h3&gt;
+
+&lt;p&gt;We will now start a Cutter debugging session (&lt;em&gt;yay! we already have debugging support within Cutter :D&lt;/em&gt;) by clicking the “Play” icon in the top bar. This will take us to the debugging view as we can see here:&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/lagrange_cutter_12.5.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_12.5.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Debugging view on Cutter&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;The process to get the flag at each iteration will be as follows:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Place a breakpoint in the comparison instruction within the loop checking the flag. This can be done selecting the line &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cmp ebx, eax&lt;/code&gt; and pressing &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;F2&lt;/code&gt; or clicking on it and going to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Breakpoint -&amp;gt; Add breakpoint&lt;/code&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Patch the conditional jump in the next instruction to be inconditional so it will always continue the loop. this can be done by clicking into it and then &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Edit -&amp;gt; Instruction&lt;/code&gt;.&lt;/p&gt;
+
+    &lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/lagrange_cutter_13.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_13.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Change instruction to inconditional jump&lt;/figcaption&gt;
+&lt;/figure&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Continue until program breaks. This can be done by pressing &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;F5&lt;/code&gt; or clicking in the “fast forward” icon in the top bar. You will need to provide the inputs. This can be easily done within Cutter directly. Just go to the bottom-left and change the “R2 Console” value of the menu into “Debugee Input”. Then provide appropriate inputs in order. First &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;6&lt;/code&gt; and then any 6-byte-long string like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AAAAAA&lt;/code&gt; so it will pass the second check directly. After providing the inputs, the program will break.&lt;/p&gt;
+
+    &lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/lagrange_cutter_14.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_14.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Provide input within the debugging session&lt;/figcaption&gt;
+&lt;/figure&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Check value at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eax&lt;/code&gt;, it will contain the &lt;em&gt;i-th&lt;/em&gt; character of the correct flag string. We can see it in the register’s window (under the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rax&lt;/code&gt; register, as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eax&lt;/code&gt; is essentially the lower 32-bit part of the 64-bit register &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rax&lt;/code&gt;). A really quick and simple way to get the ASCII representation is just to hover over it.&lt;/p&gt;
+
+    &lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/lagrange_cutter_15.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_15.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Check correct char of flag&lt;/figcaption&gt;
+&lt;/figure&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Repeat until it exits.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;After 6 iterations, we will have the correct flag &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;C0roN4&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;We can now test it running the program and providing the correct inputs we obtained:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ./lagrange_baby 
+6
+C0roN4
+flag{C0roN4}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;As expected, the program returned &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;flag{C0roN4}&lt;/code&gt; as output, so we have successfully solved the challenge.&lt;/p&gt;
+
+&lt;h2 id=&quot;additional-comments&quot;&gt;Additional comments&lt;/h2&gt;
+
+&lt;p&gt;This challenge is a good example of two important things to keep in mind while reversing:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;We can take a lot of advantage if we &lt;em&gt;somehow&lt;/em&gt; have symbols for the binary. In this case they were provided embedded as the binary was non stripped. This allowed us to super quickly assume that the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sym.isprime&lt;/code&gt; function did what it looked like it had to do. I encourage you to take a look at the function itself and imagine having to conduct the same reversing session but not knowing its symbol name. You will probably find quite lost inside a function that that relies on random procedures and making more nested function calls. It is not trivial at all to discover that this function is &lt;em&gt;just&lt;/em&gt; checking if a given number is prime. If you are curious, it is actually implementing the &lt;a href=&quot;https://en.wikipedia.org/wiki/Miller%E2%80%93Rabin_primality_test&quot;&gt;Miller-Rabin primalty test&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;It is very easy to get lost into details that are non important to our objective. In this binary we can take as example the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sym.epic_function&lt;/code&gt;. If you take a look into it, you will see that it makes some floating point operations as well as some calls to another function called &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sym.pow_mod&lt;/code&gt;. You could spend a pretty large amount of time dealing with those trying to understand what is actually happening inside them, and probably getting frustrated as well. However, as you have seen above, there is no need to dig into them, as we are only interested in its plain outcome, regardless of its inner implementation. Anyway, for the curious people out there, I am pretty sure that the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sym.epic_function&lt;/code&gt; is just a hard-coded polynomial that has been constructed ad-hoc by interpolating the pairs of inputs and outputs for each char of the flag string. That is, for I/O pairs (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1 + counter_2 at i-th iteration&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;i-th char of flag string&lt;/code&gt;). Feel free to spend some time reversing and reconstructing it.&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Arnau Gàmez i Montolio</name></author><category term="radare2" /><category term="reversing" /><category term="Cutter" /><category term="hackupc" /><category term="advent" /><summary type="html">The Lagrange reversing challenge was the 6th problem included in the Advent of Corona CTF platform. The platform was uploading challenges during the first weeks of covid19 confinement, and it is still up if you want to take a look and play.</summary></entry><entry><title type="html">Solving sonda reversing challenge with radare2</title><link href="http://localhost:4000/blog/2020/04/03/hackupc-sonda-writeup/" rel="alternate" type="text/html" title="Solving sonda reversing challenge with radare2" /><published>2020-04-03T00:00:00+02:00</published><updated>2020-04-03T00:00:00+02:00</updated><id>http://localhost:4000/blog/2020/04/03/hackupc-sonda-writeup</id><content type="html" xml:base="http://localhost:4000/blog/2020/04/03/hackupc-sonda-writeup/">&lt;p&gt;This was the reversing challenge from the HackUPC &lt;em&gt;TheGame&lt;/em&gt; CTF-like competition. A slightly modified version has also been used recently during the &lt;em&gt;Advent of Corona&lt;/em&gt; running platform of challenges during the 2020 covid19 confinement.&lt;/p&gt;
 
 &lt;h2 id=&quot;description&quot;&gt;Description&lt;/h2&gt;
 

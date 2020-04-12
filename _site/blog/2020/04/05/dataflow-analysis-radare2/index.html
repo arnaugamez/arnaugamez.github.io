@@ -9,24 +9,21 @@
   <head>
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>Posts by Category | Arnau Gàmez i Montolio</title>
-<meta name="description" content="Arnau Gàmez i Montolio’s (@arnaugamez) personal blog. Hacking, Reverse Engineering and Mathematics ">
+<!-- begin _includes/seo.html --><title>Dataflow analysis with radare2 | Arnau Gàmez i Montolio</title>
+<meta name="description" content="Context  ">
 
 
   <meta name="author" content="Arnau Gàmez i Montolio">
 
 
-<meta property="og:type" content="website">
+<meta property="og:type" content="article">
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="Arnau Gàmez i Montolio">
-<meta property="og:title" content="Posts by Category">
-<meta property="og:url" content="http://localhost:4000/categories/">
+<meta property="og:title" content="Dataflow analysis with radare2">
+<meta property="og:url" content="http://localhost:4000/blog/2020/04/05/dataflow-analysis-radare2/">
 
 
-  <meta property="og:description" content="Arnau Gàmez i Montolio’s (@arnaugamez) personal blog. Hacking, Reverse Engineering and Mathematics ">
-
-
-
+  <meta property="og:description" content="Context  ">
 
 
 
@@ -34,9 +31,14 @@
 
 
 
+  <meta property="article:published_time" content="2020-04-05T00:00:00+02:00">
 
 
-<link rel="canonical" href="http://localhost:4000/categories/">
+
+
+
+
+<link rel="canonical" href="http://localhost:4000/blog/2020/04/05/dataflow-analysis-radare2/">
 
 
 
@@ -106,7 +108,7 @@
 
   </head>
 
-  <body class="layout--categories">
+  <body class="layout--single">
     <nav class="skip-links">
   <h2 class="screen-reader-text">Skip links</h2>
   <ul>
@@ -277,67 +279,128 @@
 
 
 
-  <div class="archive">
-    
-      <h1 id="page-title" class="page__title">Posts by Category</h1>
-    
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Dataflow analysis with radare2">
+    <meta itemprop="description" content="Context">
+    <meta itemprop="datePublished" content="2020-04-05T00:00:00+02:00">
     
 
-
-
-
-
-<ul class="taxonomy__index">
-  
-    
+    <div class="page__inner-wrap">
       
-        <li>
-          <a href="#blog">
-            <strong>Blog</strong> <span class="taxonomy__count">7</span>
-          </a>
-        </li>
-      
-    
-  
-    
-      
-    
-  
-    
-      
-    
-  
-    
-      
-    
-  
-    
-      
-    
-  
-    
-      
-    
-  
-    
-      
-    
-  
-</ul>
-
-
-  
-    
-      <section id="blog" class="taxonomy__section">
-        <h2 class="archive__subtitle">Blog</h2>
-        <div class="entries-list">
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Dataflow analysis with radare2
+</h1>
           
+          <p class="page__meta">
             
+              <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-04-05T00:00:00+02:00">Apr 05, 2020 </time>&emsp;
+            
+            
+              <i class="far fa-clock" aria-hidden="true"></i> 
 
 
 
-<div class="list__item">
+
+  < 1 min
+
+
+            
+          </p>
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+
+        
+        <h2 id="context">Context</h2>
+
+<p>Dataflow analyisis…</p>
+
+<h3 id="forward">Forward</h3>
+
+<p>Reachable definition analysis -&gt; Constant propagation (+ some folding if needed)</p>
+
+<p>Theory</p>
+
+<p>Simple example</p>
+
+<h3 id="backward">Backward</h3>
+
+<p>Liveness analysis</p>
+
+<p>Theory</p>
+
+<p>Simple example</p>
+
+<h3 id="combined">Combined</h3>
+
+<p>Do forward to propagate. Will lead to dead code to appear.</p>
+
+<h3 id="problems">Problems</h3>
+
+<p>Branch (flow), opaque predicates.</p>
+
+
+        
+
+         <!-- hack to show only on posts, as are the only ones using read_time for this layout -->
+        <p><a href="https://twitter.com/intent/follow?screen_name=arnaugamez"><img src="https://img.shields.io/twitter/follow/arnaugamez?style=social" alt="Twitter Follow"></a></p>
+        
+        
+      </section>
+      <footer class="page__meta">
+        
+        
+
+
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Dataflow+analysis+with+radare2%20http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F04%2F05%2Fdataflow-analysis-radare2%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F04%2F05%2Fdataflow-analysis-radare2%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F04%2F05%2Fdataflow-analysis-radare2%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/blog/2020/04/03/hackupc-sonda-writeup/" class="pagination--pager" title="Solving sonda reversing challenge with radare2
+">Previous</a>
+    
+    
+      <a href="/blog/2020/04/12/advent-solve-lagrange-cutter/" class="pagination--pager" title="Solving lagrange reversing challenge with Cutter
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
   <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/lagrange_cutter_6.png" alt="">
+      </div>
     
     <h2 class="archive__item-title" itemprop="headline">
       
@@ -368,52 +431,17 @@
   </article>
 </div>
 
+        
           
-            
 
 
 
-<div class="list__item">
+<div class="grid__item">
   <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
     
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="/blog/2020/04/05/dataflow-analysis-radare2/" rel="permalink">Dataflow analysis with radare2
-</a>
-      
-    </h2>
-
-    <p class="page__meta">
-      
-        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-04-05T00:00:00+02:00">Apr 05, 2020 </time>&emsp;
-      
-      
-        <i class="far fa-clock" aria-hidden="true"></i> 
-
-
-
-
-  < 1 min
-
-
-      
-    </p>
-
-    <p class="archive__item-excerpt" itemprop="description">Context
-
-</p>
-
-
-  </article>
-</div>
-
-          
-            
-
-
-
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/sonda_bb_main_3.png" alt="">
+      </div>
     
     <h2 class="archive__item-title" itemprop="headline">
       
@@ -444,13 +472,17 @@
   </article>
 </div>
 
+        
           
-            
 
 
 
-<div class="list__item">
+<div class="grid__item">
   <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/LMFAO.png" alt="">
+      </div>
     
     <h2 class="archive__item-title" itemprop="headline">
       
@@ -481,12 +513,12 @@
   </article>
 </div>
 
+        
           
-            
 
 
 
-<div class="list__item">
+<div class="grid__item">
   <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
     
     <h2 class="archive__item-title" itemprop="headline">
@@ -518,115 +550,13 @@
   </article>
 </div>
 
-          
-            
-
-
-
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="https://arsenalrecon.com/2019/07/digging-deeper-into-gmail-urls-introducing-gmail-url-decoder/">Digging Deeper into Gmail URLs
-</a> <a href="/blog/2019/07/29/digging-deeper-gmail-urls/" rel="permalink"><i class="fas fa-link" aria-hidden="true" title="permalink"></i><span class="sr-only">Permalink</span></a>
-      
-    </h2>
-
-    <p class="page__meta">
-      
-        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2019-07-29T00:00:00+02:00">Jul 29, 2019 </time>&emsp;
-      
-      
-        <i class="far fa-clock" aria-hidden="true"></i> 
-
-
-
-
-  < 1 min
-
-
-      
-    </p>
-
-    <p class="archive__item-excerpt" itemprop="description">Find my published research on extracting timestamps and other information from Gmail URLs with the accompanying tool Gmail URL Decoder that I developed durin...</p>
-
-
-  </article>
+        
+      </div>
+    </div>
+  
+  
 </div>
 
-          
-            
-
-
-
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="/blog/2019/07/25/hello-world/" rel="permalink">Hello world!
-</a>
-      
-    </h2>
-
-    <p class="page__meta">
-      
-        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2019-07-25T00:00:00+02:00">Jul 25, 2019 </time>&emsp;
-      
-      
-        <i class="far fa-clock" aria-hidden="true"></i> 
-
-
-
-
-  < 1 min
-
-
-      
-    </p>
-
-    <p class="archive__item-excerpt" itemprop="description">Hello world!
-</p>
-
-
-  </article>
-</div>
-
-          
-        </div>
-        <a href="#page-title" class="back-to-top">Back to Top &uarr;</a>
-      </section>
-    
-  
-
-  
-    
-  
-
-  
-    
-  
-
-  
-    
-  
-
-  
-    
-  
-
-  
-    
-  
-
-  
-    
-  
-
-
-  </div>
-</div>
     </div>
 
     
@@ -698,6 +628,25 @@ Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a hre
 <script src="/assets/js/lunr/lunr-en.js"></script>
 
 
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/blog/2020/04/05/dataflow-analysis-radare2/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/blog/2020/04/05/dataflow-analysis-radare2"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://arnaugamez.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
 
 
 

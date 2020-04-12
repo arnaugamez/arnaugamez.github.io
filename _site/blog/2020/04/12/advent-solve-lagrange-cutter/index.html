@@ -1,0 +1,883 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.19.1 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Solving lagrange reversing challenge with Cutter | Arnau Gàmez i Montolio</title>
+<meta name="description" content="The Lagrange reversing challenge was the 6th problem included in the Advent of Corona CTF platform. The platform was uploading challenges during the first weeks of covid19 confinement, and it is still up if you want to take a look and play.  ">
+
+
+  <meta name="author" content="Arnau Gàmez i Montolio">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Arnau Gàmez i Montolio">
+<meta property="og:title" content="Solving lagrange reversing challenge with Cutter">
+<meta property="og:url" content="http://localhost:4000/blog/2020/04/12/advent-solve-lagrange-cutter/">
+
+
+  <meta property="og:description" content="The Lagrange reversing challenge was the 6th problem included in the Advent of Corona CTF platform. The platform was uploading challenges during the first weeks of covid19 confinement, and it is still up if you want to take a look and play.  ">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/posts/lagrange_cutter_6.png">
+
+
+
+
+
+  <meta property="article:published_time" content="2020-04-12T00:00:00+02:00">
+
+
+
+
+
+
+<link rel="canonical" href="http://localhost:4000/blog/2020/04/12/advent-solve-lagrange-cutter/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Arnau Gàmez i Montolio Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+<link rel="manifest" href="/assets/favicon/site.webmanifest">
+<link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#5bbad5">
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico">
+<meta name="msapplication-TileColor" content="#00aba9">
+<meta name="msapplication-config" content="/assets/favicon/browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/images/logo.png" alt=""></a>
+        
+        <a class="site-title" href="/">
+          ~/
+          <span class="site-subtitle">Hacking · Reversing · Maths</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/">blog</a>
+            </li><li class="masthead__menu-item">
+              <a href="/talks/">talks</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">about</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/images/avatar.jpg" alt="Arnau Gàmez i Montolio" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Arnau Gàmez i Montolio</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p><strong>—</strong><br />👨‍🎓  <em>Maths</em> &amp; <em>CS</em> student<br />⏪  <em>RE</em> enthusiast<br /><strong>—</strong></p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="https://twitter.com/intent/follow?screen_name=arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i><span class="label">Twitter</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+            <li><a href="mailto:contact [AT] [thisdomain] [DOT] com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Mail</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Solving lagrange reversing challenge with Cutter">
+    <meta itemprop="description" content="The Lagrange reversing challenge was the 6th problem included in the Advent of Corona CTF platform. The platform was uploading challenges during the first weeks of covid19 confinement, and it is still up if you want to take a look and play.">
+    <meta itemprop="datePublished" content="2020-04-12T00:00:00+02:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Solving lagrange reversing challenge with Cutter
+</h1>
+          
+          <p class="page__meta">
+            
+              <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-04-12T00:00:00+02:00">Apr 12, 2020 </time>&emsp;
+            
+            
+              <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  9 min
+
+
+            
+          </p>
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> Table of Contents</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#description">Description</a></li>
+  <li><a href="#obtaining-first-input">Obtaining first input</a>
+    <ul>
+      <li><a href="#strings-and-references">Strings and references</a></li>
+      <li><a href="#understand-initial-loop-1st-check">Understand initial loop (1st check)</a></li>
+      <li><a href="#bruteforce-first-input">Bruteforce first input</a></li>
+    </ul>
+  </li>
+  <li><a href="#obtaining-second-input-flag">Obtaining second input (flag)</a>
+    <ul>
+      <li><a href="#length-of-second-input-2nd-check">Length of second input (2nd check)</a></li>
+      <li><a href="#understand-last-loop-3rd-check">Understand last loop (3rd check)</a></li>
+      <li><a href="#debug-to-get-the-flag-char-by-char">Debug to get the flag char by char</a></li>
+    </ul>
+  </li>
+  <li><a href="#additional-comments">Additional comments</a></li>
+</ul>
+
+            </nav>
+          </aside>
+        
+        <p>The Lagrange reversing challenge was the 6th problem included in the <a href="https://adventofcorona.hackersatupc.org"><em>Advent of Corona</em></a> CTF platform. The platform was uploading challenges during the first weeks of covid19 confinement, and it is still up if you want to take a look and play.</p>
+
+<h2 id="description">Description</h2>
+
+<p>We download the binary file <a href="/assets/files/posts/lagrange_baby">lagrange_baby</a> from the platform, which includes the following statement for the challenge:</p>
+
+<blockquote>
+  <p>Lagrange would be proud, maybe even Newton…</p>
+</blockquote>
+
+<p>We can check that it is, indeed, a 64-bit Linux ELF executable:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ file lagrange_baby
+lagrange_baby: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=57b67fb4328e4f7989c7453333bb77c112105f0f, not stripped
+</code></pre></div></div>
+
+<p>If we run it, looks like it just waits for an input. We provide some random input to observe the outcome:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./lagrange_baby
+1234
+noup
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./lagrange_baby
+asdf
+noup
+</code></pre></div></div>
+
+<p>This time we will be using <a href="https://cutter.re">Cutter</a>, the official radare2 GUI. Let’s load our file into it and select default options for analysis:</p>
+
+<figure class="align-center" style="width:300px">
+    <a href="/assets/images/posts/lagrange_cutter_1.png"><img src="/assets/images/posts/lagrange_cutter_1.png" /></a>
+    <figcaption>Load binary on cutter with default analysis options</figcaption>
+</figure>
+
+<p>It will take no time to analyse it and prompt us with its pretty UI (notice that the specific windows layout can be different from your default one. You can adapt it to your needs and preferences).</p>
+
+<figure class="align-center" style="width:300px">
+    <a href="/assets/images/posts/lagrange_cutter_2.png"><img src="/assets/images/posts/lagrange_cutter_2.png" /></a>
+    <figcaption>Cutter main view</figcaption>
+</figure>
+
+<h2 id="obtaining-first-input">Obtaining first input</h2>
+
+<h3 id="strings-and-references">Strings and references</h3>
+
+<p>Let’s take a look at the strings on the .rodata section to see if they offer some hints:</p>
+
+<figure class="align-center" style="width:300px">
+    <a href="/assets/images/posts/lagrange_cutter_3.png"><img src="/assets/images/posts/lagrange_cutter_3.png" /></a>
+    <figcaption>Strings on .rodata section</figcaption>
+</figure>
+
+<p>From the strings found, we can assume that it will make three different checks on our input (or inputs). If all of them succeed it will print the correct flag, which does not appear to be explicitly hard-coded.</p>
+
+<p>The first string found is the one printed back to us when we tried some random inputs previously. We now select it and press <code class="language-plaintext highlighter-rouge">X</code> to show cross-references to it.</p>
+
+<figure class="align-center" style="width:300px">
+    <a href="/assets/images/posts/lagrange_cutter_4.png"><img src="/assets/images/posts/lagrange_cutter_4.png" /></a>
+    <figcaption>Cross references to "noup" string</figcaption>
+</figure>
+
+<p>Lucky us, there is only one reference to this string. To show it on the graph view, let’s do <code class="language-plaintext highlighter-rouge">Right click -&gt; Show in -&gt; Graph (main)</code></p>
+
+<figure class="align-center" style="width:300px">
+    <a href="/assets/images/posts/lagrange_cutter_5.png"><img src="/assets/images/posts/lagrange_cutter_5.png" /></a>
+    <figcaption>"noup" appearance in Graph view on main function</figcaption>
+</figure>
+
+<h3 id="understand-initial-loop-1st-check">Understand initial loop (1st check)</h3>
+
+<p>Observe in the graph overview that we reach this block if the comparison in the previous block was unsuccessful. The comparison on this previous block depends on computations done in the previous three basic blocks that are in a row. You can easily observe that there is a loop involving those three basic blocks, and the outcome of this loop will be checked (presumably against our input) to proceed to next check, or to exit passing through the “noup” printing message.</p>
+
+<figure class="align-center" style="width:300px">
+    <a href="/assets/images/posts/lagrange_cutter_6.png"><img src="/assets/images/posts/lagrange_cutter_6.png" /></a>
+    <figcaption>Graph overview on main function</figcaption>
+</figure>
+
+<p>To understand this loop we will take advantage of the integrated Ghidra decompiler. First we will fix some mismatching types between ghidra-dec and r2 analysis to avoid variable overlapping and so the decompiler output will be a little bit cleaner. Also we will change their names to describe more precisely their meaning. To do so we just need to select the desired variable on the disassembly listing on the graph view itself and press <code class="language-plaintext highlighter-rouge">Y</code>.</p>
+
+<ul>
+  <li>Change <code class="language-plaintext highlighter-rouge">size</code> variable to <code class="language-plaintext highlighter-rouge">int32_t</code>. Also change its name to <code class="language-plaintext highlighter-rouge">input_1</code> as this will hold the value from the first input.</li>
+</ul>
+
+<figure class="align-center" style="width:300px">
+    <a href="/assets/images/posts/lagrange_cutter_7.png"><img src="/assets/images/posts/lagrange_cutter_7.png" /></a>
+    <figcaption>Change size varible type and name</figcaption>
+</figure>
+
+<ul>
+  <li>Change <code class="language-plaintext highlighter-rouge">var_2ch</code> to <code class="language-plaintext highlighter-rouge">uint32_t</code> . Also change its name to <code class="language-plaintext highlighter-rouge">counter_1</code>.</li>
+</ul>
+
+<figure class="align-center" style="width:300px">
+    <a href="/assets/images/posts/lagrange_cutter_8.png"><img src="/assets/images/posts/lagrange_cutter_8.png" /></a>
+    <figcaption>Change var_2ch varible type and name</figcaption>
+</figure>
+
+<p>After those changes, we can observe that the described loop maps to the following pseudocode obtained from the decompiler.</p>
+
+<figure class="align-center" style="width:300px">
+    <a href="/assets/images/posts/lagrange_cutter_9.png"><img src="/assets/images/posts/lagrange_cutter_9.png" /></a>
+    <figcaption>Decompilation of first loop</figcaption>
+</figure>
+
+<h3 id="bruteforce-first-input">Bruteforce first input</h3>
+
+<p>Observe that we included the check that is made just after the loop. This is the check that will lead us to the “noup” message if it fails. As we can see, for the check to be successful, we need our input to be equal to the <code class="language-plaintext highlighter-rouge">iVar3</code> that results from the previous loop computations. Let’s just bruteforce it’s value by reproducing the loop on a quick python script.</p>
+
+<p>Note that the challenge author has been kind enough to keep symbols, so we can just assume that the <code class="language-plaintext highlighter-rouge">sym.isprime</code> function does exactly what one expects it to do; checking it the parameter passed is a prime number.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sympy</span> <span class="kn">import</span> <span class="n">isprime</span>
+
+<span class="n">counter_1</span> <span class="o">=</span> <span class="mh">0xd</span> <span class="c1">#13
+</span>
+<span class="k">while</span> <span class="p">(</span><span class="bp">True</span><span class="p">):</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">isprime</span><span class="p">(</span><span class="n">counter_1</span><span class="p">)</span> <span class="ow">and</span> <span class="n">isprime</span><span class="p">(</span><span class="n">counter_1</span> <span class="o">%</span> <span class="mi">10</span><span class="p">)):</span>
+    <span class="n">iVar3</span> <span class="o">=</span> <span class="n">counter_1</span> <span class="o">//</span> <span class="mi">10</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">iVar3</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+      <span class="k">if</span> <span class="p">((</span><span class="n">iVar3</span> <span class="o">-</span> <span class="p">(</span><span class="n">iVar3</span> <span class="o">&gt;&gt;</span> <span class="mh">0x1f</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">iVar3</span> <span class="o">&gt;&gt;</span> <span class="mh">0x1f</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">iVar3</span><span class="p">)</span>
+        <span class="k">break</span>
+      
+  <span class="n">counter_1</span> <span class="o">+=</span> <span class="mi">1</span>
+</code></pre></div></div>
+
+<p>If we run it, it will give us the solution to be the number <code class="language-plaintext highlighter-rouge">6</code>. Therefore, we have now the correct value for the first required input.</p>
+
+<h2 id="obtaining-second-input-flag">Obtaining second input (flag)</h2>
+
+<h3 id="length-of-second-input-2nd-check">Length of second input (2nd check)</h3>
+
+<p>Now we can take a look at the coming flow after the first check has been passed successfully.</p>
+
+<figure class="align-center" style="width:300px">
+    <a href="/assets/images/posts/lagrange_cutter_10.png"><img src="/assets/images/posts/lagrange_cutter_10.png" /></a>
+    <figcaption>Second input and check</figcaption>
+</figure>
+
+<p>As you can see, it makes a <code class="language-plaintext highlighter-rouge">malloc</code> of the number of bytes corresponding to the first input value. So it will be a malloc of 6 bytes. Then is asks for a second input with the call to <code class="language-plaintext highlighter-rouge">scanf</code> function, storing the value into the memory address pointed by string pointer <code class="language-plaintext highlighter-rouge">ptr</code>. After that, it checks the length of this second input to be equal as the first input number <code class="language-plaintext highlighter-rouge">6</code>.  If the check fails, it will go to print us another error message “still noup” (remember it from the strings listing we have seen before).</p>
+
+<h3 id="understand-last-loop-3rd-check">Understand last loop (3rd check)</h3>
+
+<p>If we provide a as second input a string of length 6 it will then go through the last part of the main function that can be seen here:</p>
+
+<figure class="align-center" style="width:300px">
+    <a href="/assets/images/posts/lagrange_cutter_11.png"><img src="/assets/images/posts/lagrange_cutter_11.png" /></a>
+    <figcaption>Last part of the main function</figcaption>
+</figure>
+
+<p>It is obvious that the <code class="language-plaintext highlighter-rouge">var_28h</code> is another counter for a loop. It gets initialized with 0. Then it is compared against the first input, which, as we have just seen, it should be the length of the second input string, i.e. <code class="language-plaintext highlighter-rouge">6</code>. While the value of <code class="language-plaintext highlighter-rouge">var_28h</code> is less than <code class="language-plaintext highlighter-rouge">6</code> it will perform some computations and another comparison. If the comparison succeeds, its value will  be incremented by 1 and loop back to the comparison against first input.</p>
+
+<p>(Feel free to rename the <code class="language-plaintext highlighter-rouge">var_28h</code> variable to <code class="language-plaintext highlighter-rouge">counter_2</code> for example. This can be done as before: select it and press <code class="language-plaintext highlighter-rouge">Y</code>)</p>
+
+<p>If the check within this loop fails at any iteration, the program will go to print us the “aaaaaaaaand still noup” string and exit. Therefore, it is clear that all checks must be passed (a total of 6) and then the flag will be printed to us.</p>
+
+<p>Observe that the pointer that is passed for the flag printing is <code class="language-plaintext highlighter-rouge">ptr</code>. This is the same pointer to our second input string. This fact reveals that our second input should actually be the correct flag.</p>
+
+<p>Let’s take a look into the basic block responsible for the comparison in the loop.</p>
+
+<figure class="align-center" style="width:300px">
+    <a href="/assets/images/posts/lagrange_cutter_12.png"><img src="/assets/images/posts/lagrange_cutter_12.png" /></a>
+    <figcaption>Loop comparison for flag</figcaption>
+</figure>
+
+<p>It is clear that it compares each byte (char) from our second input string to the result obtained from calling the <code class="language-plaintext highlighter-rouge">sym.epic_function</code>. We don’t really need to dig into this function, as we are only interested in its output at each iteration. This output will essentially represent the <em>i-th</em> character of the correct flag.</p>
+
+<h3 id="debug-to-get-the-flag-char-by-char">Debug to get the flag char by char</h3>
+
+<p>We will now start a Cutter debugging session (<em>yay! we already have debugging support within Cutter :D</em>) by clicking the “Play” icon in the top bar. This will take us to the debugging view as we can see here:</p>
+
+<figure class="align-center" style="width:300px">
+    <a href="/assets/images/posts/lagrange_cutter_12.5.png"><img src="/assets/images/posts/lagrange_cutter_12.5.png" /></a>
+    <figcaption>Debugging view on Cutter</figcaption>
+</figure>
+
+<p>The process to get the flag at each iteration will be as follows:</p>
+
+<ol>
+  <li>
+    <p>Place a breakpoint in the comparison instruction within the loop checking the flag. This can be done selecting the line <code class="language-plaintext highlighter-rouge">cmp ebx, eax</code> and pressing <code class="language-plaintext highlighter-rouge">F2</code> or clicking on it and going to <code class="language-plaintext highlighter-rouge">Breakpoint -&gt; Add breakpoint</code>.</p>
+  </li>
+  <li>
+    <p>Patch the conditional jump in the next instruction to be inconditional so it will always continue the loop. this can be done by clicking into it and then <code class="language-plaintext highlighter-rouge">Edit -&gt; Instruction</code>.</p>
+
+    <figure class="align-center" style="width:300px">
+    <a href="/assets/images/posts/lagrange_cutter_13.png"><img src="/assets/images/posts/lagrange_cutter_13.png" /></a>
+    <figcaption>Change instruction to inconditional jump</figcaption>
+</figure>
+  </li>
+  <li>
+    <p>Continue until program breaks. This can be done by pressing <code class="language-plaintext highlighter-rouge">F5</code> or clicking in the “fast forward” icon in the top bar. You will need to provide the inputs. This can be easily done within Cutter directly. Just go to the bottom-left and change the “R2 Console” value of the menu into “Debugee Input”. Then provide appropriate inputs in order. First <code class="language-plaintext highlighter-rouge">6</code> and then any 6-byte-long string like <code class="language-plaintext highlighter-rouge">AAAAAA</code> so it will pass the second check directly. After providing the inputs, the program will break.</p>
+
+    <figure class="align-center" style="width:300px">
+    <a href="/assets/images/posts/lagrange_cutter_14.png"><img src="/assets/images/posts/lagrange_cutter_14.png" /></a>
+    <figcaption>Provide input within the debugging session</figcaption>
+</figure>
+  </li>
+  <li>
+    <p>Check value at <code class="language-plaintext highlighter-rouge">eax</code>, it will contain the <em>i-th</em> character of the correct flag string. We can see it in the register’s window (under the <code class="language-plaintext highlighter-rouge">rax</code> register, as <code class="language-plaintext highlighter-rouge">eax</code> is essentially the lower 32-bit part of the 64-bit register <code class="language-plaintext highlighter-rouge">rax</code>). A really quick and simple way to get the ASCII representation is just to hover over it.</p>
+
+    <figure class="align-center" style="width:300px">
+    <a href="/assets/images/posts/lagrange_cutter_15.png"><img src="/assets/images/posts/lagrange_cutter_15.png" /></a>
+    <figcaption>Check correct char of flag</figcaption>
+</figure>
+  </li>
+  <li>
+    <p>Repeat until it exits.</p>
+  </li>
+</ol>
+
+<p>After 6 iterations, we will have the correct flag <code class="language-plaintext highlighter-rouge">C0roN4</code></p>
+
+<p>We can now test it running the program and providing the correct inputs we obtained:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./lagrange_baby 
+6
+C0roN4
+flag{C0roN4}
+</code></pre></div></div>
+
+<p>As expected, the program returned <code class="language-plaintext highlighter-rouge">flag{C0roN4}</code> as output, so we have successfully solved the challenge.</p>
+
+<h2 id="additional-comments">Additional comments</h2>
+
+<p>This challenge is a good example of two important things to keep in mind while reversing:</p>
+
+<ul>
+  <li>We can take a lot of advantage if we <em>somehow</em> have symbols for the binary. In this case they were provided embedded as the binary was non stripped. This allowed us to super quickly assume that the <code class="language-plaintext highlighter-rouge">sym.isprime</code> function did what it looked like it had to do. I encourage you to take a look at the function itself and imagine having to conduct the same reversing session but not knowing its symbol name. You will probably find quite lost inside a function that that relies on random procedures and making more nested function calls. It is not trivial at all to discover that this function is <em>just</em> checking if a given number is prime. If you are curious, it is actually implementing the <a href="https://en.wikipedia.org/wiki/Miller%E2%80%93Rabin_primality_test">Miller-Rabin primalty test</a>.</li>
+  <li>It is very easy to get lost into details that are non important to our objective. In this binary we can take as example the <code class="language-plaintext highlighter-rouge">sym.epic_function</code>. If you take a look into it, you will see that it makes some floating point operations as well as some calls to another function called <code class="language-plaintext highlighter-rouge">sym.pow_mod</code>. You could spend a pretty large amount of time dealing with those trying to understand what is actually happening inside them, and probably getting frustrated as well. However, as you have seen above, there is no need to dig into them, as we are only interested in its plain outcome, regardless of its inner implementation. Anyway, for the curious people out there, I am pretty sure that the <code class="language-plaintext highlighter-rouge">sym.epic_function</code> is just a hard-coded polynomial that has been constructed ad-hoc by interpolating the pairs of inputs and outputs for each char of the flag string. That is, for I/O pairs (<code class="language-plaintext highlighter-rouge">1 + counter_2 at i-th iteration</code>, <code class="language-plaintext highlighter-rouge">i-th char of flag string</code>). Feel free to spend some time reversing and reconstructing it.</li>
+</ul>
+
+        
+
+         <!-- hack to show only on posts, as are the only ones using read_time for this layout -->
+        <p><a href="https://twitter.com/intent/follow?screen_name=arnaugamez"><img src="https://img.shields.io/twitter/follow/arnaugamez?style=social" alt="Twitter Follow"></a></p>
+        
+        
+      </section>
+      <footer class="page__meta">
+        
+        
+
+
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Solving+lagrange+reversing+challenge+with+Cutter%20http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F04%2F12%2Fadvent-solve-lagrange-cutter%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F04%2F12%2Fadvent-solve-lagrange-cutter%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F04%2F12%2Fadvent-solve-lagrange-cutter%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/blog/2020/04/05/dataflow-analysis-radare2/" class="pagination--pager" title="Dataflow analysis with radare2
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/blog/2020/04/05/dataflow-analysis-radare2/" rel="permalink">Dataflow analysis with radare2
+</a>
+      
+    </h2>
+
+    <p class="page__meta">
+      
+        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-04-05T00:00:00+02:00">Apr 05, 2020 </time>&emsp;
+      
+      
+        <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  < 1 min
+
+
+      
+    </p>
+
+    <p class="archive__item-excerpt" itemprop="description">Context
+
+</p>
+
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/sonda_bb_main_3.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/blog/2020/04/03/hackupc-sonda-writeup/" rel="permalink">Solving sonda reversing challenge with radare2
+</a>
+      
+    </h2>
+
+    <p class="page__meta">
+      
+        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-04-03T00:00:00+02:00">Apr 03, 2020 </time>&emsp;
+      
+      
+        <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  18 min
+
+
+      
+    </p>
+
+    <p class="archive__item-excerpt" itemprop="description">This was the reversing challenge from the HackUPC TheGame CTF-like competition. A slightly modified version has also been used recently during the Advent of ...</p>
+
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/LMFAO.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/blog/2019/10/21/hackupc-lmfao-writeup/" rel="permalink">Solving LMFAO stego challenge
+</a>
+      
+    </h2>
+
+    <p class="page__meta">
+      
+        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2019-10-21T00:00:00+02:00">Oct 21, 2019 </time>&emsp;
+      
+      
+        <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  4 min
+
+
+      
+    </p>
+
+    <p class="archive__item-excerpt" itemprop="description">Last week I attended the HackUPC at Barcelona. They were running a 24h CTF-like competition with different challenges focused on algorithms, programming and ...</p>
+
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/blog/2019/08/30/pwning-router-wol-arp/" rel="permalink">Pwning F@st 5655v2AC router
+</a>
+      
+    </h2>
+
+    <p class="page__meta">
+      
+        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2019-08-30T00:00:00+02:00">Aug 30, 2019 </time>&emsp;
+      
+      
+        <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  < 1 min
+
+
+      
+    </p>
+
+    <p class="archive__item-excerpt" itemprop="description">Long story short: I set up a computer lab at home and wanted to enable Wake-on-Lan so I could power on the machine remotely whenever I needed it. Looked like...</p>
+
+
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow" style="text-align:center">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://twitter.com/intent/follow?screen_name=arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+        
+      
+        
+          <li><a href="https://github.com/arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="mailto:contact [AT] [thisdomain] [DOT] com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Mail</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright" style="text-align:center">
+
+<small>
+&copy; 2020 Arnau Gàmez i Montolio.
+</small>
+<br>
+
+<small><i>
+Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a> | Icon made by <a href="https://www.freepik.com/home">Freepik</a> from <a href="https://flaticon.com">flaticon.com</a>
+</i></small>
+</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/blog/2020/04/12/advent-solve-lagrange-cutter/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/blog/2020/04/12/advent-solve-lagrange-cutter"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://arnaugamez.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>
