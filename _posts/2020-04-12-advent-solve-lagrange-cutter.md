@@ -157,18 +157,18 @@ Now we can take a look at the coming flow after the first check has been passed 
     <figcaption>Second input and check</figcaption>
 </figure>
 
-As you can see, it makes a `malloc` of the number of bytes corresponding to the first input value. So it will be a malloc of 6 bytes. Then is asks for a second input with the call to `scanf` function, storing the value into the memory address pointed by string pointer `ptr`. After that, it checks the length of this second input to be equal as the first input number `6`.  If the check fails, it will go to print us another error message "still noup" (remember it from the strings listing we have seen before).
+As you can see, it makes a `malloc` of the number of bytes corresponding to the first input value. So it will be a malloc of 6 bytes. Then is asks for a second input with the call to `scanf` function, storing the value into the memory address pointed by string pointer `ptr`. After that, it checks the length of this second input to be equal to the first input number `6`.  If the check fails, it will go to print us another error message "still noup" (remember it from the strings listing we have seen before).
 
 ### Understand last loop (3rd check)
 
-If we provide a as second input a string of length 6 it will then go through the last part of the main function that can be seen here:
+If we provide as a second input a string of length 6 it will then go through the last part of the main function that can be seen here:
 
 <figure class="align-center" style="width:300px">
     <a href="/assets/images/posts/lagrange_cutter_11.png"><img src="/assets/images/posts/lagrange_cutter_11.png"></a>
     <figcaption>Last part of the main function</figcaption>
 </figure>
 
-It is obvious that the `var_28h` is another counter for a loop. It gets initialized with 0. Then it is compared against the first input, which, as we have just seen, it should be the length of the second input string, i.e. `6`. While the value of `var_28h` is less than `6` it will perform some computations and another comparison. If the comparison succeeds, its value will  be incremented by 1 and loop back to the comparison against first input.
+It is obvious that the `var_28h` is another counter for a loop. It gets initialized with 0. Then it is compared against the first input, whose value should be the length of the second input string as we have just seen, i.e. `6`. While the value of `var_28h` is less than `6` it will perform some computations and another comparison. If the comparison succeeds, its value will be incremented by 1 and loop back to the comparison against first input.
 
 (Feel free to rename the `var_28h` variable to `counter_2` for example. This can be done as before: select it and press `Y`)
 
@@ -198,7 +198,7 @@ The process to get the flag at each iteration will be as follows:
 
 1. Place a breakpoint in the comparison instruction within the loop checking the flag. This can be done selecting the line `cmp ebx, eax` and pressing `F2` or clicking on it and going to `Breakpoint -> Add breakpoint`.
 
-2. Patch the conditional jump in the next instruction to be inconditional so it will always continue the loop. this can be done by clicking into it and then `Edit -> Instruction`.
+2. Patch the conditional jump in the next instruction to be inconditional so it will always continue the loop. This can be done by clicking into it and then `Edit -> Instruction`.
 
    <figure class="align-center" style="width:300px">
        <a href="/assets/images/posts/lagrange_cutter_13.png"><img src="/assets/images/posts/lagrange_cutter_13.png"></a>
@@ -238,5 +238,5 @@ As expected, the program returned `flag{C0roN4}` as output, so we have successfu
 
 This challenge is a good example of two important things to keep in mind while reversing:
 
-- We can take a lot of advantage if we *somehow* have symbols for the binary. In this case they were provided embedded as the binary was non stripped. This allowed us to super quickly assume that the `sym.isprime` function did what it looked like it had to do. I encourage you to take a look at the function itself and imagine having to conduct the same reversing session but not knowing its symbol name. You will probably find quite lost inside a function that that relies on random procedures and making more nested function calls. It is not trivial at all to discover that this function is *just* checking if a given number is prime. If you are curious, it is actually implementing the [Miller-Rabin primalty test](https://en.wikipedia.org/wiki/Miller%E2%80%93Rabin_primality_test).
+- If we *somehow* have symbols for the binary, we can take a lot of advantage from them. In this case they were provided embedded, as the binary was non stripped. This allowed us to super quickly assume that the `sym.isprime` function did what it looked like it had to do. I encourage you to take a look at the function itself and imagine having to conduct the same reversing session but not knowing its symbol name. You will probably find quite lost inside a function that relies on random procedures and makes more nested function calls. It is not trivial at all to discover that this function is *just* checking if a given number is prime. If you are curious, it is actually implementing the [Miller-Rabin primalty test](https://en.wikipedia.org/wiki/Miller%E2%80%93Rabin_primality_test).
 - It is very easy to get lost into details that are non important to our objective. In this binary we can take as example the `sym.epic_function`. If you take a look into it, you will see that it makes some floating point operations as well as some calls to another function called `sym.pow_mod`. You could spend a pretty large amount of time dealing with those trying to understand what is actually happening inside them, and probably getting frustrated as well. However, as you have seen above, there is no need to dig into them, as we are only interested in its plain outcome, regardless of its inner implementation. Anyway, for the curious people out there, I am pretty sure that the `sym.epic_function` is just a hard-coded polynomial that has been constructed ad-hoc by interpolating the pairs of inputs and outputs for each char of the flag string. That is, for I/O pairs (`1 + counter_2 at i-th iteration`, `i-th char of flag string`). Feel free to spend some time reversing and reconstructing it.
