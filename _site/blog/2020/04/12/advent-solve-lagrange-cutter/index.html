@@ -450,7 +450,7 @@ noup
 
 <p>Observe that we included the check that is made just after the loop. This is the check that will lead us to the “noup” message if it fails. As we can see, for the check to be successful, we need our input to be equal to the <code class="language-plaintext highlighter-rouge">iVar3</code> that results from the previous loop computations. Let’s just bruteforce its value by reproducing the loop on a quick python script.</p>
 
-<p>Note that the challenge author has been kind enough to keep symbols, so we can just assume that the <code class="language-plaintext highlighter-rouge">sym.isprime</code> function does exactly what one expects it to do; checking it the parameter passed is a prime number.</p>
+<p>Note that the challenge author has been kind enough to keep symbols, so we can just assume that the <code class="language-plaintext highlighter-rouge">sym.isprime</code> function does exactly what one expects it to do; checking if the parameter passed is a prime number.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sympy</span> <span class="kn">import</span> <span class="n">isprime</span>
 

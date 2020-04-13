@@ -126,7 +126,7 @@ After those changes, we can observe that the described loop maps to the followin
 
 Observe that we included the check that is made just after the loop. This is the check that will lead us to the "noup" message if it fails. As we can see, for the check to be successful, we need our input to be equal to the `iVar3` that results from the previous loop computations. Let's just bruteforce its value by reproducing the loop on a quick python script.
 
-Note that the challenge author has been kind enough to keep symbols, so we can just assume that the `sym.isprime` function does exactly what one expects it to do; checking it the parameter passed is a prime number.
+Note that the challenge author has been kind enough to keep symbols, so we can just assume that the `sym.isprime` function does exactly what one expects it to do; checking if the parameter passed is a prime number.
 
 ```python
 from sympy import isprime
