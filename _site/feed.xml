@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-04-16T18:31:25+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Arnau Gàmez i Montolio</title><subtitle>Arnau Gàmez i Montolio's (@arnaugamez) personal blog. Hacking, Reverse Engineering and Mathematics</subtitle><author><name>Arnau Gàmez i Montolio</name></author><entry><title type="html">Solving lagrange reversing challenge with Cutter</title><link href="http://localhost:4000/blog/2020/04/12/advent-solve-lagrange-cutter/" rel="alternate" type="text/html" title="Solving lagrange reversing challenge with Cutter" /><published>2020-04-12T00:00:00+02:00</published><updated>2020-04-12T00:00:00+02:00</updated><id>http://localhost:4000/blog/2020/04/12/advent-solve-lagrange-cutter</id><content type="html" xml:base="http://localhost:4000/blog/2020/04/12/advent-solve-lagrange-cutter/">&lt;p&gt;The Lagrange reversing challenge was the 6th problem included in the &lt;a href=&quot;https://adventofcorona.hackersatupc.org&quot;&gt;&lt;em&gt;Advent of Corona&lt;/em&gt;&lt;/a&gt; CTF platform. The platform was uploading challenges during the first weeks of covid19 confinement, and it is still up if you want to take a look and play.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-04-19T16:43:08+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Arnau Gàmez i Montolio</title><subtitle>Arnau Gàmez i Montolio's (@arnaugamez) personal blog. Hacking, Reverse Engineering and Mathematics</subtitle><author><name>Arnau Gàmez i Montolio</name></author><entry><title type="html">Solving lagrange reversing challenge with Cutter</title><link href="http://localhost:4000/blog/2020/04/12/advent-solve-lagrange-cutter/" rel="alternate" type="text/html" title="Solving lagrange reversing challenge with Cutter" /><published>2020-04-12T00:00:00+02:00</published><updated>2020-04-12T00:00:00+02:00</updated><id>http://localhost:4000/blog/2020/04/12/advent-solve-lagrange-cutter</id><content type="html" xml:base="http://localhost:4000/blog/2020/04/12/advent-solve-lagrange-cutter/">&lt;p&gt;The Lagrange reversing challenge was the 6th problem included in the &lt;a href=&quot;https://adventofcorona.hackersatupc.org&quot;&gt;&lt;em&gt;Advent of Corona&lt;/em&gt;&lt;/a&gt; CTF platform. The platform was uploading challenges during the first weeks of covid19 confinement, and it is still up if you want to take a look and play.&lt;/p&gt;
 
 &lt;h2 id=&quot;description&quot;&gt;Description&lt;/h2&gt;
 
@@ -344,35 +344,31 @@ Num Paddr      Vaddr      Len Size Section  Type  String
 &lt;p&gt;So we need to obtain the value that gets into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;edx&lt;/code&gt; for the comparison but… not that fast. Observe that the input value (the magic number) will be used for the computations that will affect the value at the end stored at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;edx&lt;/code&gt; so we can’t just debug it, place a breakpoint before comparison, give a random input number and retrieve value at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;edx&lt;/code&gt;. We can proceed in two different ways:&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;Statically decode/understand the process that manipulates input value, mixes and plays with it in different ways and stores value in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;edx&lt;/code&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Bruteforce it&lt;/p&gt;
-  &lt;/li&gt;
+  &lt;li&gt;Decode/understand statically the process that manipulates input value, mixes and plays with it in different ways and stores value in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;edx&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;Bruteforce it.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;First approach would be fairly easy in this case. Indeed, if you know just a little of x86 assembly and how usual and simple code constructs map to it, you probably already recognize this sequence. But for today, let’s explore the second option of bruteforcing it, motivated by two reasons:&lt;/p&gt;
+&lt;p&gt;First approach would be fairly easy in this case. Indeed, if you know just a little of x86 assembly and how usual and simple code constructs map to it, you probably already recognize this sequence. But for today, let’s explore the second option of bruteforcing it.&lt;/p&gt;
 
-&lt;ul&gt;
-  &lt;li&gt;Show you how we can leverage radare2’s code emulation with ESIL by using the bruteforce approach as an excuse for a practical example.&lt;/li&gt;
-  &lt;li&gt;If you observe the basic block that follows the false branch of the comparison (in this case as we have a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jne&lt;/code&gt; the false branch will actually be taken when the zero flag was set, i.e. when &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eax&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;edx&lt;/code&gt; had same value as we are looking for) you will see that it makes an extra check on the input value to be &lt;em&gt;lower or equal&lt;/em&gt; than &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x14&lt;/code&gt; in order to continue to the meaningful part of the program and not to show bad message and exit. This basically means that the input magic number will be at most &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x14 = 20&lt;/code&gt;, so bruteforce should go very quick.&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;Observe the basic block that follows the false branch of the comparison. This false branch will be taken when the zero flag is set. That is when &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eax&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;edx&lt;/code&gt; have the same value because we have a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jne&lt;/code&gt; unconditional jump. You will see that this basic block makes an extra check on the input value. It checks it to be &lt;em&gt;lower or equal&lt;/em&gt; than &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x14&lt;/code&gt;. If the comparison succeeds, the flow will follow into the meaningful part of the program. Otherwise, it would should the bad message and exit.&lt;/p&gt;
+
+&lt;p&gt;The previous fact means that the input magic number will be at most &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x14 = 20&lt;/code&gt;. Therefore, a bruteforce approach should go very quick.&lt;/p&gt;
+
+&lt;p&gt;In the next section I will show you how we can leverage radare2’s code emulation with ESIL. Using the bruteforce approach will serve us as an excuse for a practical example.&lt;/p&gt;
 
 &lt;h3 id=&quot;emulation-idea&quot;&gt;Emulation idea&lt;/h3&gt;
 
 &lt;p&gt;The basic idea for bruteforce the needed input value with emulation will be as follows (note that emulation options are under &lt;strong&gt;ae&lt;/strong&gt; (sub)commands, standing for &lt;strong&gt;a&lt;/strong&gt;nalysis &lt;strong&gt;e&lt;/strong&gt;sil. Check them with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ae?&lt;/code&gt;):&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;Initialize ESIL VM state with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;aei&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;Set &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ecx&lt;/code&gt; to 0 (in the context of the emulation engine VM; remember we are not actually running the program!) with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;aer ecx = 0&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;Seek to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x90e&lt;/code&gt; (where the snippet of code computing the desired value starts) with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;s 0x90e&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;Set instruction pointer for ESIL to current seeked position with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;aeip&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;Emulate execution (stepping) until &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x92c&lt;/code&gt; (just before the subtraction is done) with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;aesu 0x92c&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;Compare values of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eax&lt;/code&gt; (gets loaded from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ecx&lt;/code&gt; where our input is stored) and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;edx&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;If they are equal, we found a valid number input&lt;/li&gt;
-  &lt;li&gt;Increment &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ecx&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;Repeat from 2 until &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ecx&lt;/code&gt; is less or equal than &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x14 = 20&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Initialize ESIL VM state with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;aei&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;Set &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ecx&lt;/code&gt; to 0 (in the context of the emulation engine VM; remember we are not actually running the program!) with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;aer ecx = 0&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;Seek to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x90e&lt;/code&gt; (where the snippet of code computing the desired value starts) with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;s 0x90e&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;Set instruction pointer for ESIL to current seeked position with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;aeip&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;Emulate execution (stepping) until &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x92c&lt;/code&gt; (just before the subtraction is done) with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;aesu 0x92c&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;Compare values of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eax&lt;/code&gt; (gets loaded from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ecx&lt;/code&gt; where our input is stored) and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;edx&lt;/code&gt;. If they are equal, we found a valid number input.&lt;/li&gt;
+  &lt;li&gt;Increment &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ecx&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;Repeat from 2 until &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ecx&lt;/code&gt; is less or equal than &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x14 = 20&lt;/code&gt;.&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;h3 id=&quot;scripting-with-r2pipe-to-perform-the-bruteforce&quot;&gt;Scripting with r2pipe to perform the bruteforce&lt;/h3&gt;
@@ -382,7 +378,7 @@ Num Paddr      Vaddr      Len Size Section  Type  String
 &lt;ul&gt;
   &lt;li&gt;&lt;strong&gt;&lt;em&gt;open&lt;/em&gt;&lt;/strong&gt;&lt;/li&gt;
   &lt;li&gt;&lt;strong&gt;&lt;em&gt;cmd&lt;/em&gt;&lt;/strong&gt;: input a r2 command and get r2 output as output&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;&lt;em&gt;cmdj&lt;/em&gt;&lt;/strong&gt;: input a r2 command with &lt;strong&gt;&lt;em&gt;j&lt;/em&gt;&lt;/strong&gt; suffix that returns json output, it will deserialize into native object.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;em&gt;cmdj&lt;/em&gt;&lt;/strong&gt;: input a r2 command with &lt;strong&gt;&lt;em&gt;j&lt;/em&gt;&lt;/strong&gt; suffix that returns json output, it will deserialize into native object&lt;/li&gt;
   &lt;li&gt;&lt;strong&gt;&lt;em&gt;quit&lt;/em&gt;&lt;/strong&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -411,7 +407,7 @@ Candidate magic number: 0
 Candidate magic number: 17
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;As we can see we have two possible candidates. If you look at the basic block we arrive for valid magic number input (in the screenshot above), you can see that it uses that value as the size for a &lt;em&gt;malloc&lt;/em&gt; call, so it is reasonable to make the educated guess that the actual &lt;strong&gt;correct&lt;/strong&gt; magic number is intended to be 17, as a malloc of size 0 would not make much sense.&lt;/p&gt;
+&lt;p&gt;As we can see we have two possible candidates. If you look at the basic block we arrive for valid magic number input (in the screenshot above), you can see that it uses that value as the size for a &lt;em&gt;malloc&lt;/em&gt; call, so it is reasonable to make the educated guess that the actual &lt;strong&gt;correct&lt;/strong&gt; magic number is intended to be 17, as a &lt;em&gt;malloc&lt;/em&gt; of size 0 would not make much sense.&lt;/p&gt;
 
 &lt;p&gt;By the way, the operation being performed is exactly a &lt;em&gt;mod 17&lt;/em&gt;, so basically is checking if &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;magic_number % 17 == 0&lt;/code&gt;. That explains why 0 is valid as well. Also you might notice that other multiples of 17 would work as well for the first check, but they won’t pass the second check to be less than 20.&lt;/p&gt;
 
@@ -487,7 +483,7 @@ WTF is wrong with u?
   &lt;li&gt;Place a &lt;strong&gt;b&lt;/strong&gt;reakpoint in that address with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;db 0x555555554ac8&lt;/code&gt;.&lt;/li&gt;
   &lt;li&gt;&lt;strong&gt;C&lt;/strong&gt;ontinue program until it breaks with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dc&lt;/code&gt;.&lt;/li&gt;
   &lt;li&gt;Get &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eax&lt;/code&gt; &lt;strong&gt;r&lt;/strong&gt;egister value. This can be done with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dr rax&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Repeat steps 4 and 5 until flag message is printed (it will be after 17 steps, as is is controlled by the counter described previously that gets compared to the first input value).&lt;/li&gt;
+  &lt;li&gt;Repeat steps 4 and 5 until flag message is printed. It will be after 17 steps, as is is controlled by the counter described previously that gets compared to the first input value.&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;p&gt;Instead of patching the jump after the comparison, we could have followed some other strategies that would have led us to same results, for example patching instruction pointer &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rip&lt;/code&gt; with value as if comparison had been successful with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dr rip = 0x555555554af8&lt;/code&gt; every time after we reach the breakpoint.&lt;/p&gt;

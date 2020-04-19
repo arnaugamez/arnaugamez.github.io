@@ -144,28 +144,29 @@ The comparison is done by subtracting `edx` from `eax` on `0x92c` and then using
 
 So we need to obtain the value that gets into `edx` for the comparison but... not that fast. Observe that the input value (the magic number) will be used for the computations that will affect the value at the end stored at `edx` so we can't just debug it, place a breakpoint before comparison, give a random input number and retrieve value at `edx`. We can proceed in two different ways:
 
-- Statically decode/understand the process that manipulates input value, mixes and plays with it in different ways and stores value in `edx`
+- Decode/understand statically the process that manipulates input value, mixes and plays with it in different ways and stores value in `edx`.
+- Bruteforce it.
 
-- Bruteforce it
+First approach would be fairly easy in this case. Indeed, if you know just a little of x86 assembly and how usual and simple code constructs map to it, you probably already recognize this sequence. But for today, let's explore the second option of bruteforcing it.
 
-First approach would be fairly easy in this case. Indeed, if you know just a little of x86 assembly and how usual and simple code constructs map to it, you probably already recognize this sequence. But for today, let's explore the second option of bruteforcing it, motivated by two reasons:
+Observe the basic block that follows the false branch of the comparison. This false branch will be taken when the zero flag is set. That is when `eax` and `edx` have the same value because we have a `jne` unconditional jump. You will see that this basic block makes an extra check on the input value. It checks it to be *lower or equal* than `0x14`. If the comparison succeeds, the flow will follow into the meaningful part of the program. Otherwise, it would should the bad message and exit.
 
-- Show you how we can leverage radare2's code emulation with ESIL by using the bruteforce approach as an excuse for a practical example.
-- If you observe the basic block that follows the false branch of the comparison (in this case as we have a `jne` the false branch will actually be taken when the zero flag was set, i.e. when `eax` and `edx` had same value as we are looking for) you will see that it makes an extra check on the input value to be _lower or equal_ than `0x14` in order to continue to the meaningful part of the program and not to show bad message and exit. This basically means that the input magic number will be at most `0x14 = 20`, so bruteforce should go very quick.
+The previous fact means that the input magic number will be at most `0x14 = 20`. Therefore, a bruteforce approach should go very quick.
+
+In the next section I will show you how we can leverage radare2's code emulation with ESIL. Using the bruteforce approach will serve us as an excuse for a practical example.
 
 ### Emulation idea
 
 The basic idea for bruteforce the needed input value with emulation will be as follows (note that emulation options are under **ae** (sub)commands, standing for **a**nalysis **e**sil. Check them with `ae?`):
 
-1. Initialize ESIL VM state with `aei`
-2. Set `ecx` to 0 (in the context of the emulation engine VM; remember we are not actually running the program!) with `aer ecx = 0`
-3. Seek to `0x90e` (where the snippet of code computing the desired value starts) with `s 0x90e`
-4. Set instruction pointer for ESIL to current seeked position with `aeip`
-5. Emulate execution (stepping) until `0x92c` (just before the subtraction is done) with `aesu 0x92c`
-6. Compare values of `eax` (gets loaded from `ecx` where our input is stored) and `edx`
-7. If they are equal, we found a valid number input
-8. Increment `ecx`
-9. Repeat from 2 until `ecx` is less or equal than `0x14 = 20`
+1. Initialize ESIL VM state with `aei`.
+2. Set `ecx` to 0 (in the context of the emulation engine VM; remember we are not actually running the program!) with `aer ecx = 0`.
+3. Seek to `0x90e` (where the snippet of code computing the desired value starts) with `s 0x90e`.
+4. Set instruction pointer for ESIL to current seeked position with `aeip`.
+5. Emulate execution (stepping) until `0x92c` (just before the subtraction is done) with `aesu 0x92c`.
+6. Compare values of `eax` (gets loaded from `ecx` where our input is stored) and `edx`. If they are equal, we found a valid number input.
+8. Increment `ecx`.
+9. Repeat from 2 until `ecx` is less or equal than `0x14 = 20`.
 
 ### Scripting with r2pipe to perform the bruteforce
 
@@ -173,7 +174,7 @@ We will use r2pipe API to script on top of r2 with python and do the bruteforce 
 
 - ***open***
 - ***cmd***: input a r2 command and get r2 output as output
-- ***cmdj***: input a r2 command with ***j*** suffix that returns json output, it will deserialize into native object.
+- ***cmdj***: input a r2 command with ***j*** suffix that returns json output, it will deserialize into native object
 - ***quit***
 
 With that in mind we can create this simple script that will iterate over possible values and print when there is a possible candidate:
@@ -203,7 +204,7 @@ Candidate magic number: 0
 Candidate magic number: 17
 ```
 
-As we can see we have two possible candidates. If you look at the basic block we arrive for valid magic number input (in the screenshot above), you can see that it uses that value as the size for a *malloc* call, so it is reasonable to make the educated guess that the actual **correct** magic number is intended to be 17, as a malloc of size 0 would not make much sense.
+As we can see we have two possible candidates. If you look at the basic block we arrive for valid magic number input (in the screenshot above), you can see that it uses that value as the size for a *malloc* call, so it is reasonable to make the educated guess that the actual **correct** magic number is intended to be 17, as a *malloc* of size 0 would not make much sense.
 
 By the way, the operation being performed is exactly a *mod 17*, so basically is checking if `magic_number % 17 == 0`. That explains why 0 is valid as well. Also you might notice that other multiples of 17 would work as well for the first check, but they won't pass the second check to be less than 20.
 
@@ -281,7 +282,7 @@ Now the procedure will be as follows (note that **d**ebug options are under **d*
 3. Place a **b**reakpoint in that address with `db 0x555555554ac8`.
 4. **C**ontinue program until it breaks with `dc`.
 5. Get `eax` **r**egister value. This can be done with `dr rax`.
-6. Repeat steps 4 and 5 until flag message is printed (it will be after 17 steps, as is is controlled by the counter described previously that gets compared to the first input value).
+6. Repeat steps 4 and 5 until flag message is printed. It will be after 17 steps, as is is controlled by the counter described previously that gets compared to the first input value.
 
 Instead of patching the jump after the comparison, we could have followed some other strategies that would have led us to same results, for example patching instruction pointer `rip` with value as if comparison had been successful with `dr rip = 0x555555554af8` every time after we reach the breakpoint.
 
