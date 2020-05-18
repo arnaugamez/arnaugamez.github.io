@@ -39,6 +39,6 @@ Co-founder and president of Hacking Lliure, a catalan non-profit hacking associa
 
 Involved in radare2 community since 2017, mainly trying to make it accessible to beginners through introductory [talks](/talks) and workshops.
 
-Also helping to organize r2con, the radare2 congress, held every year in early Septemeber @ Barcelona.
+Also helping to organize r2con, the radare2 congress, held every year in early September @ Barcelona.
 
 [![Twitter Follow @radareorg](https://img.shields.io/twitter/follow/radareorg?style=social)](https://twitter.com/intent/follow?screen_name=radareorg)
