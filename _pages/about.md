@@ -4,18 +4,20 @@ title: "About"
 classes: wide
 ---
 
-Hi there! My name is Arnau Gàmez i Montolio, from lovely Barcelona. I am currently finishing my studies in both Mathematics and Computer Engineering. 
+Hi there! My name is Arnau Gàmez i Montolio, from lovely Barcelona.
 
-Passionate about hacking and information security since I can remember. Recently I have been particularly interested in the field of reverse (code) engineering, including but not limited to:
+I am passionate about hacking and information security since I can remember. Recently I have been particularly interested in the field of reverse (code) engineering, including but not limited to:
 
 - Code (de)obfuscation
 - Malware analysis
 - Binary formats
 - Vulnerability research and exploit development
 
+I also hold a double degree in Mathematics and Computer Engineering.
+
 [![Twitter Follow @arnaugamez](https://img.shields.io/twitter/follow/arnaugamez?style=social)](https://twitter.com/intent/follow?screen_name=arnaugamez)
 
-I am also associated with the following groups
+I am associated with the following groups:
 
 ### Hacking Lliure
 

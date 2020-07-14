@@ -9,8 +9,8 @@
   <head>
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>Digging Deeper into Gmail URLs | Arnau Gàmez i Montolio</title>
-<meta name="description" content="Find my published research on extracting timestamps and other information from Gmail URLs with the accompanying tool Gmail URL Decoder that I developed during my DFIR internship at Arsenal.">
+<!-- begin _includes/seo.html --><title>Pwning F@st 5655v2AC router | Arnau Gàmez i Montolio</title>
+<meta name="description" content="Long story short: I set up a computer lab at home and wanted to enable Wake-on-Lan so I could power on the machine remotely whenever I needed it. Looked like easy task, but ended up having to hack into my home router in order to add a static entry on the ARP table for the machine, since the ethernet connection stops delivering power after the entry for this computer gets flushed from the ARP table cache (I assume due to built-in power saving management) and the included router control panel did not have that option, even if accessing as admin user.">
 
 
   <meta name="author" content="Arnau Gàmez i Montolio">
@@ -19,28 +19,26 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="Arnau Gàmez i Montolio">
-<meta property="og:title" content="Digging Deeper into Gmail URLs">
-<meta property="og:url" content="http://localhost:4000/blog/2019/07/29/digging-deeper-gmail-urls/">
+<meta property="og:title" content="Pwning F@st 5655v2AC router">
+<meta property="og:url" content="http://localhost:4000/blog/2019/08/30/pwning-router-wol-arp/">
 
 
-  <meta property="og:description" content="Find my published research on extracting timestamps and other information from Gmail URLs with the accompanying tool Gmail URL Decoder that I developed during my DFIR internship at Arsenal.">
-
-
-
-  <meta property="og:image" content="http://localhost:4000/assets/images/posts/GmailURLdecoder.jpg">
-
-
-
-
-
-  <meta property="article:published_time" content="2019-07-29T00:00:00+02:00">
+  <meta property="og:description" content="Long story short: I set up a computer lab at home and wanted to enable Wake-on-Lan so I could power on the machine remotely whenever I needed it. Looked like easy task, but ended up having to hack into my home router in order to add a static entry on the ARP table for the machine, since the ethernet connection stops delivering power after the entry for this computer gets flushed from the ARP table cache (I assume due to built-in power saving management) and the included router control panel did not have that option, even if accessing as admin user.">
 
 
 
 
 
 
-<link rel="canonical" href="http://localhost:4000/blog/2019/07/29/digging-deeper-gmail-urls/">
+
+  <meta property="article:published_time" content="2019-08-30T00:00:00+02:00">
+
+
+
+
+
+
+<link rel="canonical" href="http://localhost:4000/blog/2019/08/30/pwning-router-wol-arp/">
 
 
 
@@ -283,20 +281,20 @@
 
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
-    <meta itemprop="headline" content="Digging Deeper into Gmail URLs">
-    <meta itemprop="description" content="Find my published research on extracting timestamps and other information from Gmail URLs with the accompanying tool Gmail URL Decoder that I developed during my DFIR internship at Arsenal.">
-    <meta itemprop="datePublished" content="2019-07-29T00:00:00+02:00">
+    <meta itemprop="headline" content="Pwning F@st 5655v2AC router">
+    <meta itemprop="description" content="Long story short: I set up a computer lab at home and wanted to enable Wake-on-Lan so I could power on the machine remotely whenever I needed it. Looked like easy task, but ended up having to hack into my home router in order to add a static entry on the ARP table for the machine, since the ethernet connection stops delivering power after the entry for this computer gets flushed from the ARP table cache (I assume due to built-in power saving management) and the included router control panel did not have that option, even if accessing as admin user.">
+    <meta itemprop="datePublished" content="2019-08-30T00:00:00+02:00">
     
 
     <div class="page__inner-wrap">
       
         <header>
-          <h1 id="page-title" class="page__title" itemprop="headline">Digging Deeper into Gmail URLs
+          <h1 id="page-title" class="page__title" itemprop="headline">Pwning F@st 5655v2AC router
 </h1>
           
           <p class="page__meta">
             
-              <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2019-07-29T00:00:00+02:00">Jul 29, 2019 </time>&emsp;
+              <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2019-08-30T00:00:00+02:00">Aug 30, 2019 </time>&emsp;
             
             
               <i class="far fa-clock" aria-hidden="true"></i> 
@@ -317,9 +315,10 @@
         
 
         
-        <p>Find my published research on extracting timestamps and other information from Gmail URLs with the accompanying tool <strong><em>Gmail URL Decoder</em></strong> that I developed during my DFIR internship at <a href="https://arsenalrecon.com/">Arsenal</a>.</p>
+        <p><strong>Long story short</strong>: I set up a computer lab at home and wanted to enable <a href="https://en.wikipedia.org/wiki/Wake-on-LAN">Wake-on-Lan</a> so I could power on the machine remotely whenever I needed it. Looked like easy task, but ended up having to hack into my home router in order to add a static entry on the <a href="https://en.wikipedia.org/wiki/Address_Resolution_Protocol">ARP</a> table for the machine, since the ethernet connection stops delivering power after the entry for this computer gets flushed from the ARP table cache (I assume due to built-in power saving management) and the included router control panel did not have that option, even if accessing as admin user.</p>
 
-        <div><a href="https://arsenalrecon.com/2019/07/digging-deeper-into-gmail-urls-introducing-gmail-url-decoder/" class="btn btn--primary">Direct Link</a></div>
+
+        
 
          <!-- hack to show only on posts, as are the only ones using read_time for this layout -->
         <p><a href="https://twitter.com/intent/follow?screen_name=arnaugamez"><img src="https://img.shields.io/twitter/follow/arnaugamez?style=social" alt="Twitter Follow"></a></p>
@@ -336,22 +335,22 @@
       <section class="page__share">
   
 
-  <a href="https://twitter.com/intent/tweet?text=Digging+Deeper+into+Gmail+URLs%20http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2019%2F07%2F29%2Fdigging-deeper-gmail-urls%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=Pwning+F%40st+5655v2AC+router%20http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2019%2F08%2F30%2Fpwning-router-wol-arp%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2019%2F07%2F29%2Fdigging-deeper-gmail-urls%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2019%2F08%2F30%2Fpwning-router-wol-arp%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2019%2F07%2F29%2Fdigging-deeper-gmail-urls%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2019%2F08%2F30%2Fpwning-router-wol-arp%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
       
   <nav class="pagination">
     
-      <a href="/blog/2019/07/25/hello-world/" class="pagination--pager" title="Hello world!
+      <a href="/blog/2019/07/29/digging-deeper-gmail-urls/" class="pagination--pager" title="Digging Deeper into Gmail URLs
 ">Previous</a>
     
     
-      <a href="/blog/2019/08/30/pwning-router-wol-arp/" class="pagination--pager" title="Pwning F@st 5655v2AC router
+      <a href="/blog/2019/10/21/hackupc-lmfao-writeup/" class="pagination--pager" title="Solving LMFAO stego challenge
 ">Next</a>
     
   </nav>
@@ -611,8 +610,8 @@ Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a hre
     
   <script>
     var disqus_config = function () {
-      this.page.url = "http://localhost:4000/blog/2019/07/29/digging-deeper-gmail-urls/";  /* Replace PAGE_URL with your page's canonical URL variable */
-      this.page.identifier = "/blog/2019/07/29/digging-deeper-gmail-urls"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+      this.page.url = "http://localhost:4000/blog/2019/08/30/pwning-router-wol-arp/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/blog/2019/08/30/pwning-router-wol-arp"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
     };
     (function() { /* DON'T EDIT BELOW THIS LINE */
       var d = document, s = d.createElement('script');

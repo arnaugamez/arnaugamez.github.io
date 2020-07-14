@@ -11,6 +11,12 @@ var store = [{
         "url": "http://localhost:4000/blog/2019/07/29/digging-deeper-gmail-urls/",
         "teaser": "http://localhost:4000/assets/images/posts/GmailURLdecoder.jpg"
       },{
+        "title": "Pwning F@st 5655v2AC router",
+        "excerpt":"Long story short: I set up a computer lab at home and wanted to enable Wake-on-Lan so I could power on the machine remotely whenever I needed it. Looked like easy task, but ended up having to hack into my home router in order to add a static entry on...","categories": ["Blog"],
+        "tags": ["router","ARP","WoL","Wake on Lan"],
+        "url": "http://localhost:4000/blog/2019/08/30/pwning-router-wol-arp/",
+        "teaser": null
+      },{
         "title": "Solving LMFAO stego challenge",
         "excerpt":"Last week I attended the HackUPC at Barcelona. They were running a 24h CTF-like competition with different challenges focused on algorithms, programming and some hacking. I wasn’t planning to play, but some friends got me involved in the last moment and I somehow managed to win the competition by completing...","categories": ["Blog"],
         "tags": ["hackupc","writeup","stego","steganography","thegame"],
@@ -23,9 +29,21 @@ var store = [{
         "url": "http://localhost:4000/blog/2020/04/03/hackupc-sonda-writeup/",
         "teaser": "http://localhost:4000/assets/images/posts/sonda_bb_main_3.png"
       },{
+        "title": "Dataflow analysis with radare2",
+        "excerpt":"Context   Dataflow analyisis…   Forward   Reachable definition analysis -&gt; Constant propagation (+ some folding if needed)   Theory   Simple example   Backward   Liveness analysis   Theory   Simple example   Combined   Do forward to propagate. Will lead to dead code to appear.   Problems   Branch (flow), opaque predicates.   ","categories": ["Blog"],
+        "tags": ["radare2","reversing","deobfuscation","obfuscation"],
+        "url": "http://localhost:4000/blog/2020/04/05/dataflow-analysis-radare2/",
+        "teaser": null
+      },{
         "title": "Solving lagrange reversing challenge with Cutter",
         "excerpt":"The Lagrange reversing challenge was the 6th problem included in the Advent of Corona CTF platform. The platform was uploading challenges during the first weeks of covid19 confinement, and it is still up if you want to take a look and play. Description We download the binary file lagrange_baby from...","categories": ["Blog"],
         "tags": ["radare2","reversing","Cutter","hackupc","advent"],
         "url": "http://localhost:4000/blog/2020/04/12/advent-solve-lagrange-cutter/",
         "teaser": "http://localhost:4000/assets/images/posts/lagrange_cutter_6.png"
+      },{
+        "title": "r2syntia",
+        "excerpt":" ","categories": ["Blog"],
+        "tags": ["syntia","reversing","radare2","synthesis"],
+        "url": "http://localhost:4000/blog/2020/07/14/presenting-r2syntia/",
+        "teaser": "http://localhost:4000/assets/images/posts/LMFAO.png"
       }]
