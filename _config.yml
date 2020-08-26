@@ -63,7 +63,7 @@ plugins:
 author:
   name   : "Arnau Gàmez i Montolio"
   avatar : "/assets/images/avatar.jpg"
-  bio    : "__---__<br/>👨‍🎓 &nbsp;_Maths_ & _CS_ student<br/>⏪ &nbsp;_RE_ enthusiast<br/>__---__"
+  bio    : "__---__<br/>👨‍🎓 &nbsp;_Maths_ & _CS_<br/>⏪ &nbsp;_RE_ enthusiast<br/>__---__"
   links:
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
