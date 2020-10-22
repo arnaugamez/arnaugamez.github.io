@@ -1,7 +1,7 @@
 <!doctype html>
 <!--
-  Minimal Mistakes Jekyll Theme 4.19.3 by Michael Rose
-  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Minimal Mistakes Jekyll Theme 4.20.2 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
   Free for personal and commercial use under the MIT license
   https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
 -->
@@ -14,6 +14,9 @@
 
 
   <meta name="author" content="Arnau Gàmez i Montolio">
+  
+  <meta property="article:author" content="Arnau Gàmez i Montolio">
+  
 
 
 <meta property="og:type" content="article">
@@ -191,7 +194,7 @@
     
     
       <div class="author__bio" itemprop="description">
-        <p><strong>—</strong><br />👨‍🎓  <em>Maths</em> &amp; <em>CS</em> student<br />⏪  <em>RE</em> enthusiast<br /><strong>—</strong></p>
+        <p><strong>—</strong><br />👨‍🎓  <em>Maths</em> &amp; <em>CS</em><br />⏪  <em>RE</em> enthusiast<br /><strong>—</strong></p>
 
       </div>
     
@@ -205,7 +208,7 @@
       
         
           
-            <li><a href="https://twitter.com/intent/follow?screen_name=arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i><span class="label">Twitter</span></a></li>
+            <li><a href="https://twitter.com/arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i><span class="label">Twitter</span></a></li>
           
         
           
@@ -500,19 +503,19 @@ Num Paddr      Vaddr      Len Size Section  Type  String
 <p>With that in mind we can create this simple script that will iterate over possible values and print when there is a possible candidate:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">r2pipe</span>
-<span class="n">r2</span> <span class="o">=</span> <span class="n">r2</span><span class="o">.</span><span class="nb">open</span><span class="p">(</span><span class="s">"./sonda"</span><span class="p">)</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="n">r2</span><span class="p">.</span><span class="nb">open</span><span class="p">(</span><span class="s">"./sonda"</span><span class="p">)</span>
 
-<span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"aei"</span><span class="p">)</span>
+<span class="n">r2</span><span class="p">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"aei"</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mh">0x14</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"aer ecx = "</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span>
-    <span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"s 0x90e"</span><span class="p">)</span>
-    <span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"aeip"</span><span class="p">)</span>
-    <span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"aesu 0x92c"</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"aer eax"</span><span class="p">)</span> <span class="o">==</span> <span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"aer edx"</span><span class="p">)):</span>
+    <span class="n">r2</span><span class="p">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"aer ecx = "</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span>
+    <span class="n">r2</span><span class="p">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"s 0x90e"</span><span class="p">)</span>
+    <span class="n">r2</span><span class="p">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"aeip"</span><span class="p">)</span>
+    <span class="n">r2</span><span class="p">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"aesu 0x92c"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">r2</span><span class="p">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"aer eax"</span><span class="p">)</span> <span class="o">==</span> <span class="n">r2</span><span class="p">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"aer edx"</span><span class="p">)):</span>
         <span class="k">print</span><span class="p">(</span><span class="s">"Candidate magic number: "</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span>
         
-<span class="n">r2</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+<span class="n">r2</span><span class="p">.</span><span class="n">quit</span><span class="p">()</span>
 </code></pre></div></div>
 
 <p>We can run this script and get:</p>
@@ -688,17 +691,17 @@ asdf
 <p>As we are now scripting with python, we don’t need to define a macro at all. Indeed, it will be better just to iterate 17 times and store the <code class="language-plaintext highlighter-rouge">rax</code> value and subtract it from previous one to get the correct char of the flag at each step. Afterwards we will simply print the obtained flag.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">r2pipe</span>
-<span class="n">r2</span> <span class="o">=</span> <span class="n">r2pipe</span><span class="o">.</span><span class="nb">open</span><span class="p">(</span><span class="s">"./sonda"</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="p">[</span><span class="s">'-d'</span><span class="p">,</span> <span class="s">'-R'</span><span class="p">,</span> <span class="s">'stdin=input.txt'</span><span class="p">,</span> <span class="s">'-R'</span><span class="p">,</span> <span class="s">'aslr=no'</span><span class="p">])</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="n">r2pipe</span><span class="p">.</span><span class="nb">open</span><span class="p">(</span><span class="s">"./sonda"</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="p">[</span><span class="s">'-d'</span><span class="p">,</span> <span class="s">'-R'</span><span class="p">,</span> <span class="s">'stdin=input.txt'</span><span class="p">,</span> <span class="s">'-R'</span><span class="p">,</span> <span class="s">'aslr=no'</span><span class="p">])</span>
 
 <span class="n">flag</span> <span class="o">=</span> <span class="s">""</span>
 <span class="n">pre</span> <span class="o">=</span> <span class="mi">0</span>
 
-<span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"wa jmp 0x555555554af8 @ 0x555555554acb"</span><span class="p">)</span>
-<span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"db 0x555555554ac8"</span><span class="p">)</span>
+<span class="n">r2</span><span class="p">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"wa jmp 0x555555554af8 @ 0x555555554acb"</span><span class="p">)</span>
+<span class="n">r2</span><span class="p">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"db 0x555555554ac8"</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">17</span><span class="p">):</span>
-    <span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"dc"</span><span class="p">)</span>
-    <span class="n">cur</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"dr rax"</span><span class="p">),</span> <span class="mi">16</span><span class="p">)</span>
+    <span class="n">r2</span><span class="p">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"dc"</span><span class="p">)</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">r2</span><span class="p">.</span><span class="n">cmd</span><span class="p">(</span><span class="s">"dr rax"</span><span class="p">),</span> <span class="mi">16</span><span class="p">)</span>
     <span class="n">flag</span> <span class="o">+=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">cur</span> <span class="o">-</span> <span class="n">pre</span><span class="p">)</span>
     <span class="n">pre</span> <span class="o">=</span> <span class="n">cur</span>
 
@@ -997,7 +1000,7 @@ flag{6n|L0V"6&gt;f\$JE{uY}
     
       
         
-          <li><a href="https://twitter.com/intent/follow?screen_name=arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+          <li><a href="https://twitter.com/arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
         
       
         

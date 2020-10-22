@@ -146,9 +146,9 @@ a:focus, button:focus { /* Default*/ outline: thin dotted #6f777d; /* Webkit*/ o
 * { box-sizing: border-box; }
 
 html { /* apply a natural box layout model to all elements */ box-sizing: border-box; background-color: #fff; font-size: 16px; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
-@media (min-width: 48em) { html { font-size: 18px; } }
-@media (min-width: 64em) { html { font-size: 19px; } }
-@media (min-width: 80em) { html { font-size: 20px; } }
+@media (min-width: 48em) { html { font-size: 17px; } }
+@media (min-width: 64em) { html { font-size: 18px; } }
+@media (min-width: 80em) { html { font-size: 19px; } }
 
 /* Remove margin */
 body { margin: 0; }
@@ -949,7 +949,7 @@ body { display: -webkit-box; display: -ms-flexbox; display: flex; min-height: 10
 .page__title { margin-top: 0; line-height: 1; }
 .page__title + .page__meta, .page__title + .comment__date { margin-top: -0.5em; }
 
-.page__lead { font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif; font-size: 1.25em; }
+.page__lead { font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif; font-size: 1em; }
 
 .page__content { /* paragraph indents */ /* blockquote citations */ }
 .page__content h2 { padding-bottom: 0.5em; border-bottom: 1px solid #f2f3f3; }
