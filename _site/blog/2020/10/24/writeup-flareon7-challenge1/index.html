@@ -1,0 +1,760 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.20.2 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Write-up for FlareOn7 challenge #1 - fidler | Arnau Gàmez i Montolio</title>
+<meta name="description" content="* GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS *">
+
+
+  <meta name="author" content="Arnau Gàmez i Montolio">
+  
+  <meta property="article:author" content="Arnau Gàmez i Montolio">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Arnau Gàmez i Montolio">
+<meta property="og:title" content="Write-up for FlareOn7 challenge #1 - fidler">
+<meta property="og:url" content="http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge1/">
+
+
+  <meta property="og:description" content="* GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS *">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-10-24T00:00:00+02:00">
+
+
+
+
+
+
+<link rel="canonical" href="http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge1/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Arnau Gàmez i Montolio Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+<link rel="manifest" href="/assets/favicon/site.webmanifest">
+<link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#5bbad5">
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico">
+<meta name="msapplication-TileColor" content="#00aba9">
+<meta name="msapplication-config" content="/assets/favicon/browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/images/logo.png" alt=""></a>
+        
+        <a class="site-title" href="/">
+          ~/
+          <span class="site-subtitle">Hacking · Reversing · Maths</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/">blog</a>
+            </li><li class="masthead__menu-item">
+              <a href="/talks/">talks</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">about</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/images/avatar.jpg" alt="Arnau Gàmez i Montolio" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Arnau Gàmez i Montolio</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p><strong>—</strong><br />👨‍🎓  <em>Maths</em> &amp; <em>CS</em><br />⏪  <em>RE</em> enthusiast<br /><strong>—</strong></p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="https://twitter.com/arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i><span class="label">Twitter</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+            <li><a href="mailto:contact [AT] [thisdomain] [DOT] com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Mail</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Write-up for FlareOn7 challenge #1 - fidler">
+    <meta itemprop="description" content="*GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS*">
+    <meta itemprop="datePublished" content="2020-10-24T00:00:00+02:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Write-up for FlareOn7 challenge #1 - fidler
+</h1>
+          
+          <p class="page__meta">
+            
+              <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-10-24T00:00:00+02:00">Oct 24, 2020 </time>&emsp;
+            
+            
+              <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 min
+
+
+            
+          </p>
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> Table of Contents</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#description">Description</a></li>
+  <li><a href="#analysis">Analysis</a></li>
+  <li><a href="#obtain-token-value">Obtain token value</a></li>
+  <li><a href="#obtain-flag">Obtain flag</a></li>
+</ul>
+
+            </nav>
+          </aside>
+        
+        <p>*
+GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS
+*</p>
+
+<h2 id="description">Description</h2>
+<p>We are introduced to the challenge with the following message:</p>
+
+<blockquote>
+  <p>Welcome to the Seventh Flare-On Challenge!</p>
+
+  <p>This is a simple game. Win it by any means necessary and the victory screen will reveal the flag. Enter the flag here on this site to score and move on to the next level.</p>
+
+  <p>This challenge is written in Python and is distributed as a runnable EXE and matching source code for your convenience. You can run the source code directly on any Python platform with PyGame if you would prefer.</p>
+</blockquote>
+
+<p>I did not even bother to install PyGame and went straight into the only interesting file <code class="language-plaintext highlighter-rouge">fidler.py</code>, which contains all the logic of the program.</p>
+
+<h2 id="analysis">Analysis</h2>
+
+<p>It is a small and very easy to follow python program. Within a quick glimpse, we inmediately bump into the following two functions: <code class="language-plaintext highlighter-rouge">decode_flag</code> and <code class="language-plaintext highlighter-rouge">victory_screen</code>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">decode_flag</span><span class="p">(</span><span class="n">frob</span><span class="p">):</span>
+    <span class="n">last_value</span> <span class="o">=</span> <span class="n">frob</span>
+    <span class="n">encoded_flag</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1135</span><span class="p">,</span> <span class="mi">1038</span><span class="p">,</span> <span class="mi">1126</span><span class="p">,</span> <span class="mi">1028</span><span class="p">,</span> <span class="mi">1117</span><span class="p">,</span> <span class="mi">1071</span><span class="p">,</span> <span class="mi">1094</span><span class="p">,</span> <span class="mi">1077</span><span class="p">,</span> <span class="mi">1121</span><span class="p">,</span> <span class="mi">1087</span><span class="p">,</span> <span class="mi">1110</span><span class="p">,</span> <span class="mi">1092</span><span class="p">,</span> <span class="mi">1072</span><span class="p">,</span> <span class="mi">1095</span><span class="p">,</span> <span class="mi">1090</span><span class="p">,</span> <span class="mi">1027</span><span class="p">,</span>
+                    <span class="mi">1127</span><span class="p">,</span> <span class="mi">1040</span><span class="p">,</span> <span class="mi">1137</span><span class="p">,</span> <span class="mi">1030</span><span class="p">,</span> <span class="mi">1127</span><span class="p">,</span> <span class="mi">1099</span><span class="p">,</span> <span class="mi">1062</span><span class="p">,</span> <span class="mi">1101</span><span class="p">,</span> <span class="mi">1123</span><span class="p">,</span> <span class="mi">1027</span><span class="p">,</span> <span class="mi">1136</span><span class="p">,</span> <span class="mi">1054</span><span class="p">]</span>
+    <span class="n">decoded_flag</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">encoded_flag</span><span class="p">)):</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">encoded_flag</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="o">-</span> <span class="p">((</span><span class="n">i</span><span class="o">%</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">i</span><span class="o">%</span><span class="mi">3</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span> <span class="o">^</span> <span class="n">last_value</span>
+        <span class="n">decoded_flag</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="n">last_value</span> <span class="o">=</span> <span class="n">c</span>
+
+    <span class="k">return</span> <span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">decoded_flag</span><span class="p">])</span>
+
+
+<span class="k">def</span> <span class="nf">victory_screen</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
+    <span class="n">screen</span> <span class="o">=</span> <span class="n">pg</span><span class="p">.</span><span class="n">display</span><span class="p">.</span><span class="n">set_mode</span><span class="p">((</span><span class="mi">640</span><span class="p">,</span> <span class="mi">160</span><span class="p">))</span>
+    <span class="n">clock</span> <span class="o">=</span> <span class="n">pg</span><span class="p">.</span><span class="n">time</span><span class="p">.</span><span class="n">Clock</span><span class="p">()</span>
+    <span class="n">heading</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="s">'If the following key ends with @flare-on.com you probably won!'</span><span class="p">,</span>
+                    <span class="n">color</span><span class="o">=</span><span class="n">pg</span><span class="p">.</span><span class="n">Color</span><span class="p">(</span><span class="s">'gold'</span><span class="p">),</span> <span class="n">font</span><span class="o">=</span><span class="n">pg</span><span class="p">.</span><span class="n">font</span><span class="p">.</span><span class="n">Font</span><span class="p">(</span><span class="s">'fonts/arial.ttf'</span><span class="p">,</span> <span class="mi">22</span><span class="p">))</span>
+    <span class="n">flag_label</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">105</span><span class="p">,</span> <span class="s">'Flag:'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">pg</span><span class="p">.</span><span class="n">Color</span><span class="p">(</span><span class="s">'gold'</span><span class="p">),</span> <span class="n">font</span><span class="o">=</span><span class="n">pg</span><span class="p">.</span><span class="n">font</span><span class="p">.</span><span class="n">Font</span><span class="p">(</span><span class="s">'fonts/arial.ttf'</span><span class="p">,</span> <span class="mi">22</span><span class="p">))</span>
+    <span class="n">flag_content_label</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="s">'the_flag_goes_here'</span><span class="p">,</span>
+                               <span class="n">color</span><span class="o">=</span><span class="n">pg</span><span class="p">.</span><span class="n">Color</span><span class="p">(</span><span class="s">'red'</span><span class="p">),</span> <span class="n">font</span><span class="o">=</span><span class="n">pg</span><span class="p">.</span><span class="n">font</span><span class="p">.</span><span class="n">Font</span><span class="p">(</span><span class="s">'fonts/arial.ttf'</span><span class="p">,</span> <span class="mi">32</span><span class="p">))</span>
+
+    <span class="n">controls</span> <span class="o">=</span> <span class="p">[</span><span class="n">heading</span><span class="p">,</span> <span class="n">flag_label</span><span class="p">,</span> <span class="n">flag_content_label</span><span class="p">]</span>
+    <span class="n">done</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="n">flag_content_label</span><span class="p">.</span><span class="n">change_text</span><span class="p">(</span><span class="n">decode_flag</span><span class="p">(</span><span class="n">token</span><span class="p">))</span>
+    
+    <span class="c1"># --snip--
+</span></code></pre></div></div>
+
+<p>The function <code class="language-plaintext highlighter-rouge">decode_flag</code> runs a fairly easy decryption routine to retrive the flag, depending on the parameter <code class="language-plaintext highlighter-rouge">frob</code> received. This function will be called from <code class="language-plaintext highlighter-rouge">victory_screen</code> function passing as argument the same <code class="language-plaintext highlighter-rouge">token</code> parameter it received, without applying any modification to it.</p>
+
+<p>If we look for calls to <code class="language-plaintext highlighter-rouge">victory_screen</code> function, we find the following snippet of code under <code class="language-plaintext highlighter-rouge">game_screen</code> function:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">game_screen</span><span class="p">():</span>
+    <span class="c1"># --snip--
+</span>    <span class="n">target_amount</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">36</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">35</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">current_coins</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">target_amount</span> <span class="o">-</span> <span class="mi">2</span><span class="o">**</span><span class="mi">20</span><span class="p">):</span>
+        <span class="k">while</span> <span class="n">current_coins</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="n">target_amount</span> <span class="o">+</span> <span class="mi">2</span><span class="o">**</span><span class="mi">20</span><span class="p">):</span>
+            <span class="n">current_coins</span> <span class="o">-=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">20</span>
+        <span class="n">victory_screen</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">current_coins</span> <span class="o">/</span> <span class="mi">10</span><span class="o">**</span><span class="mi">8</span><span class="p">))</span>
+        <span class="k">return</span>
+    <span class="c1"># --snip--
+</span></code></pre></div></div>
+
+<p>We see that the <code class="language-plaintext highlighter-rouge">token</code> argument passed to <code class="language-plaintext highlighter-rouge">victory_screen</code> will be equal to <code class="language-plaintext highlighter-rouge">int(current_coins / 10**8)</code>. Thus, we need to obtain which value(s) of <code class="language-plaintext highlighter-rouge">current_coints</code> will satisfy the required conditions to arrive to this call to <code class="language-plaintext highlighter-rouge">victory_screen</code>.</p>
+
+<h2 id="obtain-token-value">Obtain token value</h2>
+
+<p>Observe that to enter the body of the first <code class="language-plaintext highlighter-rouge">if</code>, we need that:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">current_coins</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="o">^</span><span class="mi">36</span> <span class="o">+</span> <span class="mi">2</span><span class="o">^</span><span class="mi">35</span> <span class="o">-</span> <span class="mi">2</span><span class="o">^</span><span class="mi">20</span> <span class="o">=</span> <span class="mi">103078166528</span>
+</code></pre></div></div>
+<p>Then, it will enter a <code class="language-plaintext highlighter-rouge">while</code> loop that decreases the value of <code class="language-plaintext highlighter-rouge">current_coins</code> by <code class="language-plaintext highlighter-rouge">2^20</code> until the following condition is met:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">current_coins</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">^</span><span class="mi">36</span> <span class="o">+</span> <span class="mi">2</span><span class="o">^</span><span class="mi">35</span> <span class="o">+</span> <span class="mi">2</span><span class="o">^</span><span class="mi">20</span> <span class="o">=</span> <span class="mi">103080263680</span>
+</code></pre></div></div>
+<p>Thus, we get that <code class="language-plaintext highlighter-rouge">current_coins</code> must satisfy:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">103078166528</span> <span class="o">&lt;</span> <span class="n">current_coins</span> <span class="o">&lt;</span> <span class="mi">103080263680</span>
+</code></pre></div></div>
+
+<p>Notice that <code class="language-plaintext highlighter-rouge">current_coins</code> is then divided by <code class="language-plaintext highlighter-rouge">10^8</code> and casted to <code class="language-plaintext highlighter-rouge">int</code> type. This will essentially remove the 8 least significant digits of <code class="language-plaintext highlighter-rouge">current_coins</code>, meaning that any <code class="language-plaintext highlighter-rouge">current_coins</code> value within the valid interval will lead to the <code class="language-plaintext highlighter-rouge">token</code> argument having a value of <code class="language-plaintext highlighter-rouge">1030</code>. Thus, our token must be <code class="language-plaintext highlighter-rouge">1030</code>.</p>
+
+<h2 id="obtain-flag">Obtain flag</h2>
+
+<p>To get the flag, we can simply extract the <code class="language-plaintext highlighter-rouge">decode_flag</code> function into a new python file and print the value it returns when passing <code class="language-plaintext highlighter-rouge">1030</code> as argument.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">decode_flag</span><span class="p">(</span><span class="n">frob</span><span class="p">):</span>
+    <span class="n">last_value</span> <span class="o">=</span> <span class="n">frob</span>
+    <span class="n">encoded_flag</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1135</span><span class="p">,</span> <span class="mi">1038</span><span class="p">,</span> <span class="mi">1126</span><span class="p">,</span> <span class="mi">1028</span><span class="p">,</span> <span class="mi">1117</span><span class="p">,</span> <span class="mi">1071</span><span class="p">,</span> <span class="mi">1094</span><span class="p">,</span> <span class="mi">1077</span><span class="p">,</span> <span class="mi">1121</span><span class="p">,</span> <span class="mi">1087</span><span class="p">,</span> <span class="mi">1110</span><span class="p">,</span> <span class="mi">1092</span><span class="p">,</span> <span class="mi">1072</span><span class="p">,</span> <span class="mi">1095</span><span class="p">,</span> <span class="mi">1090</span><span class="p">,</span> <span class="mi">1027</span><span class="p">,</span>
+                    <span class="mi">1127</span><span class="p">,</span> <span class="mi">1040</span><span class="p">,</span> <span class="mi">1137</span><span class="p">,</span> <span class="mi">1030</span><span class="p">,</span> <span class="mi">1127</span><span class="p">,</span> <span class="mi">1099</span><span class="p">,</span> <span class="mi">1062</span><span class="p">,</span> <span class="mi">1101</span><span class="p">,</span> <span class="mi">1123</span><span class="p">,</span> <span class="mi">1027</span><span class="p">,</span> <span class="mi">1136</span><span class="p">,</span> <span class="mi">1054</span><span class="p">]</span>
+    <span class="n">decoded_flag</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">encoded_flag</span><span class="p">)):</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">encoded_flag</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="o">-</span> <span class="p">((</span><span class="n">i</span><span class="o">%</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">i</span><span class="o">%</span><span class="mi">3</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span> <span class="o">^</span> <span class="n">last_value</span>
+        <span class="n">decoded_flag</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="n">last_value</span> <span class="o">=</span> <span class="n">c</span>
+
+    <span class="k">return</span> <span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">decoded_flag</span><span class="p">])</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">decode_flag</span><span class="p">(</span><span class="mi">1030</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ python decoder.py
+idle_with_kitty@flare-on.com
+</code></pre></div></div>
+
+<p>So, we obtained the flag <code class="language-plaintext highlighter-rouge">idle_with_kitty@flare-on.com</code> and can move onto the next challenge!</p>
+
+<p>*
+LINK TO CHALLENGE 2 POST.
+*</p>
+
+        
+
+         <!-- hack to show only on posts, as are the only ones using read_time for this layout -->
+        <p><a href="https://twitter.com/intent/follow?screen_name=arnaugamez"><img src="https://img.shields.io/twitter/follow/arnaugamez?style=social" alt="Twitter Follow"></a></p>
+        
+        
+      </section>
+      <footer class="page__meta">
+        
+        
+
+
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Write-up+for+FlareOn7+challenge+%231+-+fidler%20http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F10%2F24%2Fwriteup-flareon7-challenge1%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F10%2F24%2Fwriteup-flareon7-challenge1%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F10%2F24%2Fwriteup-flareon7-challenge1%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/blog/2020/04/12/advent-solve-lagrange-cutter/" class="pagination--pager" title="Solving lagrange reversing challenge with Cutter
+">Previous</a>
+    
+    
+      <a href="/blog/2020/10/24/writeup-flareon7-challenge2/" class="pagination--pager" title="Write-up for FlareOn7 challenge #2 - garbage
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/blog/2020/10/24/writeup-flareon7-challenge2/" rel="permalink">Write-up for FlareOn7 challenge #2 - garbage
+</a>
+      
+    </h2>
+
+    <p class="page__meta">
+      
+        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-10-24T00:00:00+02:00">Oct 24, 2020 </time>&emsp;
+      
+      
+        <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 min
+
+
+      
+    </p>
+
+    <p class="archive__item-excerpt" itemprop="description">*
+GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS
+*
+
+</p>
+
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/lagrange_cutter_6.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/blog/2020/04/12/advent-solve-lagrange-cutter/" rel="permalink">Solving lagrange reversing challenge with Cutter
+</a>
+      
+    </h2>
+
+    <p class="page__meta">
+      
+        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-04-12T00:00:00+02:00">Apr 12, 2020 </time>&emsp;
+      
+      
+        <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  9 min
+
+
+      
+    </p>
+
+    <p class="archive__item-excerpt" itemprop="description">The Lagrange reversing challenge was the 6th problem included in the Advent of Corona CTF platform. The platform was uploading challenges during the first we...</p>
+
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/blog/2020/04/05/dataflow-analysis-radare2/" rel="permalink">Dataflow analysis with radare2
+</a>
+      
+    </h2>
+
+    <p class="page__meta">
+      
+        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-04-05T00:00:00+02:00">Apr 05, 2020 </time>&emsp;
+      
+      
+        <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  < 1 min
+
+
+      
+    </p>
+
+    <p class="archive__item-excerpt" itemprop="description">Context
+
+</p>
+
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/sonda_bb_main_3.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/blog/2020/04/03/hackupc-sonda-writeup/" rel="permalink">Solving sonda reversing challenge with radare2
+</a>
+      
+    </h2>
+
+    <p class="page__meta">
+      
+        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-04-03T00:00:00+02:00">Apr 03, 2020 </time>&emsp;
+      
+      
+        <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  18 min
+
+
+      
+    </p>
+
+    <p class="archive__item-excerpt" itemprop="description">This was the reversing challenge from the HackUPC TheGame CTF-like competition. A slightly modified version has also been used recently during the Advent of ...</p>
+
+
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow" style="text-align:center">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://twitter.com/arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+        
+      
+        
+          <li><a href="https://github.com/arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="mailto:contact [AT] [thisdomain] [DOT] com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Mail</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright" style="text-align:center">
+
+<small>
+&copy; 2020 Arnau Gàmez i Montolio.
+</small>
+<br>
+
+<small><i>
+Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a> | Icon made by <a href="https://www.freepik.com/home">Freepik</a> from <a href="https://flaticon.com">flaticon.com</a>
+</i></small>
+</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge1/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/blog/2020/10/24/writeup-flareon7-challenge1"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://arnaugamez.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

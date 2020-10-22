@@ -9,8 +9,8 @@
   <head>
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>r2syntia | Arnau Gàmez i Montolio</title>
-<meta name="description" content="">
+<!-- begin _includes/seo.html --><title>Write-up for FlareOn7 challenge #2 - garbage | Arnau Gàmez i Montolio</title>
+<meta name="description" content="* GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS *">
 
 
   <meta name="author" content="Arnau Gàmez i Montolio">
@@ -22,28 +22,26 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="Arnau Gàmez i Montolio">
-<meta property="og:title" content="r2syntia">
-<meta property="og:url" content="http://localhost:4000/blog/2020/07/14/presenting-r2syntia/">
+<meta property="og:title" content="Write-up for FlareOn7 challenge #2 - garbage">
+<meta property="og:url" content="http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge2/">
 
 
-  <meta property="og:description" content="">
-
-
-
-  <meta property="og:image" content="http://localhost:4000/assets/images/posts/LMFAO.png">
-
-
-
-
-
-  <meta property="article:published_time" content="2020-07-14T00:00:00+02:00">
+  <meta property="og:description" content="* GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS *">
 
 
 
 
 
 
-<link rel="canonical" href="http://localhost:4000/blog/2020/07/14/presenting-r2syntia/">
+
+  <meta property="article:published_time" content="2020-10-24T00:00:00+02:00">
+
+
+
+
+
+
+<link rel="canonical" href="http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge2/">
 
 
 
@@ -286,20 +284,20 @@
 
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
-    <meta itemprop="headline" content="r2syntia">
-    <meta itemprop="description" content="">
-    <meta itemprop="datePublished" content="2020-07-14T00:00:00+02:00">
+    <meta itemprop="headline" content="Write-up for FlareOn7 challenge #2 - garbage">
+    <meta itemprop="description" content="*GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS*">
+    <meta itemprop="datePublished" content="2020-10-24T00:00:00+02:00">
     
 
     <div class="page__inner-wrap">
       
         <header>
-          <h1 id="page-title" class="page__title" itemprop="headline">r2syntia
+          <h1 id="page-title" class="page__title" itemprop="headline">Write-up for FlareOn7 challenge #2 - garbage
 </h1>
           
           <p class="page__meta">
             
-              <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-07-14T00:00:00+02:00">Jul 14, 2020 </time>&emsp;
+              <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-10-24T00:00:00+02:00">Oct 24, 2020 </time>&emsp;
             
             
               <i class="far fa-clock" aria-hidden="true"></i> 
@@ -307,7 +305,7 @@
 
 
 
-  < 1 min
+  2 min
 
 
             
@@ -323,12 +321,126 @@
           <aside class="sidebar__right sticky">
             <nav class="toc">
               <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> Table of Contents</h4></header>
-              
+              <ul class="toc__menu">
+  <li><a href="#description">Description</a></li>
+  <li><a href="#analysis">Analysis</a>
+    <ul>
+      <li><a href="#fix-binary">Fix binary</a></li>
+      <li><a href="#unpack">Unpack</a></li>
+    </ul>
+  </li>
+  <li><a href="#retrieve-flag-with-emulation">Retrieve flag with emulation</a></li>
+</ul>
 
             </nav>
           </aside>
         
-        
+        <p>*
+GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS
+*</p>
+
+<h2 id="description">Description</h2>
+<p>We are introduced to the challenge with the following message:</p>
+
+<blockquote>
+  <p>One of our team members developed a Flare-On challenge but accidentally deleted it. We recovered it using extreme digital forensic techniques but it seems to be corrupted. We would fix it but we are too busy solving today’s most important information security threats affecting our global economy. You should be able to get it working again, reverse engineer it, and acquire the flag.</p>
+</blockquote>
+
+<h2 id="analysis">Analysis</h2>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch2/die.png"><img src="/assets/images/posts/flareon7_ch2/die.png" /></a>
+    <figcaption>Loop comparison for flag</figcaption>
+</figure>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch2/upx_bad.png"><img src="/assets/images/posts/flareon7_ch2/upx_bad.png" /></a>
+    <figcaption>Loop comparison for flag</figcaption>
+</figure>
+
+<h3 id="fix-binary">Fix binary</h3>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch2/pe_bear_rsrc.png"><img src="/assets/images/posts/flareon7_ch2/pe_bear_rsrc.png" /></a>
+    <figcaption>Loop comparison for flag</figcaption>
+</figure>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ radare2 -w fixed_garbage.exe
+[0x00418760]&gt; r
+40740
+[0x00418760]&gt; r 40740 + (0x400 - 0x124)
+[0x00418760]&gt; r
+41472
+</code></pre></div></div>
+
+<h3 id="unpack">Unpack</h3>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch2/upx_good.png"><img src="/assets/images/posts/flareon7_ch2/upx_good.png" /></a>
+    <figcaption>Loop comparison for flag</figcaption>
+</figure>
+
+<p>If we try to run it still does not work.</p>
+
+<p>Fix PE or do ESIL magic!</p>
+
+<h2 id="retrieve-flag-with-emulation">Retrieve flag with emulation</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ radare2 unpacked_garbage.exe
+[0x00401473]&gt; aaa
+[x] Analyze all flags starting with sym. and entry0 (aa)
+[x] Analyze function calls (aac)
+[x] Analyze len bytes of instructions for references (aar)
+[x] Check for vtables
+[x] Type matching analysis for all functions (aaft)
+[x] Propagate noreturn information
+[x] Use -AA or aaaa to perform additional experimental analysis.
+[0x00401473]&gt; s main
+[0x0040106b]&gt; pdf
+            ; CALL XREF from entry0 @ 0x4013e6
+┌ 432: int main (int argc, char **argv, char **envp);
+│           ; var LPDWORD lpNumberOfBytesWritten @ ebp-0x13c
+│           ; var LPCSTR lpFileName @ ebp-0x138
+--snip--
+│           0x00401084      bef8194100     mov esi, str.nPTnaGLkIqdcQwvieFQKGcTGOTbfMjDNmvibfBDdFBhoPaBbtfQuuGWYomtqTFqvBSKdUMmciqKSGZaosWCSoZlcIlyQpOwkcAgw ; 0x4119f8 ; "nPTnaGLkIqdcQwvieFQKGcTGOTbfMjDNmvibfBDdFBhoPaBbtfQuuGWYomtqTFqvBSKdUMmciqKSGZaosWCSoZlcIlyQpOwkcAgw "
+--snip--
+│           0x004010b3      be601a4100     mov esi, str.KglPFOsQDxBPXmclOpmsdLDEPMRWbMDzwhDGOyqAkVMRvnBeIkpZIhFznwVylfjrkqprBPAdPuaiVoVugQAlyOQQtxBNsTdPZgDH ; 0x411a60 ; "KglPFOsQDxBPXmclOpmsdLDEPMRWbMDzwhDGOyqAkVMRvnBeIkpZIhFznwVylfjrkqprBPAdPuaiVoVugQAlyOQQtxBNsTdPZgDH "
+--snip--
+│           0x00401150      53             push ebx                    ; HANDLE hTemplateFile
+│           0x00401151      6880000000     push 0x80                   ; 128 ; DWORD dwFlagsAndAttributes
+│           0x00401156      6a02           push 2                      ; 2 ; DWORD dwCreationDisposition
+│           0x00401158      53             push ebx                    ; LPSECURITY_ATTRIBUTES lpSecurityAttributes
+│           0x00401159      6a02           push 2                      ; 2 ; DWORD dwShareMode
+│           0x0040115b      6800000040     push 0x40000000             ; DWORD dwDesiredAccess
+│           0x00401160      ffb5c8feffff   push dword [lpFileName]     ; LPCSTR lpFileName
+│           0x00401166      ff150cd04000   call dword [sym.imp._CreateFileA] ; 0x40d00c ; HANDLE CreateFileA(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile)
+│           0x0040116c      8d8dc8feffff   lea ecx, [lpFileName]
+--snip--
+│       │   0x0040119d      53             push ebx                    ; LPOVERLAPPED lpOverlapped
+│       │   0x0040119e      8d85c4feffff   lea eax, [lpNumberOfBytesWritten]
+│       │   0x004011a4      50             push eax                    ; LPDWORD lpNumberOfBytesWritten
+│       │   0x004011a5      6a3d           push 0x3d                   ; '=' ; 61 ; DWORD nNumberOfBytesToWrite
+│       │   0x004011a7      ffb5c8feffff   push dword [lpFileName]     ; LPCVOID lpBuffer
+│       │   0x004011ad      56             push esi                    ; HANDLE hFile
+│       │   0x004011ae      ff1504d04000   call dword [sym.imp._WriteFile] ; 0x40d004 ; BOOL WriteFile(HANDLE hFile, LPCVOID lpBuffer, DWORD nNumberOfBytesToWrite, LPDWORD lpNumberOfBytesWritten, LPOVERLAPPED lpOverlapped)
+--snip--
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[0x0040106b]&gt; aeim
+[0x0040106b]&gt; aesu 0x00401166
+[0x00401150]&gt; aer eip=0x0040116c
+[0x00401150]&gt; aesu 0x004011ae
+[0x0040119d]&gt; afvd
+--snip--
+var lpFileName = 0x00177ec4 = 0x00177ec4 -&gt; 0x00177fa4 "MsgBox("Congrats! Your key is: C0rruptGarbag3@flare-on.com")"
+--snip--
+</code></pre></div></div>
+
+<p>We obtained the flag <code class="language-plaintext highlighter-rouge">C0rruptGarbag3@flare-on.com</code> and successfully finished this challenge!</p>
+
+<p>*
+LINK TO CHALLENGE 3 POST.
+*</p>
 
         
 
@@ -347,18 +459,18 @@
       <section class="page__share">
   
 
-  <a href="https://twitter.com/intent/tweet?text=r2syntia%20http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F07%2F14%2Fpresenting-r2syntia%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=Write-up+for+FlareOn7+challenge+%232+-+garbage%20http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F10%2F24%2Fwriteup-flareon7-challenge2%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F07%2F14%2Fpresenting-r2syntia%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F10%2F24%2Fwriteup-flareon7-challenge2%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F07%2F14%2Fpresenting-r2syntia%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F10%2F24%2Fwriteup-flareon7-challenge2%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
       
   <nav class="pagination">
     
-      <a href="/blog/2020/04/12/advent-solve-lagrange-cutter/" class="pagination--pager" title="Solving lagrange reversing challenge with Cutter
+      <a href="/blog/2020/10/24/writeup-flareon7-challenge1/" class="pagination--pager" title="Write-up for FlareOn7 challenge #1 - fidler
 ">Previous</a>
     
     
@@ -376,6 +488,47 @@
     <div class="page__related">
       <h4 class="page__related-title">You May Also Enjoy</h4>
       <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/blog/2020/10/24/writeup-flareon7-challenge1/" rel="permalink">Write-up for FlareOn7 challenge #1 - fidler
+</a>
+      
+    </h2>
+
+    <p class="page__meta">
+      
+        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-10-24T00:00:00+02:00">Oct 24, 2020 </time>&emsp;
+      
+      
+        <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 min
+
+
+      
+    </p>
+
+    <p class="archive__item-excerpt" itemprop="description">*
+GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS
+*
+
+</p>
+
+
+  </article>
+</div>
+
         
           
 
@@ -498,47 +651,6 @@
 </div>
 
         
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-      <div class="archive__item-teaser">
-        <img src="/assets/images/posts/LMFAO.png" alt="">
-      </div>
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="/blog/2019/10/21/hackupc-lmfao-writeup/" rel="permalink">Solving LMFAO stego challenge
-</a>
-      
-    </h2>
-
-    <p class="page__meta">
-      
-        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2019-10-21T00:00:00+02:00">Oct 21, 2019 </time>&emsp;
-      
-      
-        <i class="far fa-clock" aria-hidden="true"></i> 
-
-
-
-
-  4 min
-
-
-      
-    </p>
-
-    <p class="archive__item-excerpt" itemprop="description">Last week I attended the HackUPC at Barcelona. They were running a 24h CTF-like competition with different challenges focused on algorithms, programming and ...</p>
-
-
-  </article>
-</div>
-
-        
       </div>
     </div>
   
@@ -620,8 +732,8 @@ Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a hre
     
   <script>
     var disqus_config = function () {
-      this.page.url = "http://localhost:4000/blog/2020/07/14/presenting-r2syntia/";  /* Replace PAGE_URL with your page's canonical URL variable */
-      this.page.identifier = "/blog/2020/07/14/presenting-r2syntia"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+      this.page.url = "http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge2/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/blog/2020/10/24/writeup-flareon7-challenge2"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
     };
     (function() { /* DON'T EDIT BELOW THIS LINE */
       var d = document, s = d.createElement('script');

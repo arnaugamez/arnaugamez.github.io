@@ -41,9 +41,15 @@ var store = [{
         "url": "http://localhost:4000/blog/2020/04/12/advent-solve-lagrange-cutter/",
         "teaser": "http://localhost:4000/assets/images/posts/lagrange_cutter_6.png"
       },{
-        "title": "r2syntia",
-        "excerpt":" ","categories": ["Blog"],
-        "tags": ["syntia","reversing","radare2","synthesis"],
-        "url": "http://localhost:4000/blog/2020/07/14/presenting-r2syntia/",
-        "teaser": "http://localhost:4000/assets/images/posts/LMFAO.png"
+        "title": "Write-up for FlareOn7 challenge #1 - fidler",
+        "excerpt":"* GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS * Description We are introduced to the challenge with the following message: Welcome to the Seventh Flare-On Challenge! This is a simple game. Win it by any means necessary and the victory screen will reveal the flag. Enter the flag here...","categories": ["Blog"],
+        "tags": ["flareon","reversing","python","CTF"],
+        "url": "http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge1/",
+        "teaser": null
+      },{
+        "title": "Write-up for FlareOn7 challenge #2 - garbage",
+        "excerpt":"* GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS * Description We are introduced to the challenge with the following message: One of our team members developed a Flare-On challenge but accidentally deleted it. We recovered it using extreme digital forensic techniques but it seems to be corrupted. We would...","categories": ["Blog"],
+        "tags": ["flareon","reversing","radare2","emulation","esil","CTF"],
+        "url": "http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge2/",
+        "teaser": null
       }]
