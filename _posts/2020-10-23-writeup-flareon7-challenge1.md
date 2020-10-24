@@ -16,11 +16,6 @@ toc_icon: "file-alt"
 toc_sticky: true
 ---
 
-*
-GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS
-*
-
-
 ## Description
 We are introduced to the challenge with the following message:
 
@@ -135,7 +130,3 @@ idle_with_kitty@flare-on.com
 ```
 
 So, we obtained the flag `idle_with_kitty@flare-on.com` and can move onto the next challenge!
-
-*
-LINK TO CHALLENGE 2 POST.
-*

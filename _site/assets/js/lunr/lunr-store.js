@@ -11,12 +11,6 @@ var store = [{
         "url": "http://localhost:4000/blog/2019/07/29/digging-deeper-gmail-urls/",
         "teaser": "http://localhost:4000/assets/images/posts/GmailURLdecoder.jpg"
       },{
-        "title": "Pwning F@st 5655v2AC router",
-        "excerpt":"Long story short: I set up a computer lab at home and wanted to enable Wake-on-Lan so I could power on the machine remotely whenever I needed it. Looked like easy task, but ended up having to hack into my home router in order to add a static entry on...","categories": ["Blog"],
-        "tags": ["router","ARP","WoL","Wake on Lan"],
-        "url": "http://localhost:4000/blog/2019/08/30/pwning-router-wol-arp/",
-        "teaser": null
-      },{
         "title": "Solving LMFAO stego challenge",
         "excerpt":"Last week I attended the HackUPC at Barcelona. They were running a 24h CTF-like competition with different challenges focused on algorithms, programming and some hacking. I wasn’t planning to play, but some friends got me involved in the last moment and I somehow managed to win the competition by completing...","categories": ["Blog"],
         "tags": ["hackupc","writeup","stego","steganography","thegame"],
@@ -29,12 +23,6 @@ var store = [{
         "url": "http://localhost:4000/blog/2020/04/03/hackupc-sonda-writeup/",
         "teaser": "http://localhost:4000/assets/images/posts/sonda_bb_main_3.png"
       },{
-        "title": "Dataflow analysis with radare2",
-        "excerpt":"Context   Dataflow analyisis…   Forward   Reachable definition analysis -&gt; Constant propagation (+ some folding if needed)   Theory   Simple example   Backward   Liveness analysis   Theory   Simple example   Combined   Do forward to propagate. Will lead to dead code to appear.   Problems   Branch (flow), opaque predicates.   ","categories": ["Blog"],
-        "tags": ["radare2","reversing","deobfuscation","obfuscation"],
-        "url": "http://localhost:4000/blog/2020/04/05/dataflow-analysis-radare2/",
-        "teaser": null
-      },{
         "title": "Solving lagrange reversing challenge with Cutter",
         "excerpt":"The Lagrange reversing challenge was the 6th problem included in the Advent of Corona CTF platform. The platform was uploading challenges during the first weeks of covid19 confinement, and it is still up if you want to take a look and play. Description We download the binary file lagrange_baby from...","categories": ["Blog"],
         "tags": ["radare2","reversing","Cutter","hackupc","advent"],
@@ -42,14 +30,14 @@ var store = [{
         "teaser": "http://localhost:4000/assets/images/posts/lagrange_cutter_6.png"
       },{
         "title": "Write-up for FlareOn7 challenge #1 - fidler",
-        "excerpt":"* GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS * Description We are introduced to the challenge with the following message: Welcome to the Seventh Flare-On Challenge! This is a simple game. Win it by any means necessary and the victory screen will reveal the flag. Enter the flag here...","categories": ["Blog"],
+        "excerpt":"Description We are introduced to the challenge with the following message: Welcome to the Seventh Flare-On Challenge! This is a simple game. Win it by any means necessary and the victory screen will reveal the flag. Enter the flag here on this site to score and move on to the...","categories": ["Blog"],
         "tags": ["flareon","reversing","python","CTF"],
-        "url": "http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge1/",
+        "url": "http://localhost:4000/blog/2020/10/23/writeup-flareon7-challenge1/",
         "teaser": null
       },{
         "title": "Write-up for FlareOn7 challenge #2 - garbage",
-        "excerpt":"* GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS * Description We are introduced to the challenge with the following message: One of our team members developed a Flare-On challenge but accidentally deleted it. We recovered it using extreme digital forensic techniques but it seems to be corrupted. We would...","categories": ["Blog"],
+        "excerpt":"Description We are introduced to the challenge with the following message: One of our team members developed a Flare-On challenge but accidentally deleted it. We recovered it using extreme digital forensic techniques but it seems to be corrupted. We would fix it but we are too busy solving today’s most...","categories": ["Blog"],
         "tags": ["flareon","reversing","radare2","emulation","esil","CTF"],
         "url": "http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge2/",
-        "teaser": null
+        "teaser": "http://localhost:4000/assets/images/posts/flareon7_ch2/upx_bad.png"
       }]

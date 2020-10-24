@@ -10,7 +10,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>Write-up for FlareOn7 challenge #2 - garbage | Arnau Gàmez i Montolio</title>
-<meta name="description" content="* GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS *">
+<meta name="description" content="Description We are introduced to the challenge with the following message:">
 
 
   <meta name="author" content="Arnau Gàmez i Montolio">
@@ -26,9 +26,11 @@
 <meta property="og:url" content="http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge2/">
 
 
-  <meta property="og:description" content="* GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS *">
+  <meta property="og:description" content="Description We are introduced to the challenge with the following message:">
 
 
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/posts/flareon7_ch2/upx_bad.png">
 
 
 
@@ -285,7 +287,7 @@
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="Write-up for FlareOn7 challenge #2 - garbage">
-    <meta itemprop="description" content="*GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS*">
+    <meta itemprop="description" content="DescriptionWe are introduced to the challenge with the following message:">
     <meta itemprop="datePublished" content="2020-10-24T00:00:00+02:00">
     
 
@@ -305,7 +307,7 @@
 
 
 
-  2 min
+  5 min
 
 
             
@@ -323,49 +325,53 @@
               <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> Table of Contents</h4></header>
               <ul class="toc__menu">
   <li><a href="#description">Description</a></li>
-  <li><a href="#analysis">Analysis</a>
-    <ul>
-      <li><a href="#fix-binary">Fix binary</a></li>
-      <li><a href="#unpack">Unpack</a></li>
-    </ul>
-  </li>
+  <li><a href="#analysis">Analysis</a></li>
+  <li><a href="#fix-binary-and-unpack">Fix binary and unpack</a></li>
   <li><a href="#retrieve-flag-with-emulation">Retrieve flag with emulation</a></li>
 </ul>
 
             </nav>
           </aside>
         
-        <p>*
-GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS
-*</p>
-
-<h2 id="description">Description</h2>
+        <h2 id="description">Description</h2>
 <p>We are introduced to the challenge with the following message:</p>
 
 <blockquote>
   <p>One of our team members developed a Flare-On challenge but accidentally deleted it. We recovered it using extreme digital forensic techniques but it seems to be corrupted. We would fix it but we are too busy solving today’s most important information security threats affecting our global economy. You should be able to get it working again, reverse engineer it, and acquire the flag.</p>
 </blockquote>
 
+<p>This challenge consists of the single file <code class="language-plaintext highlighter-rouge">garbage.exe</code>, so we will jump directly into analyzing it.</p>
+
 <h2 id="analysis">Analysis</h2>
+<p>If we load our binary into <a href="http://ntinfo.biz/index.html">Detect It Easy</a>, we find that <code class="language-plaintext highlighter-rouge">garbage.exe</code> is a 32-bit PE Windows executable, which appears to be packed with the popular <a href="https://upx.github.io/">UPX</a> packer.</p>
 
 <figure class="align-center">
     <a href="/assets/images/posts/flareon7_ch2/die.png"><img src="/assets/images/posts/flareon7_ch2/die.png" /></a>
-    <figcaption>Loop comparison for flag</figcaption>
+    <figcaption>Output of Detect It Easy (DIE)</figcaption>
 </figure>
+
+<p>Inmediately, we try to unpack the file so we can proceed with our analysis. However, when we try to unpack the file with <code class="language-plaintext highlighter-rouge">upx</code> utility, an error message is thrown.</p>
 
 <figure class="align-center">
     <a href="/assets/images/posts/flareon7_ch2/upx_bad.png"><img src="/assets/images/posts/flareon7_ch2/upx_bad.png" /></a>
-    <figcaption>Loop comparison for flag</figcaption>
+    <figcaption>Output of upx failed unpacking</figcaption>
 </figure>
 
-<h3 id="fix-binary">Fix binary</h3>
+<p>Remember the description message of the challenge? This might be (part of) the file’s corruption it refered to. It is clear that we need to fix the binary somehow before we can unpack it successfully.</p>
+
+<h2 id="fix-binary-and-unpack">Fix binary and unpack</h2>
+
+<p>Let’s load <code class="language-plaintext highlighter-rouge">garbage.exe</code> into <a href="https://hshrzd.wordpress.com/pe-bear/">PE-Bear</a> to investigate what could be wrong with it. We quickly find a a red-colored area under the <code class="language-plaintext highlighter-rouge">.rsrc</code> section within the <code class="language-plaintext highlighter-rouge">Section Hdrs</code> tab.</p>
 
 <figure class="align-center">
     <a href="/assets/images/posts/flareon7_ch2/pe_bear_rsrc.png"><img src="/assets/images/posts/flareon7_ch2/pe_bear_rsrc.png" /></a>
-    <figcaption>Loop comparison for flag</figcaption>
+    <figcaption>Output of PE-Bear showing the mismatching .rsrc section size</figcaption>
 </figure>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ radare2 -w fixed_garbage.exe
+<p>As it indicates, there is a mismatch between the <code class="language-plaintext highlighter-rouge">.rsrc</code> section size reported in the PE header (<code class="language-plaintext highlighter-rouge">0x400</code>) and its actual size within the file (<code class="language-plaintext highlighter-rouge">0x124</code>). To fix it, we will extend the file a total of <code class="language-plaintext highlighter-rouge">(0x400 - 0x124)</code> bytes. This can be easily done with <a href="https://github.com/radareorg/radare2">radare2</a>. First of all, we make a copy of <code class="language-plaintext highlighter-rouge">garbage.exe</code> into <code class="language-plaintext highlighter-rouge">fixed_garbage.exe</code> so we can keep the original one, just in case.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cp garbage.exe fixed_garbage.exe
+$ radare2 -w fixed_garbage.exe
 [0x00418760]&gt; r
 40740
 [0x00418760]&gt; r 40740 + (0x400 - 0x124)
@@ -373,18 +379,37 @@ GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS
 41472
 </code></pre></div></div>
 
-<h3 id="unpack">Unpack</h3>
+<p>We open <code class="language-plaintext highlighter-rouge">fixed_garbage.exe</code> with radare2 in write mode (<code class="language-plaintext highlighter-rouge">-w</code>) so we can change its contents, which will be automatically stored on disk. The <code class="language-plaintext highlighter-rouge">r</code> command shows us current file size (in bytes). If we specify a new size after it, we will effectively change file size to the indicated new size. We show the new size just to check it.</p>
+
+<blockquote>
+  <p>Fun fact: we could have used the following one-liner to achieve the same result without the need to get the initial file size, as we can use output of radare2 commands as values, similarly as we do in a regular shell:</p>
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[0x00418760]&gt; r `r` + (0x400 - 0x124)
+</code></pre></div>  </div>
+</blockquote>
+
+<p>If we try again to unpack <code class="language-plaintext highlighter-rouge">fixed_garbage.exe</code> with <code class="language-plaintext highlighter-rouge">upx</code>, we will get a successful outcome resulting in the unpacked executable <code class="language-plaintext highlighter-rouge">unpacked_garbage.exe</code> being created.</p>
 
 <figure class="align-center">
     <a href="/assets/images/posts/flareon7_ch2/upx_good.png"><img src="/assets/images/posts/flareon7_ch2/upx_good.png" /></a>
-    <figcaption>Loop comparison for flag</figcaption>
+    <figcaption>Output of upx successful unpacking</figcaption>
 </figure>
 
-<p>If we try to run it still does not work.</p>
+<p>However, as we simply extended its size, the unpacked version will certainly still be corrupted. Indeed, if we attempt to launch <code class="language-plaintext highlighter-rouge">unpacked_garbage.exe</code>, we (still) get the following error message:</p>
 
-<p>Fix PE or do ESIL magic!</p>
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch2/error_open_unpacked.png"><img src="/assets/images/posts/flareon7_ch2/error_open_unpacked.png" /></a>
+    <figcaption>Error executing unpacked_garbage.exe</figcaption>
+</figure>
+
+<p>The <em>orthodox</em> way of proceeding would be analyzing the PE file and completely fixing it to the point we could execute/debug the binary. However, as we are a bit lazy to do so, and we know some radare2’s emulation magic, we might try our luck to see if that would be enough.</p>
+
+<blockquote>
+  <p>If you are interested in radare2’s emulation with ESIL, I have a couple public <a href="/talks">talks</a> covering it.</p>
+</blockquote>
 
 <h2 id="retrieve-flag-with-emulation">Retrieve flag with emulation</h2>
+
+<p>Let’s open <code class="language-plaintext highlighter-rouge">unpacked_garbage.exe</code> with radare2, analyze it and print the dissassembly of its main function.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ radare2 unpacked_garbage.exe
 [0x00401473]&gt; aaa
@@ -402,33 +427,47 @@ GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS
 │           ; var LPDWORD lpNumberOfBytesWritten @ ebp-0x13c
 │           ; var LPCSTR lpFileName @ ebp-0x138
 --snip--
-│           0x00401084      bef8194100     mov esi, str.nPTnaGLkIqdcQwvieFQKGcTGOTbfMjDNmvibfBDdFBhoPaBbtfQuuGWYomtqTFqvBSKdUMmciqKSGZaosWCSoZlcIlyQpOwkcAgw ; 0x4119f8 ; "nPTnaGLkIqdcQwvieFQKGcTGOTbfMjDNmvibfBDdFBhoPaBbtfQuuGWYomtqTFqvBSKdUMmciqKSGZaosWCSoZlcIlyQpOwkcAgw "
+│           0x00401084      mov esi, str.nPTnaGLkIqdcQwvieFQKGcTGOTbfMjDNmvibfBDdFBhoPaBbtfQuuGWYomtqTFqvBSKdUMmciqKSGZaosWCSoZlcIlyQpOwkcAgw ; 0x4119f8 ; "nPTnaGLkIqdcQwvieFQKGcTGOTbfMjDNmvibfBDdFBhoPaBbtfQuuGWYomtqTFqvBSKdUMmciqKSGZaosWCSoZlcIlyQpOwkcAgw "
 --snip--
-│           0x004010b3      be601a4100     mov esi, str.KglPFOsQDxBPXmclOpmsdLDEPMRWbMDzwhDGOyqAkVMRvnBeIkpZIhFznwVylfjrkqprBPAdPuaiVoVugQAlyOQQtxBNsTdPZgDH ; 0x411a60 ; "KglPFOsQDxBPXmclOpmsdLDEPMRWbMDzwhDGOyqAkVMRvnBeIkpZIhFznwVylfjrkqprBPAdPuaiVoVugQAlyOQQtxBNsTdPZgDH "
+│           0x004010b3      mov esi, str.KglPFOsQDxBPXmclOpmsdLDEPMRWbMDzwhDGOyqAkVMRvnBeIkpZIhFznwVylfjrkqprBPAdPuaiVoVugQAlyOQQtxBNsTdPZgDH ; 0x411a60 ; "KglPFOsQDxBPXmclOpmsdLDEPMRWbMDzwhDGOyqAkVMRvnBeIkpZIhFznwVylfjrkqprBPAdPuaiVoVugQAlyOQQtxBNsTdPZgDH "
 --snip--
-│           0x00401150      53             push ebx                    ; HANDLE hTemplateFile
-│           0x00401151      6880000000     push 0x80                   ; 128 ; DWORD dwFlagsAndAttributes
-│           0x00401156      6a02           push 2                      ; 2 ; DWORD dwCreationDisposition
-│           0x00401158      53             push ebx                    ; LPSECURITY_ATTRIBUTES lpSecurityAttributes
-│           0x00401159      6a02           push 2                      ; 2 ; DWORD dwShareMode
-│           0x0040115b      6800000040     push 0x40000000             ; DWORD dwDesiredAccess
-│           0x00401160      ffb5c8feffff   push dword [lpFileName]     ; LPCSTR lpFileName
-│           0x00401166      ff150cd04000   call dword [sym.imp._CreateFileA] ; 0x40d00c ; HANDLE CreateFileA(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile)
-│           0x0040116c      8d8dc8feffff   lea ecx, [lpFileName]
+│           0x00401150      push ebx                    ; HANDLE hTemplateFile
+│           0x00401151      push 0x80                   ; 128 ; DWORD dwFlagsAndAttributes
+│           0x00401156      push 2                      ; 2 ; DWORD dwCreationDisposition
+│           0x00401158      push ebx                    ; LPSECURITY_ATTRIBUTES lpSecurityAttributes
+│           0x00401159      push 2                      ; 2 ; DWORD dwShareMode
+│           0x0040115b      push 0x40000000             ; DWORD dwDesiredAccess
+│           0x00401160      push dword [lpFileName]     ; LPCSTR lpFileName
+│           0x00401166      call dword [sym.imp._CreateFileA] ; 0x40d00c ; HANDLE CreateFileA(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile)
+│           0x0040116c      lea ecx, [lpFileName]
 --snip--
-│       │   0x0040119d      53             push ebx                    ; LPOVERLAPPED lpOverlapped
-│       │   0x0040119e      8d85c4feffff   lea eax, [lpNumberOfBytesWritten]
-│       │   0x004011a4      50             push eax                    ; LPDWORD lpNumberOfBytesWritten
-│       │   0x004011a5      6a3d           push 0x3d                   ; '=' ; 61 ; DWORD nNumberOfBytesToWrite
-│       │   0x004011a7      ffb5c8feffff   push dword [lpFileName]     ; LPCVOID lpBuffer
-│       │   0x004011ad      56             push esi                    ; HANDLE hFile
-│       │   0x004011ae      ff1504d04000   call dword [sym.imp._WriteFile] ; 0x40d004 ; BOOL WriteFile(HANDLE hFile, LPCVOID lpBuffer, DWORD nNumberOfBytesToWrite, LPDWORD lpNumberOfBytesWritten, LPOVERLAPPED lpOverlapped)
+│       │   0x0040119d      push ebx                    ; LPOVERLAPPED lpOverlapped
+│       │   0x0040119e      lea eax, [lpNumberOfBytesWritten]
+│       │   0x004011a4      push eax                    ; LPDWORD lpNumberOfBytesWritten
+│       │   0x004011a5      push 0x3d                   ; '=' ; 61 ; DWORD nNumberOfBytesToWrite
+│       │   0x004011a7      push dword [lpFileName]     ; LPCVOID lpBuffer
+│       │   0x004011ad      push esi                    ; HANDLE hFile
+│       │   0x004011ae      call dword [sym.imp._WriteFile] ; 0x40d004 ; BOOL WriteFile(HANDLE hFile, LPCVOID lpBuffer, DWORD nNumberOfBytesToWrite, LPDWORD lpNumberOfBytesWritten, LPOVERLAPPED lpOverlapped)
 --snip--
 </code></pre></div></div>
 
+<p>Notice how there are a couple of suspicous strings being loaded. After that, we reach a call into <code class="language-plaintext highlighter-rouge">CreateFile</code> at <code class="language-plaintext highlighter-rouge">0x00401166</code> followed by another call into <code class="language-plaintext highlighter-rouge">WriteFile</code> at <code class="language-plaintext highlighter-rouge">0x004011ae</code>. Thus, we will emulate the code of the main function to retrieve the parameters being passed into those two function calls.</p>
+
+<p>First, we initialize the ESIL emulation engine along its virtual memory with <code class="language-plaintext highlighter-rouge">aeim</code>. Then we step until the offset where <code class="language-plaintext highlighter-rouge">CreateFile</code> gets called with <code class="language-plaintext highlighter-rouge">aesu 0x00401166</code>. Now we show the contents of the local variables at this precise moment with <code class="language-plaintext highlighter-rouge">afvd</code>.</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[0x0040106b]&gt; aeim
 [0x0040106b]&gt; aesu 0x00401166
-[0x00401150]&gt; aer eip=0x0040116c
+[0x00401150]&gt; afvd
+--snip--
+var lpFileName = 0x00177ec4 = 0x00177ec4 -&gt; 0x00177fe4 "sink_the_tanker.vbs"
+--snip--
+</code></pre></div></div>
+
+<p>We observe a reference to the file <code class="language-plaintext highlighter-rouge">sink_the_tanker.vbs</code>, which looks like would be the name of the file being created if we actually fixed and executed the unpacked binary.</p>
+
+<p>As we are not interested in getting into the mess of actually emulating the <code class="language-plaintext highlighter-rouge">CreateFile</code> function, we can just skip it changing the instruction pointer <code class="language-plaintext highlighter-rouge">eip</code> to the offset that comes after the function call. Then, we proceed to emulate until the call into <code class="language-plaintext highlighter-rouge">WriteFile</code> and show the contents of the local variables again.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[0x00401150]&gt; aer eip=0x0040116c
 [0x00401150]&gt; aesu 0x004011ae
 [0x0040119d]&gt; afvd
 --snip--
@@ -436,11 +475,9 @@ var lpFileName = 0x00177ec4 = 0x00177ec4 -&gt; 0x00177fa4 "MsgBox("Congrats! You
 --snip--
 </code></pre></div></div>
 
-<p>We obtained the flag <code class="language-plaintext highlighter-rouge">C0rruptGarbag3@flare-on.com</code> and successfully finished this challenge!</p>
+<p>We get a reference to a string containing an <code class="language-plaintext highlighter-rouge">MsgBox</code> function, presumably to be written into the previous <code class="language-plaintext highlighter-rouge">sink_the_tanker.vbs</code> file. Even better, the message inside this MsgBox contains our flag. Awesome!</p>
 
-<p>*
-LINK TO CHALLENGE 3 POST.
-*</p>
+<p>Thus, we obtained the flag <code class="language-plaintext highlighter-rouge">C0rruptGarbag3@flare-on.com</code> and successfully finished this challenge!</p>
 
         
 
@@ -470,7 +507,7 @@ LINK TO CHALLENGE 3 POST.
       
   <nav class="pagination">
     
-      <a href="/blog/2020/10/24/writeup-flareon7-challenge1/" class="pagination--pager" title="Write-up for FlareOn7 challenge #1 - fidler
+      <a href="/blog/2020/10/23/writeup-flareon7-challenge1/" class="pagination--pager" title="Write-up for FlareOn7 challenge #1 - fidler
 ">Previous</a>
     
     
@@ -498,14 +535,14 @@ LINK TO CHALLENGE 3 POST.
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="/blog/2020/10/24/writeup-flareon7-challenge1/" rel="permalink">Write-up for FlareOn7 challenge #1 - fidler
+        <a href="/blog/2020/10/23/writeup-flareon7-challenge1/" rel="permalink">Write-up for FlareOn7 challenge #1 - fidler
 </a>
       
     </h2>
 
     <p class="page__meta">
       
-        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-10-24T00:00:00+02:00">Oct 24, 2020 </time>&emsp;
+        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-10-23T00:00:00+02:00">Oct 23, 2020 </time>&emsp;
       
       
         <i class="far fa-clock" aria-hidden="true"></i> 
@@ -519,9 +556,8 @@ LINK TO CHALLENGE 3 POST.
       
     </p>
 
-    <p class="archive__item-excerpt" itemprop="description">*
-GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS
-*
+    <p class="archive__item-excerpt" itemprop="description">Description
+We are introduced to the challenge with the following message:
 
 </p>
 
@@ -578,45 +614,6 @@ GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS
 <div class="grid__item">
   <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
     
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="/blog/2020/04/05/dataflow-analysis-radare2/" rel="permalink">Dataflow analysis with radare2
-</a>
-      
-    </h2>
-
-    <p class="page__meta">
-      
-        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-04-05T00:00:00+02:00">Apr 05, 2020 </time>&emsp;
-      
-      
-        <i class="far fa-clock" aria-hidden="true"></i> 
-
-
-
-
-  < 1 min
-
-
-      
-    </p>
-
-    <p class="archive__item-excerpt" itemprop="description">Context
-
-</p>
-
-
-  </article>
-</div>
-
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
       <div class="archive__item-teaser">
         <img src="/assets/images/posts/sonda_bb_main_3.png" alt="">
       </div>
@@ -645,6 +642,47 @@ GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS
     </p>
 
     <p class="archive__item-excerpt" itemprop="description">This was the reversing challenge from the HackUPC TheGame CTF-like competition. A slightly modified version has also been used recently during the Advent of ...</p>
+
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/LMFAO.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/blog/2019/10/21/hackupc-lmfao-writeup/" rel="permalink">Solving LMFAO stego challenge
+</a>
+      
+    </h2>
+
+    <p class="page__meta">
+      
+        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2019-10-21T00:00:00+02:00">Oct 21, 2019 </time>&emsp;
+      
+      
+        <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  4 min
+
+
+      
+    </p>
+
+    <p class="archive__item-excerpt" itemprop="description">Last week I attended the HackUPC at Barcelona. They were running a 24h CTF-like competition with different challenges focused on algorithms, programming and ...</p>
 
 
   </article>

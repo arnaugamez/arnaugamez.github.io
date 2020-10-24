@@ -1,8 +1,148 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-10-22T22:31:10+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Arnau Gàmez i Montolio</title><subtitle>Arnau Gàmez i Montolio's (@arnaugamez) personal blog. Hacking, Reverse Engineering and Mathematics</subtitle><author><name>Arnau Gàmez i Montolio</name></author><entry><title type="html">Write-up for FlareOn7 challenge #1 - fidler</title><link href="http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge1/" rel="alternate" type="text/html" title="Write-up for FlareOn7 challenge #1 - fidler" /><published>2020-10-24T00:00:00+02:00</published><updated>2020-10-24T00:00:00+02:00</updated><id>http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge1</id><content type="html" xml:base="http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge1/">&lt;p&gt;*
-GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS
-*&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-10-24T20:11:17+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Arnau Gàmez i Montolio</title><subtitle>Arnau Gàmez i Montolio's (@arnaugamez) personal blog. Hacking, Reverse Engineering and Mathematics</subtitle><author><name>Arnau Gàmez i Montolio</name></author><entry><title type="html">Write-up for FlareOn7 challenge #2 - garbage</title><link href="http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge2/" rel="alternate" type="text/html" title="Write-up for FlareOn7 challenge #2 - garbage" /><published>2020-10-24T00:00:00+02:00</published><updated>2020-10-24T00:00:00+02:00</updated><id>http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge2</id><content type="html" xml:base="http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge2/">&lt;h2 id=&quot;description&quot;&gt;Description&lt;/h2&gt;
+&lt;p&gt;We are introduced to the challenge with the following message:&lt;/p&gt;
 
-&lt;h2 id=&quot;description&quot;&gt;Description&lt;/h2&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;One of our team members developed a Flare-On challenge but accidentally deleted it. We recovered it using extreme digital forensic techniques but it seems to be corrupted. We would fix it but we are too busy solving today’s most important information security threats affecting our global economy. You should be able to get it working again, reverse engineer it, and acquire the flag.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;This challenge consists of the single file &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;garbage.exe&lt;/code&gt;, so we will jump directly into analyzing it.&lt;/p&gt;
+
+&lt;h2 id=&quot;analysis&quot;&gt;Analysis&lt;/h2&gt;
+&lt;p&gt;If we load our binary into &lt;a href=&quot;http://ntinfo.biz/index.html&quot;&gt;Detect It Easy&lt;/a&gt;, we find that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;garbage.exe&lt;/code&gt; is a 32-bit PE Windows executable, which appears to be packed with the popular &lt;a href=&quot;https://upx.github.io/&quot;&gt;UPX&lt;/a&gt; packer.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch2/die.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch2/die.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Output of Detect It Easy (DIE)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Inmediately, we try to unpack the file so we can proceed with our analysis. However, when we try to unpack the file with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;upx&lt;/code&gt; utility, an error message is thrown.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch2/upx_bad.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch2/upx_bad.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Output of upx failed unpacking&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Remember the description message of the challenge? This might be (part of) the file’s corruption it refered to. It is clear that we need to fix the binary somehow before we can unpack it successfully.&lt;/p&gt;
+
+&lt;h2 id=&quot;fix-binary-and-unpack&quot;&gt;Fix binary and unpack&lt;/h2&gt;
+
+&lt;p&gt;Let’s load &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;garbage.exe&lt;/code&gt; into &lt;a href=&quot;https://hshrzd.wordpress.com/pe-bear/&quot;&gt;PE-Bear&lt;/a&gt; to investigate what could be wrong with it. We quickly find a a red-colored area under the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.rsrc&lt;/code&gt; section within the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Section Hdrs&lt;/code&gt; tab.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch2/pe_bear_rsrc.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch2/pe_bear_rsrc.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Output of PE-Bear showing the mismatching .rsrc section size&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;As it indicates, there is a mismatch between the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.rsrc&lt;/code&gt; section size reported in the PE header (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x400&lt;/code&gt;) and its actual size within the file (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x124&lt;/code&gt;). To fix it, we will extend the file a total of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;(0x400 - 0x124)&lt;/code&gt; bytes. This can be easily done with &lt;a href=&quot;https://github.com/radareorg/radare2&quot;&gt;radare2&lt;/a&gt;. First of all, we make a copy of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;garbage.exe&lt;/code&gt; into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;fixed_garbage.exe&lt;/code&gt; so we can keep the original one, just in case.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cp garbage.exe fixed_garbage.exe
+$ radare2 -w fixed_garbage.exe
+[0x00418760]&amp;gt; r
+40740
+[0x00418760]&amp;gt; r 40740 + (0x400 - 0x124)
+[0x00418760]&amp;gt; r
+41472
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We open &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;fixed_garbage.exe&lt;/code&gt; with radare2 in write mode (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-w&lt;/code&gt;) so we can change its contents, which will be automatically stored on disk. The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;r&lt;/code&gt; command shows us current file size (in bytes). If we specify a new size after it, we will effectively change file size to the indicated new size. We show the new size just to check it.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Fun fact: we could have used the following one-liner to achieve the same result without the need to get the initial file size, as we can use output of radare2 commands as values, similarly as we do in a regular shell:&lt;/p&gt;
+  &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[0x00418760]&amp;gt; r `r` + (0x400 - 0x124)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;If we try again to unpack &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;fixed_garbage.exe&lt;/code&gt; with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;upx&lt;/code&gt;, we will get a successful outcome resulting in the unpacked executable &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;unpacked_garbage.exe&lt;/code&gt; being created.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch2/upx_good.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch2/upx_good.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Output of upx successful unpacking&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;However, as we simply extended its size, the unpacked version will certainly still be corrupted. Indeed, if we attempt to launch &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;unpacked_garbage.exe&lt;/code&gt;, we (still) get the following error message:&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch2/error_open_unpacked.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch2/error_open_unpacked.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Error executing unpacked_garbage.exe&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;The &lt;em&gt;orthodox&lt;/em&gt; way of proceeding would be analyzing the PE file and completely fixing it to the point we could execute/debug the binary. However, as we are a bit lazy to do so, and we know some radare2’s emulation magic, we might try our luck to see if that would be enough.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;If you are interested in radare2’s emulation with ESIL, I have a couple public &lt;a href=&quot;/talks&quot;&gt;talks&lt;/a&gt; covering it.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;retrieve-flag-with-emulation&quot;&gt;Retrieve flag with emulation&lt;/h2&gt;
+
+&lt;p&gt;Let’s open &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;unpacked_garbage.exe&lt;/code&gt; with radare2, analyze it and print the dissassembly of its main function.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ radare2 unpacked_garbage.exe
+[0x00401473]&amp;gt; aaa
+[x] Analyze all flags starting with sym. and entry0 (aa)
+[x] Analyze function calls (aac)
+[x] Analyze len bytes of instructions for references (aar)
+[x] Check for vtables
+[x] Type matching analysis for all functions (aaft)
+[x] Propagate noreturn information
+[x] Use -AA or aaaa to perform additional experimental analysis.
+[0x00401473]&amp;gt; s main
+[0x0040106b]&amp;gt; pdf
+            ; CALL XREF from entry0 @ 0x4013e6
+┌ 432: int main (int argc, char **argv, char **envp);
+│           ; var LPDWORD lpNumberOfBytesWritten @ ebp-0x13c
+│           ; var LPCSTR lpFileName @ ebp-0x138
+--snip--
+│           0x00401084      mov esi, str.nPTnaGLkIqdcQwvieFQKGcTGOTbfMjDNmvibfBDdFBhoPaBbtfQuuGWYomtqTFqvBSKdUMmciqKSGZaosWCSoZlcIlyQpOwkcAgw ; 0x4119f8 ; &quot;nPTnaGLkIqdcQwvieFQKGcTGOTbfMjDNmvibfBDdFBhoPaBbtfQuuGWYomtqTFqvBSKdUMmciqKSGZaosWCSoZlcIlyQpOwkcAgw &quot;
+--snip--
+│           0x004010b3      mov esi, str.KglPFOsQDxBPXmclOpmsdLDEPMRWbMDzwhDGOyqAkVMRvnBeIkpZIhFznwVylfjrkqprBPAdPuaiVoVugQAlyOQQtxBNsTdPZgDH ; 0x411a60 ; &quot;KglPFOsQDxBPXmclOpmsdLDEPMRWbMDzwhDGOyqAkVMRvnBeIkpZIhFznwVylfjrkqprBPAdPuaiVoVugQAlyOQQtxBNsTdPZgDH &quot;
+--snip--
+│           0x00401150      push ebx                    ; HANDLE hTemplateFile
+│           0x00401151      push 0x80                   ; 128 ; DWORD dwFlagsAndAttributes
+│           0x00401156      push 2                      ; 2 ; DWORD dwCreationDisposition
+│           0x00401158      push ebx                    ; LPSECURITY_ATTRIBUTES lpSecurityAttributes
+│           0x00401159      push 2                      ; 2 ; DWORD dwShareMode
+│           0x0040115b      push 0x40000000             ; DWORD dwDesiredAccess
+│           0x00401160      push dword [lpFileName]     ; LPCSTR lpFileName
+│           0x00401166      call dword [sym.imp._CreateFileA] ; 0x40d00c ; HANDLE CreateFileA(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile)
+│           0x0040116c      lea ecx, [lpFileName]
+--snip--
+│       │   0x0040119d      push ebx                    ; LPOVERLAPPED lpOverlapped
+│       │   0x0040119e      lea eax, [lpNumberOfBytesWritten]
+│       │   0x004011a4      push eax                    ; LPDWORD lpNumberOfBytesWritten
+│       │   0x004011a5      push 0x3d                   ; '=' ; 61 ; DWORD nNumberOfBytesToWrite
+│       │   0x004011a7      push dword [lpFileName]     ; LPCVOID lpBuffer
+│       │   0x004011ad      push esi                    ; HANDLE hFile
+│       │   0x004011ae      call dword [sym.imp._WriteFile] ; 0x40d004 ; BOOL WriteFile(HANDLE hFile, LPCVOID lpBuffer, DWORD nNumberOfBytesToWrite, LPDWORD lpNumberOfBytesWritten, LPOVERLAPPED lpOverlapped)
+--snip--
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Notice how there are a couple of suspicous strings being loaded. After that, we reach a call into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CreateFile&lt;/code&gt; at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x00401166&lt;/code&gt; followed by another call into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;WriteFile&lt;/code&gt; at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x004011ae&lt;/code&gt;. Thus, we will emulate the code of the main function to retrieve the parameters being passed into those two function calls.&lt;/p&gt;
+
+&lt;p&gt;First, we initialize the ESIL emulation engine along its virtual memory with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;aeim&lt;/code&gt;. Then we step until the offset where &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CreateFile&lt;/code&gt; gets called with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;aesu 0x00401166&lt;/code&gt;. Now we show the contents of the local variables at this precise moment with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;afvd&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[0x0040106b]&amp;gt; aeim
+[0x0040106b]&amp;gt; aesu 0x00401166
+[0x00401150]&amp;gt; afvd
+--snip--
+var lpFileName = 0x00177ec4 = 0x00177ec4 -&amp;gt; 0x00177fe4 &quot;sink_the_tanker.vbs&quot;
+--snip--
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We observe a reference to the file &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sink_the_tanker.vbs&lt;/code&gt;, which looks like would be the name of the file being created if we actually fixed and executed the unpacked binary.&lt;/p&gt;
+
+&lt;p&gt;As we are not interested in getting into the mess of actually emulating the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CreateFile&lt;/code&gt; function, we can just skip it changing the instruction pointer &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eip&lt;/code&gt; to the offset that comes after the function call. Then, we proceed to emulate until the call into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;WriteFile&lt;/code&gt; and show the contents of the local variables again.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[0x00401150]&amp;gt; aer eip=0x0040116c
+[0x00401150]&amp;gt; aesu 0x004011ae
+[0x0040119d]&amp;gt; afvd
+--snip--
+var lpFileName = 0x00177ec4 = 0x00177ec4 -&amp;gt; 0x00177fa4 &quot;MsgBox(&quot;Congrats! Your key is: C0rruptGarbag3@flare-on.com&quot;)&quot;
+--snip--
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We get a reference to a string containing an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MsgBox&lt;/code&gt; function, presumably to be written into the previous &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sink_the_tanker.vbs&lt;/code&gt; file. Even better, the message inside this MsgBox contains our flag. Awesome!&lt;/p&gt;
+
+&lt;p&gt;Thus, we obtained the flag &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;C0rruptGarbag3@flare-on.com&lt;/code&gt; and successfully finished this challenge!&lt;/p&gt;</content><author><name>Arnau Gàmez i Montolio</name></author><category term="Blog" /><category term="flareon" /><category term="reversing" /><category term="radare2" /><category term="emulation" /><category term="esil" /><category term="CTF" /><summary type="html">Description We are introduced to the challenge with the following message:</summary></entry><entry><title type="html">Write-up for FlareOn7 challenge #1 - fidler</title><link href="http://localhost:4000/blog/2020/10/23/writeup-flareon7-challenge1/" rel="alternate" type="text/html" title="Write-up for FlareOn7 challenge #1 - fidler" /><published>2020-10-23T00:00:00+02:00</published><updated>2020-10-23T00:00:00+02:00</updated><id>http://localhost:4000/blog/2020/10/23/writeup-flareon7-challenge1</id><content type="html" xml:base="http://localhost:4000/blog/2020/10/23/writeup-flareon7-challenge1/">&lt;h2 id=&quot;description&quot;&gt;Description&lt;/h2&gt;
 &lt;p&gt;We are introduced to the challenge with the following message:&lt;/p&gt;
 
 &lt;blockquote&gt;
@@ -107,116 +247,7 @@ GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS
 idle_with_kitty@flare-on.com
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;So, we obtained the flag &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;idle_with_kitty@flare-on.com&lt;/code&gt; and can move onto the next challenge!&lt;/p&gt;
-
-&lt;p&gt;*
-LINK TO CHALLENGE 2 POST.
-*&lt;/p&gt;</content><author><name>Arnau Gàmez i Montolio</name></author><category term="Blog" /><category term="flareon" /><category term="reversing" /><category term="python" /><category term="CTF" /><summary type="html">* GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS *</summary></entry><entry><title type="html">Write-up for FlareOn7 challenge #2 - garbage</title><link href="http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge2/" rel="alternate" type="text/html" title="Write-up for FlareOn7 challenge #2 - garbage" /><published>2020-10-24T00:00:00+02:00</published><updated>2020-10-24T00:00:00+02:00</updated><id>http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge2</id><content type="html" xml:base="http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge2/">&lt;p&gt;*
-GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS
-*&lt;/p&gt;
-
-&lt;h2 id=&quot;description&quot;&gt;Description&lt;/h2&gt;
-&lt;p&gt;We are introduced to the challenge with the following message:&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;One of our team members developed a Flare-On challenge but accidentally deleted it. We recovered it using extreme digital forensic techniques but it seems to be corrupted. We would fix it but we are too busy solving today’s most important information security threats affecting our global economy. You should be able to get it working again, reverse engineer it, and acquire the flag.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;analysis&quot;&gt;Analysis&lt;/h2&gt;
-
-&lt;figure class=&quot;align-center&quot;&gt;
-    &lt;a href=&quot;/assets/images/posts/flareon7_ch2/die.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch2/die.png&quot; /&gt;&lt;/a&gt;
-    &lt;figcaption&gt;Loop comparison for flag&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;figure class=&quot;align-center&quot;&gt;
-    &lt;a href=&quot;/assets/images/posts/flareon7_ch2/upx_bad.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch2/upx_bad.png&quot; /&gt;&lt;/a&gt;
-    &lt;figcaption&gt;Loop comparison for flag&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;h3 id=&quot;fix-binary&quot;&gt;Fix binary&lt;/h3&gt;
-
-&lt;figure class=&quot;align-center&quot;&gt;
-    &lt;a href=&quot;/assets/images/posts/flareon7_ch2/pe_bear_rsrc.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch2/pe_bear_rsrc.png&quot; /&gt;&lt;/a&gt;
-    &lt;figcaption&gt;Loop comparison for flag&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ radare2 -w fixed_garbage.exe
-[0x00418760]&amp;gt; r
-40740
-[0x00418760]&amp;gt; r 40740 + (0x400 - 0x124)
-[0x00418760]&amp;gt; r
-41472
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;unpack&quot;&gt;Unpack&lt;/h3&gt;
-
-&lt;figure class=&quot;align-center&quot;&gt;
-    &lt;a href=&quot;/assets/images/posts/flareon7_ch2/upx_good.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch2/upx_good.png&quot; /&gt;&lt;/a&gt;
-    &lt;figcaption&gt;Loop comparison for flag&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;If we try to run it still does not work.&lt;/p&gt;
-
-&lt;p&gt;Fix PE or do ESIL magic!&lt;/p&gt;
-
-&lt;h2 id=&quot;retrieve-flag-with-emulation&quot;&gt;Retrieve flag with emulation&lt;/h2&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ radare2 unpacked_garbage.exe
-[0x00401473]&amp;gt; aaa
-[x] Analyze all flags starting with sym. and entry0 (aa)
-[x] Analyze function calls (aac)
-[x] Analyze len bytes of instructions for references (aar)
-[x] Check for vtables
-[x] Type matching analysis for all functions (aaft)
-[x] Propagate noreturn information
-[x] Use -AA or aaaa to perform additional experimental analysis.
-[0x00401473]&amp;gt; s main
-[0x0040106b]&amp;gt; pdf
-            ; CALL XREF from entry0 @ 0x4013e6
-┌ 432: int main (int argc, char **argv, char **envp);
-│           ; var LPDWORD lpNumberOfBytesWritten @ ebp-0x13c
-│           ; var LPCSTR lpFileName @ ebp-0x138
---snip--
-│           0x00401084      bef8194100     mov esi, str.nPTnaGLkIqdcQwvieFQKGcTGOTbfMjDNmvibfBDdFBhoPaBbtfQuuGWYomtqTFqvBSKdUMmciqKSGZaosWCSoZlcIlyQpOwkcAgw ; 0x4119f8 ; &quot;nPTnaGLkIqdcQwvieFQKGcTGOTbfMjDNmvibfBDdFBhoPaBbtfQuuGWYomtqTFqvBSKdUMmciqKSGZaosWCSoZlcIlyQpOwkcAgw &quot;
---snip--
-│           0x004010b3      be601a4100     mov esi, str.KglPFOsQDxBPXmclOpmsdLDEPMRWbMDzwhDGOyqAkVMRvnBeIkpZIhFznwVylfjrkqprBPAdPuaiVoVugQAlyOQQtxBNsTdPZgDH ; 0x411a60 ; &quot;KglPFOsQDxBPXmclOpmsdLDEPMRWbMDzwhDGOyqAkVMRvnBeIkpZIhFznwVylfjrkqprBPAdPuaiVoVugQAlyOQQtxBNsTdPZgDH &quot;
---snip--
-│           0x00401150      53             push ebx                    ; HANDLE hTemplateFile
-│           0x00401151      6880000000     push 0x80                   ; 128 ; DWORD dwFlagsAndAttributes
-│           0x00401156      6a02           push 2                      ; 2 ; DWORD dwCreationDisposition
-│           0x00401158      53             push ebx                    ; LPSECURITY_ATTRIBUTES lpSecurityAttributes
-│           0x00401159      6a02           push 2                      ; 2 ; DWORD dwShareMode
-│           0x0040115b      6800000040     push 0x40000000             ; DWORD dwDesiredAccess
-│           0x00401160      ffb5c8feffff   push dword [lpFileName]     ; LPCSTR lpFileName
-│           0x00401166      ff150cd04000   call dword [sym.imp._CreateFileA] ; 0x40d00c ; HANDLE CreateFileA(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile)
-│           0x0040116c      8d8dc8feffff   lea ecx, [lpFileName]
---snip--
-│       │   0x0040119d      53             push ebx                    ; LPOVERLAPPED lpOverlapped
-│       │   0x0040119e      8d85c4feffff   lea eax, [lpNumberOfBytesWritten]
-│       │   0x004011a4      50             push eax                    ; LPDWORD lpNumberOfBytesWritten
-│       │   0x004011a5      6a3d           push 0x3d                   ; '=' ; 61 ; DWORD nNumberOfBytesToWrite
-│       │   0x004011a7      ffb5c8feffff   push dword [lpFileName]     ; LPCVOID lpBuffer
-│       │   0x004011ad      56             push esi                    ; HANDLE hFile
-│       │   0x004011ae      ff1504d04000   call dword [sym.imp._WriteFile] ; 0x40d004 ; BOOL WriteFile(HANDLE hFile, LPCVOID lpBuffer, DWORD nNumberOfBytesToWrite, LPDWORD lpNumberOfBytesWritten, LPOVERLAPPED lpOverlapped)
---snip--
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[0x0040106b]&amp;gt; aeim
-[0x0040106b]&amp;gt; aesu 0x00401166
-[0x00401150]&amp;gt; aer eip=0x0040116c
-[0x00401150]&amp;gt; aesu 0x004011ae
-[0x0040119d]&amp;gt; afvd
---snip--
-var lpFileName = 0x00177ec4 = 0x00177ec4 -&amp;gt; 0x00177fa4 &quot;MsgBox(&quot;Congrats! Your key is: C0rruptGarbag3@flare-on.com&quot;)&quot;
---snip--
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;We obtained the flag &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;C0rruptGarbag3@flare-on.com&lt;/code&gt; and successfully finished this challenge!&lt;/p&gt;
-
-&lt;p&gt;*
-LINK TO CHALLENGE 3 POST.
-*&lt;/p&gt;</content><author><name>Arnau Gàmez i Montolio</name></author><category term="Blog" /><category term="flareon" /><category term="reversing" /><category term="radare2" /><category term="emulation" /><category term="esil" /><category term="CTF" /><summary type="html">* GENERIC HEADER WITH LINKS TO ALL OTHER WRITE-UPS *</summary></entry><entry><title type="html">Solving lagrange reversing challenge with Cutter</title><link href="http://localhost:4000/blog/2020/04/12/advent-solve-lagrange-cutter/" rel="alternate" type="text/html" title="Solving lagrange reversing challenge with Cutter" /><published>2020-04-12T00:00:00+02:00</published><updated>2020-04-12T00:00:00+02:00</updated><id>http://localhost:4000/blog/2020/04/12/advent-solve-lagrange-cutter</id><content type="html" xml:base="http://localhost:4000/blog/2020/04/12/advent-solve-lagrange-cutter/">&lt;p&gt;The Lagrange reversing challenge was the 6th problem included in the &lt;a href=&quot;https://adventofcorona.hackersatupc.org&quot;&gt;&lt;em&gt;Advent of Corona&lt;/em&gt;&lt;/a&gt; CTF platform. The platform was uploading challenges during the first weeks of covid19 confinement, and it is still up if you want to take a look and play.&lt;/p&gt;
+&lt;p&gt;So, we obtained the flag &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;idle_with_kitty@flare-on.com&lt;/code&gt; and can move onto the next challenge!&lt;/p&gt;</content><author><name>Arnau Gàmez i Montolio</name></author><category term="Blog" /><category term="flareon" /><category term="reversing" /><category term="python" /><category term="CTF" /><summary type="html">Description We are introduced to the challenge with the following message:</summary></entry><entry><title type="html">Solving lagrange reversing challenge with Cutter</title><link href="http://localhost:4000/blog/2020/04/12/advent-solve-lagrange-cutter/" rel="alternate" type="text/html" title="Solving lagrange reversing challenge with Cutter" /><published>2020-04-12T00:00:00+02:00</published><updated>2020-04-12T00:00:00+02:00</updated><id>http://localhost:4000/blog/2020/04/12/advent-solve-lagrange-cutter</id><content type="html" xml:base="http://localhost:4000/blog/2020/04/12/advent-solve-lagrange-cutter/">&lt;p&gt;The Lagrange reversing challenge was the 6th problem included in the &lt;a href=&quot;https://adventofcorona.hackersatupc.org&quot;&gt;&lt;em&gt;Advent of Corona&lt;/em&gt;&lt;/a&gt; CTF platform. The platform was uploading challenges during the first weeks of covid19 confinement, and it is still up if you want to take a look and play.&lt;/p&gt;
 
 &lt;h2 id=&quot;description&quot;&gt;Description&lt;/h2&gt;
 
@@ -446,33 +477,7 @@ flag{C0roN4}
 &lt;ul&gt;
   &lt;li&gt;If we &lt;em&gt;somehow&lt;/em&gt; have symbols for the binary, we can take a lot of advantage from them. In this case they were provided embedded, as the binary was non stripped. This allowed us to super quickly assume that the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sym.isprime&lt;/code&gt; function did what it looked like it had to do. I encourage you to take a look at the function itself and imagine having to conduct the same reversing session but not knowing its symbol name. You will probably find quite lost inside a function that relies on random procedures and makes more nested function calls. It is not trivial at all to discover that this function is &lt;em&gt;just&lt;/em&gt; checking if a given number is prime. If you are curious, it is actually implementing the &lt;a href=&quot;https://en.wikipedia.org/wiki/Miller%E2%80%93Rabin_primality_test&quot;&gt;Miller-Rabin primalty test&lt;/a&gt;.&lt;/li&gt;
   &lt;li&gt;It is very easy to get lost into details that are non important to our objective. In this binary we can take as example the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sym.epic_function&lt;/code&gt;. If you take a look into it, you will see that it makes some floating point operations as well as some calls to another function called &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sym.pow_mod&lt;/code&gt;. You could spend a pretty large amount of time dealing with those trying to understand what is actually happening inside them, and probably getting frustrated as well. However, as you have seen above, there is no need to dig into them, as we are only interested in its plain outcome, regardless of its inner implementation. Anyway, for the curious people out there, I am pretty sure that the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sym.epic_function&lt;/code&gt; is just a hard-coded polynomial that has been constructed ad-hoc by interpolating the pairs of inputs and outputs for each char of the flag string. That is, for I/O pairs (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1 + counter_2 at i-th iteration&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;i-th char of flag string&lt;/code&gt;). Feel free to spend some time reversing and reconstructing it.&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Arnau Gàmez i Montolio</name></author><category term="Blog" /><category term="radare2" /><category term="reversing" /><category term="Cutter" /><category term="hackupc" /><category term="advent" /><summary type="html">The Lagrange reversing challenge was the 6th problem included in the Advent of Corona CTF platform. The platform was uploading challenges during the first weeks of covid19 confinement, and it is still up if you want to take a look and play.</summary></entry><entry><title type="html">Dataflow analysis with radare2</title><link href="http://localhost:4000/blog/2020/04/05/dataflow-analysis-radare2/" rel="alternate" type="text/html" title="Dataflow analysis with radare2" /><published>2020-04-05T00:00:00+02:00</published><updated>2020-04-05T00:00:00+02:00</updated><id>http://localhost:4000/blog/2020/04/05/dataflow-analysis-radare2</id><content type="html" xml:base="http://localhost:4000/blog/2020/04/05/dataflow-analysis-radare2/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;/h2&gt;
-
-&lt;p&gt;Dataflow analyisis…&lt;/p&gt;
-
-&lt;h3 id=&quot;forward&quot;&gt;Forward&lt;/h3&gt;
-
-&lt;p&gt;Reachable definition analysis -&amp;gt; Constant propagation (+ some folding if needed)&lt;/p&gt;
-
-&lt;p&gt;Theory&lt;/p&gt;
-
-&lt;p&gt;Simple example&lt;/p&gt;
-
-&lt;h3 id=&quot;backward&quot;&gt;Backward&lt;/h3&gt;
-
-&lt;p&gt;Liveness analysis&lt;/p&gt;
-
-&lt;p&gt;Theory&lt;/p&gt;
-
-&lt;p&gt;Simple example&lt;/p&gt;
-
-&lt;h3 id=&quot;combined&quot;&gt;Combined&lt;/h3&gt;
-
-&lt;p&gt;Do forward to propagate. Will lead to dead code to appear.&lt;/p&gt;
-
-&lt;h3 id=&quot;problems&quot;&gt;Problems&lt;/h3&gt;
-
-&lt;p&gt;Branch (flow), opaque predicates.&lt;/p&gt;</content><author><name>Arnau Gàmez i Montolio</name></author><category term="Blog" /><category term="radare2" /><category term="reversing" /><category term="deobfuscation" /><category term="obfuscation" /><summary type="html">Context</summary></entry><entry><title type="html">Solving sonda reversing challenge with radare2</title><link href="http://localhost:4000/blog/2020/04/03/hackupc-sonda-writeup/" rel="alternate" type="text/html" title="Solving sonda reversing challenge with radare2" /><published>2020-04-03T00:00:00+02:00</published><updated>2020-04-03T00:00:00+02:00</updated><id>http://localhost:4000/blog/2020/04/03/hackupc-sonda-writeup</id><content type="html" xml:base="http://localhost:4000/blog/2020/04/03/hackupc-sonda-writeup/">&lt;p&gt;This was the reversing challenge from the HackUPC &lt;em&gt;TheGame&lt;/em&gt; CTF-like competition. A slightly modified version has also been used recently during the &lt;em&gt;Advent of Corona&lt;/em&gt; running platform of challenges during the 2020 covid19 confinement.&lt;/p&gt;
+&lt;/ul&gt;</content><author><name>Arnau Gàmez i Montolio</name></author><category term="Blog" /><category term="radare2" /><category term="reversing" /><category term="Cutter" /><category term="hackupc" /><category term="advent" /><summary type="html">The Lagrange reversing challenge was the 6th problem included in the Advent of Corona CTF platform. The platform was uploading challenges during the first weeks of covid19 confinement, and it is still up if you want to take a look and play.</summary></entry><entry><title type="html">Solving sonda reversing challenge with radare2</title><link href="http://localhost:4000/blog/2020/04/03/hackupc-sonda-writeup/" rel="alternate" type="text/html" title="Solving sonda reversing challenge with radare2" /><published>2020-04-03T00:00:00+02:00</published><updated>2020-04-03T00:00:00+02:00</updated><id>http://localhost:4000/blog/2020/04/03/hackupc-sonda-writeup</id><content type="html" xml:base="http://localhost:4000/blog/2020/04/03/hackupc-sonda-writeup/">&lt;p&gt;This was the reversing challenge from the HackUPC &lt;em&gt;TheGame&lt;/em&gt; CTF-like competition. A slightly modified version has also been used recently during the &lt;em&gt;Advent of Corona&lt;/em&gt; running platform of challenges during the 2020 covid19 confinement.&lt;/p&gt;
 
 &lt;h2 id=&quot;description&quot;&gt;Description&lt;/h2&gt;
 
@@ -1032,4 +1037,4 @@ flag{6n|L0V&quot;6&amp;gt;f\$JE{uY}
     &lt;a href=&quot;/assets/images/posts/LMFAO_solved.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/LMFAO_solved.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Recovered original image&lt;/figcaption&gt;
 &lt;/figure&gt;
-&lt;p&gt;As we can see, we get the solution &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;flag{se_biene_bien_duro}&lt;/code&gt;&lt;/p&gt;</content><author><name>Arnau Gàmez i Montolio</name></author><category term="Blog" /><category term="hackupc" /><category term="writeup" /><category term="stego" /><category term="steganography" /><category term="thegame" /><summary type="html">Last week I attended the HackUPC at Barcelona. They were running a 24h CTF-like competition with different challenges focused on algorithms, programming and some hacking. I wasn’t planning to play, but some friends got me involved in the last moment and I somehow managed to win the competition by completing all challenges and getting max score, along with Yuva.</summary></entry><entry><title type="html">Pwning F@st 5655v2AC router</title><link href="http://localhost:4000/blog/2019/08/30/pwning-router-wol-arp/" rel="alternate" type="text/html" title="Pwning F@st 5655v2AC router" /><published>2019-08-30T00:00:00+02:00</published><updated>2019-08-30T00:00:00+02:00</updated><id>http://localhost:4000/blog/2019/08/30/pwning-router-wol-arp</id><content type="html" xml:base="http://localhost:4000/blog/2019/08/30/pwning-router-wol-arp/">&lt;p&gt;&lt;strong&gt;Long story short&lt;/strong&gt;: I set up a computer lab at home and wanted to enable &lt;a href=&quot;https://en.wikipedia.org/wiki/Wake-on-LAN&quot;&gt;Wake-on-Lan&lt;/a&gt; so I could power on the machine remotely whenever I needed it. Looked like easy task, but ended up having to hack into my home router in order to add a static entry on the &lt;a href=&quot;https://en.wikipedia.org/wiki/Address_Resolution_Protocol&quot;&gt;ARP&lt;/a&gt; table for the machine, since the ethernet connection stops delivering power after the entry for this computer gets flushed from the ARP table cache (I assume due to built-in power saving management) and the included router control panel did not have that option, even if accessing as admin user.&lt;/p&gt;</content><author><name>Arnau Gàmez i Montolio</name></author><category term="Blog" /><category term="router" /><category term="ARP" /><category term="WoL" /><category term="Wake on Lan" /><summary type="html">Long story short: I set up a computer lab at home and wanted to enable Wake-on-Lan so I could power on the machine remotely whenever I needed it. Looked like easy task, but ended up having to hack into my home router in order to add a static entry on the ARP table for the machine, since the ethernet connection stops delivering power after the entry for this computer gets flushed from the ARP table cache (I assume due to built-in power saving management) and the included router control panel did not have that option, even if accessing as admin user.</summary></entry><entry><title type="html">Digging Deeper into Gmail URLs</title><link href="http://localhost:4000/blog/2019/07/29/digging-deeper-gmail-urls/" rel="alternate" type="text/html" title="Digging Deeper into Gmail URLs" /><published>2019-07-29T00:00:00+02:00</published><updated>2019-07-29T00:00:00+02:00</updated><id>http://localhost:4000/blog/2019/07/29/digging-deeper-gmail-urls</id><content type="html" xml:base="http://localhost:4000/blog/2019/07/29/digging-deeper-gmail-urls/">&lt;p&gt;Find my published research on extracting timestamps and other information from Gmail URLs with the accompanying tool &lt;strong&gt;&lt;em&gt;Gmail URL Decoder&lt;/em&gt;&lt;/strong&gt; that I developed during my DFIR internship at &lt;a href=&quot;https://arsenalrecon.com/&quot;&gt;Arsenal&lt;/a&gt;.&lt;/p&gt;</content><author><name>Arnau Gàmez i Montolio</name></author><category term="Blog" /><category term="DFIR" /><category term="gmail" /><category term="URL" /><summary type="html">Find my published research on extracting timestamps and other information from Gmail URLs with the accompanying tool Gmail URL Decoder that I developed during my DFIR internship at Arsenal.</summary></entry><entry><title type="html">Hello world!</title><link href="http://localhost:4000/blog/2019/07/25/hello-world/" rel="alternate" type="text/html" title="Hello world!" /><published>2019-07-25T00:00:00+02:00</published><updated>2019-07-25T00:00:00+02:00</updated><id>http://localhost:4000/blog/2019/07/25/hello-world</id><content type="html" xml:base="http://localhost:4000/blog/2019/07/25/hello-world/">&lt;p&gt;Hello world!&lt;/p&gt;</content><author><name>Arnau Gàmez i Montolio</name></author><category term="Blog" /><category term="Hello" /><summary type="html">Hello world!</summary></entry></feed>
+&lt;p&gt;As we can see, we get the solution &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;flag{se_biene_bien_duro}&lt;/code&gt;&lt;/p&gt;</content><author><name>Arnau Gàmez i Montolio</name></author><category term="Blog" /><category term="hackupc" /><category term="writeup" /><category term="stego" /><category term="steganography" /><category term="thegame" /><summary type="html">Last week I attended the HackUPC at Barcelona. They were running a 24h CTF-like competition with different challenges focused on algorithms, programming and some hacking. I wasn’t planning to play, but some friends got me involved in the last moment and I somehow managed to win the competition by completing all challenges and getting max score, along with Yuva.</summary></entry><entry><title type="html">Digging Deeper into Gmail URLs</title><link href="http://localhost:4000/blog/2019/07/29/digging-deeper-gmail-urls/" rel="alternate" type="text/html" title="Digging Deeper into Gmail URLs" /><published>2019-07-29T00:00:00+02:00</published><updated>2019-07-29T00:00:00+02:00</updated><id>http://localhost:4000/blog/2019/07/29/digging-deeper-gmail-urls</id><content type="html" xml:base="http://localhost:4000/blog/2019/07/29/digging-deeper-gmail-urls/">&lt;p&gt;Find my published research on extracting timestamps and other information from Gmail URLs with the accompanying tool &lt;strong&gt;&lt;em&gt;Gmail URL Decoder&lt;/em&gt;&lt;/strong&gt; that I developed during my DFIR internship at &lt;a href=&quot;https://arsenalrecon.com/&quot;&gt;Arsenal&lt;/a&gt;.&lt;/p&gt;</content><author><name>Arnau Gàmez i Montolio</name></author><category term="Blog" /><category term="DFIR" /><category term="gmail" /><category term="URL" /><summary type="html">Find my published research on extracting timestamps and other information from Gmail URLs with the accompanying tool Gmail URL Decoder that I developed during my DFIR internship at Arsenal.</summary></entry><entry><title type="html">Hello world!</title><link href="http://localhost:4000/blog/2019/07/25/hello-world/" rel="alternate" type="text/html" title="Hello world!" /><published>2019-07-25T00:00:00+02:00</published><updated>2019-07-25T00:00:00+02:00</updated><id>http://localhost:4000/blog/2019/07/25/hello-world</id><content type="html" xml:base="http://localhost:4000/blog/2019/07/25/hello-world/">&lt;p&gt;Hello world!&lt;/p&gt;</content><author><name>Arnau Gàmez i Montolio</name></author><category term="Blog" /><category term="Hello" /><summary type="html">Hello world!</summary></entry></feed>
