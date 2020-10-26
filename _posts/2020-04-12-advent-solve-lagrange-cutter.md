@@ -51,14 +51,14 @@ noup
 
 This time we will be using [Cutter](https://cutter.re), the official radare2 GUI. Let's load our file into it and select default options for analysis:
 
-<figure class="align-center" style="width:300px">
+<figure class="align-center" style="width: 75%">
     <a href="/assets/images/posts/lagrange_cutter_1.png"><img src="/assets/images/posts/lagrange_cutter_1.png"></a>
     <figcaption>Load binary on cutter with default analysis options</figcaption>
 </figure>
 
 It will take no time to analyse it and prompt us with its pretty UI (notice that the specific windows layout can be different from your default one. You can adapt it to your needs and preferences).
 
-<figure class="align-center" style="width:300px">
+<figure class="align-center">
     <a href="/assets/images/posts/lagrange_cutter_2.png"><img src="/assets/images/posts/lagrange_cutter_2.png"></a>
     <figcaption>Cutter main view</figcaption>
 </figure>
@@ -69,7 +69,7 @@ It will take no time to analyse it and prompt us with its pretty UI (notice that
 
 Let's take a look at the strings on the .rodata section to see if they offer some hints:
 
-<figure class="align-center" style="width:300px">
+<figure class="align-center">
     <a href="/assets/images/posts/lagrange_cutter_3.png"><img src="/assets/images/posts/lagrange_cutter_3.png"></a>
     <figcaption>Strings on .rodata section</figcaption>
 </figure>
@@ -78,14 +78,14 @@ From the strings found, we can assume that it will make three different checks o
 
 The first string found is the one printed back to us when we tried some random inputs previously. We now select it and press `X` to show cross-references to it.
 
-<figure class="align-center" style="width:300px">
+<figure class="align-center">
     <a href="/assets/images/posts/lagrange_cutter_4.png"><img src="/assets/images/posts/lagrange_cutter_4.png"></a>
     <figcaption>Cross references to "noup" string</figcaption>
 </figure>
 
 Lucky us, there is only one reference to this string. To show it on the graph view, let's do `Right click -> Show in -> Graph (main)`
 
-<figure class="align-center" style="width:300px">
+<figure class="align-center">
     <a href="/assets/images/posts/lagrange_cutter_5.png"><img src="/assets/images/posts/lagrange_cutter_5.png"></a>
     <figcaption>"noup" appearance in Graph view on main function</figcaption>
 </figure>
@@ -94,7 +94,7 @@ Lucky us, there is only one reference to this string. To show it on the graph vi
 
 Observe in the graph overview that we reach this block if the comparison in the previous block was unsuccessful. The comparison on this previous block depends on computations done in the previous three basic blocks that are in a row. You can easily observe that there is a loop involving those three basic blocks, and the outcome of this loop will be checked (presumably against our input) to proceed to next check, or to exit passing through the "noup" printing message.
 
-<figure class="align-center" style="width:300px">
+<figure class="align-center" style="width: 50%">
     <a href="/assets/images/posts/lagrange_cutter_6.png"><img src="/assets/images/posts/lagrange_cutter_6.png"></a>
     <figcaption>Graph overview on main function</figcaption>
 </figure>
@@ -103,21 +103,21 @@ To understand this loop we will take advantage of the integrated Ghidra decompil
 
 - Change `size` variable to `int32_t`. Also change its name to `input_1` as this will hold the value from the first input.
 
-<figure class="align-center" style="width:300px">
+<figure class="align-center" style="width: 75%">
     <a href="/assets/images/posts/lagrange_cutter_7.png"><img src="/assets/images/posts/lagrange_cutter_7.png"></a>
     <figcaption>Change size varible type and name</figcaption>
 </figure>
 
 - Change `var_2ch` to `uint32_t` . Also change its name to `counter_1`.
 
-<figure class="align-center" style="width:300px">
+<figure class="align-center" style="width: 75%">
     <a href="/assets/images/posts/lagrange_cutter_8.png"><img src="/assets/images/posts/lagrange_cutter_8.png"></a>
     <figcaption>Change var_2ch varible type and name</figcaption>
 </figure>
 
 After those changes, we can observe that the described loop maps to the following pseudocode obtained from the decompiler.
 
-<figure class="align-center" style="width:300px">
+<figure class="align-center">
     <a href="/assets/images/posts/lagrange_cutter_9.png"><img src="/assets/images/posts/lagrange_cutter_9.png"></a>
     <figcaption>Decompilation of first loop</figcaption>
 </figure>
@@ -152,7 +152,7 @@ If we run it, it will give us the solution to be the number `6`. Therefore, we h
 
 Now we can take a look at the coming flow after the first check has been passed successfully.
 
-<figure class="align-center" style="width:300px">
+<figure class="align-center">
     <a href="/assets/images/posts/lagrange_cutter_10.png"><img src="/assets/images/posts/lagrange_cutter_10.png"></a>
     <figcaption>Second input and check</figcaption>
 </figure>
@@ -163,7 +163,7 @@ As you can see, it makes a `malloc` of the number of bytes corresponding to the 
 
 If we provide as a second input a string of length 6 it will then go through the last part of the main function that can be seen here:
 
-<figure class="align-center" style="width:300px">
+<figure class="align-center">
     <a href="/assets/images/posts/lagrange_cutter_11.png"><img src="/assets/images/posts/lagrange_cutter_11.png"></a>
     <figcaption>Last part of the main function</figcaption>
 </figure>
@@ -178,7 +178,7 @@ Observe that the pointer that is passed for the flag printing is `ptr`. This is 
 
 Let's take a look into the basic block responsible for the comparison in the loop.
 
-<figure class="align-center" style="width:300px">
+<figure class="align-center" style="width: 50%">
     <a href="/assets/images/posts/lagrange_cutter_12.png"><img src="/assets/images/posts/lagrange_cutter_12.png"></a>
     <figcaption>Loop comparison for flag</figcaption>
 </figure>
@@ -189,7 +189,7 @@ It is clear that it compares each byte (char) from our second input string to th
 
 We will now start a Cutter debugging session (*yay! we already have debugging support within Cutter :D*) by clicking the "Play" icon in the top bar. This will take us to the debugging view as we can see here:
 
-<figure class="align-center" style="width:300px">
+<figure class="align-center">
     <a href="/assets/images/posts/lagrange_cutter_12.5.png"><img src="/assets/images/posts/lagrange_cutter_12.5.png"></a>
     <figcaption>Debugging view on Cutter</figcaption>
 </figure>
@@ -200,21 +200,21 @@ The process to get the flag at each iteration will be as follows:
 
 2. Patch the conditional jump in the next instruction to be inconditional so it will always continue the loop. This can be done by clicking into it and then `Edit -> Instruction`.
 
-   <figure class="align-center" style="width:300px">
+   <figure class="align-center" style="width: 75%">
        <a href="/assets/images/posts/lagrange_cutter_13.png"><img src="/assets/images/posts/lagrange_cutter_13.png"></a>
        <figcaption>Change instruction to inconditional jump</figcaption>
    </figure>
 
 3. Continue until program breaks. This can be done by pressing `F5` or clicking in the "fast forward" icon in the top bar. You will need to provide the inputs. This can be easily done within Cutter directly. Just go to the bottom-left and change the "R2 Console" value of the menu into "Debugee Input". Then provide appropriate inputs in order. First `6` and then any 6-byte-long string like `AAAAAA` so it will pass the second check directly. After providing the inputs, the program will break.
 
-   <figure class="align-center" style="width:300px">
+   <figure class="align-center" style="width: 75%">
        <a href="/assets/images/posts/lagrange_cutter_14.png"><img src="/assets/images/posts/lagrange_cutter_14.png"></a>
        <figcaption>Provide input within the debugging session</figcaption>
    </figure>
 
 4. Check value at `eax`, it will contain the *i-th* character of the correct flag string. We can see it in the register's window (under the `rax` register, as `eax` is essentially the lower 32-bit part of the 64-bit register `rax`). A really quick and simple way to get the ASCII representation is just to hover over it.
 
-   <figure class="align-center" style="width:300px">
+   <figure class="align-center" style="width: 75%">
        <a href="/assets/images/posts/lagrange_cutter_15.png"><img src="/assets/images/posts/lagrange_cutter_15.png"></a>
        <figcaption>Check correct char of flag</figcaption>
    </figure>

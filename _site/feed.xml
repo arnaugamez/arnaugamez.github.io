@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-10-24T20:11:17+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Arnau Gàmez i Montolio</title><subtitle>Arnau Gàmez i Montolio's (@arnaugamez) personal blog. Hacking, Reverse Engineering and Mathematics</subtitle><author><name>Arnau Gàmez i Montolio</name></author><entry><title type="html">Write-up for FlareOn7 challenge #2 - garbage</title><link href="http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge2/" rel="alternate" type="text/html" title="Write-up for FlareOn7 challenge #2 - garbage" /><published>2020-10-24T00:00:00+02:00</published><updated>2020-10-24T00:00:00+02:00</updated><id>http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge2</id><content type="html" xml:base="http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge2/">&lt;h2 id=&quot;description&quot;&gt;Description&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-10-26T12:26:37+01:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Arnau Gàmez i Montolio</title><subtitle>Arnau Gàmez i Montolio's (@arnaugamez) personal blog. Hacking, Reverse Engineering and Mathematics</subtitle><author><name>Arnau Gàmez i Montolio</name></author><entry><title type="html">Write-up for FlareOn7 challenge #2 - garbage</title><link href="http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge2/" rel="alternate" type="text/html" title="Write-up for FlareOn7 challenge #2 - garbage" /><published>2020-10-24T00:00:00+02:00</published><updated>2020-10-24T00:00:00+02:00</updated><id>http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge2</id><content type="html" xml:base="http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge2/">&lt;h2 id=&quot;description&quot;&gt;Description&lt;/h2&gt;
 &lt;p&gt;We are introduced to the challenge with the following message:&lt;/p&gt;
 
 &lt;blockquote&gt;
@@ -277,14 +277,14 @@ noup
 
 &lt;p&gt;This time we will be using &lt;a href=&quot;https://cutter.re&quot;&gt;Cutter&lt;/a&gt;, the official radare2 GUI. Let’s load our file into it and select default options for analysis:&lt;/p&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+&lt;figure class=&quot;align-center&quot; style=&quot;width: 75%&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/lagrange_cutter_1.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_1.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Load binary on cutter with default analysis options&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;It will take no time to analyse it and prompt us with its pretty UI (notice that the specific windows layout can be different from your default one. You can adapt it to your needs and preferences).&lt;/p&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+&lt;figure class=&quot;align-center&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/lagrange_cutter_2.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_2.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Cutter main view&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -295,7 +295,7 @@ noup
 
 &lt;p&gt;Let’s take a look at the strings on the .rodata section to see if they offer some hints:&lt;/p&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+&lt;figure class=&quot;align-center&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/lagrange_cutter_3.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_3.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Strings on .rodata section&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -304,14 +304,14 @@ noup
 
 &lt;p&gt;The first string found is the one printed back to us when we tried some random inputs previously. We now select it and press &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;X&lt;/code&gt; to show cross-references to it.&lt;/p&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+&lt;figure class=&quot;align-center&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/lagrange_cutter_4.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_4.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Cross references to &quot;noup&quot; string&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Lucky us, there is only one reference to this string. To show it on the graph view, let’s do &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Right click -&amp;gt; Show in -&amp;gt; Graph (main)&lt;/code&gt;&lt;/p&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+&lt;figure class=&quot;align-center&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/lagrange_cutter_5.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_5.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;&quot;noup&quot; appearance in Graph view on main function&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -320,7 +320,7 @@ noup
 
 &lt;p&gt;Observe in the graph overview that we reach this block if the comparison in the previous block was unsuccessful. The comparison on this previous block depends on computations done in the previous three basic blocks that are in a row. You can easily observe that there is a loop involving those three basic blocks, and the outcome of this loop will be checked (presumably against our input) to proceed to next check, or to exit passing through the “noup” printing message.&lt;/p&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+&lt;figure class=&quot;align-center&quot; style=&quot;width: 50%&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/lagrange_cutter_6.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_6.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Graph overview on main function&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -331,7 +331,7 @@ noup
   &lt;li&gt;Change &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;size&lt;/code&gt; variable to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;int32_t&lt;/code&gt;. Also change its name to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;input_1&lt;/code&gt; as this will hold the value from the first input.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+&lt;figure class=&quot;align-center&quot; style=&quot;width: 75%&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/lagrange_cutter_7.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_7.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Change size varible type and name&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -340,14 +340,14 @@ noup
   &lt;li&gt;Change &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;var_2ch&lt;/code&gt; to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;uint32_t&lt;/code&gt; . Also change its name to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;counter_1&lt;/code&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+&lt;figure class=&quot;align-center&quot; style=&quot;width: 75%&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/lagrange_cutter_8.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_8.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Change var_2ch varible type and name&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;After those changes, we can observe that the described loop maps to the following pseudocode obtained from the decompiler.&lt;/p&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+&lt;figure class=&quot;align-center&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/lagrange_cutter_9.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_9.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Decompilation of first loop&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -381,7 +381,7 @@ noup
 
 &lt;p&gt;Now we can take a look at the coming flow after the first check has been passed successfully.&lt;/p&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+&lt;figure class=&quot;align-center&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/lagrange_cutter_10.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_10.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Second input and check&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -392,7 +392,7 @@ noup
 
 &lt;p&gt;If we provide as a second input a string of length 6 it will then go through the last part of the main function that can be seen here:&lt;/p&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+&lt;figure class=&quot;align-center&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/lagrange_cutter_11.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_11.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Last part of the main function&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -407,7 +407,7 @@ noup
 
 &lt;p&gt;Let’s take a look into the basic block responsible for the comparison in the loop.&lt;/p&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+&lt;figure class=&quot;align-center&quot; style=&quot;width: 50%&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/lagrange_cutter_12.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_12.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Loop comparison for flag&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -418,7 +418,7 @@ noup
 
 &lt;p&gt;We will now start a Cutter debugging session (&lt;em&gt;yay! we already have debugging support within Cutter :D&lt;/em&gt;) by clicking the “Play” icon in the top bar. This will take us to the debugging view as we can see here:&lt;/p&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+&lt;figure class=&quot;align-center&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/lagrange_cutter_12.5.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_12.5.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Debugging view on Cutter&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -432,7 +432,7 @@ noup
   &lt;li&gt;
     &lt;p&gt;Patch the conditional jump in the next instruction to be inconditional so it will always continue the loop. This can be done by clicking into it and then &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Edit -&amp;gt; Instruction&lt;/code&gt;.&lt;/p&gt;
 
-    &lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+    &lt;figure class=&quot;align-center&quot; style=&quot;width: 75%&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/lagrange_cutter_13.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_13.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Change instruction to inconditional jump&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -440,7 +440,7 @@ noup
   &lt;li&gt;
     &lt;p&gt;Continue until program breaks. This can be done by pressing &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;F5&lt;/code&gt; or clicking in the “fast forward” icon in the top bar. You will need to provide the inputs. This can be easily done within Cutter directly. Just go to the bottom-left and change the “R2 Console” value of the menu into “Debugee Input”. Then provide appropriate inputs in order. First &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;6&lt;/code&gt; and then any 6-byte-long string like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AAAAAA&lt;/code&gt; so it will pass the second check directly. After providing the inputs, the program will break.&lt;/p&gt;
 
-    &lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+    &lt;figure class=&quot;align-center&quot; style=&quot;width: 75%&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/lagrange_cutter_14.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_14.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Provide input within the debugging session&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -448,7 +448,7 @@ noup
   &lt;li&gt;
     &lt;p&gt;Check value at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eax&lt;/code&gt;, it will contain the &lt;em&gt;i-th&lt;/em&gt; character of the correct flag string. We can see it in the register’s window (under the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rax&lt;/code&gt; register, as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eax&lt;/code&gt; is essentially the lower 32-bit part of the 64-bit register &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rax&lt;/code&gt;). A really quick and simple way to get the ASCII representation is just to hover over it.&lt;/p&gt;
 
-    &lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+    &lt;figure class=&quot;align-center&quot; style=&quot;width: 75%&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/lagrange_cutter_15.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/lagrange_cutter_15.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Check correct char of flag&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -570,7 +570,7 @@ Num Paddr      Vaddr      Len Size Section  Type  String
 
 &lt;p&gt;Here we have the big picture of the main function as a graph view of its basic blocks content and interaction, that we will be exploring by parts.&lt;/p&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+&lt;figure class=&quot;align-center&quot; style=&quot;width: 50%&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/sonda_graph_zoom_out.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/sonda_graph_zoom_out.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Graph view of main function (zoomed out)&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -583,7 +583,7 @@ Num Paddr      Vaddr      Len Size Section  Type  String
 
 &lt;p&gt;If we observe the flow at the end of first basic block of main function we can see that the input value we provided through the first scanf (remember, the “magic number”) is copied from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ecx&lt;/code&gt; into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eax&lt;/code&gt; at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x92a&lt;/code&gt; (it was copied before into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ecx&lt;/code&gt; after returning from scanf call) and it is compared to the value in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;edx&lt;/code&gt; that will contain the result of the previous operations.&lt;/p&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+&lt;figure class=&quot;align-center&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/sonda_bb_main_1.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/sonda_bb_main_1.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Graph view of main first basic blocks&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -678,7 +678,7 @@ NOOB! Keep trying...
 
 &lt;p&gt;Let’s continue by checking the code where we land after the first check for magic number is successfully passed:&lt;/p&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+&lt;figure class=&quot;align-center&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/sonda_bb_main_2.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/sonda_bb_main_2.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Graph view of main basic block after correct magic number&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -693,7 +693,7 @@ WTF is wrong with u?
 
 &lt;p&gt;Another important thing to note is that the pointer returned by the malloc in this basic block is the same as the pointer that will be accessed to print its value on the basic block that will display the flag value (near the end of main function). Note that the pointer has been automatically renamed to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ptr&lt;/code&gt; by radare2 magic applied on the analysis:&lt;/p&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+&lt;figure class=&quot;align-center&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/sonda_bb_main_flag.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/sonda_bb_main_flag.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Graph view of main basic block that will print flag&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -704,7 +704,7 @@ WTF is wrong with u?
 
 &lt;p&gt;We will now explore the last few basic blocks before exiting. Those will be the meaningful ones to be able to discover the appropriate input to get to the flag, as the previous ones after the second input are just setting up some values that will be used later in here.&lt;/p&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+&lt;figure class=&quot;align-center&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/sonda_bb_main_3.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/sonda_bb_main_3.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Graph view of main basic blocks reaching end of function&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -895,7 +895,7 @@ flag{6n|L0V&quot;6&amp;gt;f\$JE{uY}
 
 &lt;p&gt;We are just provided the following image and random footer:&lt;/p&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width: 300px&quot;&gt;
+&lt;figure class=&quot;align-center&quot; style=&quot;width: 50%&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/LMFAO.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/LMFAO.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;I like eggs for breakfast&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -908,7 +908,7 @@ flag{6n|L0V&quot;6&amp;gt;f\$JE{uY}
 
 &lt;p&gt;Let’s start by applying some filters to the image in order to see if we can find something suspicious. For this, we will use &lt;a href=&quot;http://www.caesum.com/handbook/Stegsolve.jar&quot;&gt;Stegsolve.jar&lt;/a&gt; utility.&lt;/p&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width:300px&quot;&gt;
+&lt;figure class=&quot;align-center&quot; style=&quot;width:50%&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/LMFAO_stegsolve_1.gif&quot;&gt;&lt;img src=&quot;/assets/images/posts/LMFAO_stegsolve_1.gif&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Apply filters with Stegsolve&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -1033,7 +1033,7 @@ flag{6n|L0V&quot;6&amp;gt;f\$JE{uY}
 
 &lt;p&gt;Now if we just run the code &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;python lmfao.py&lt;/code&gt; it will produce the resulting image file &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LMFAO_solved.png&lt;/code&gt; from where we can extract the flag:&lt;/p&gt;
 
-&lt;figure class=&quot;align-center&quot; style=&quot;width: 300px&quot;&gt;
+&lt;figure class=&quot;align-center&quot; style=&quot;width: 50%&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/LMFAO_solved.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/LMFAO_solved.png&quot; /&gt;&lt;/a&gt;
     &lt;figcaption&gt;Recovered original image&lt;/figcaption&gt;
 &lt;/figure&gt;

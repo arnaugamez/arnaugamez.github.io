@@ -121,7 +121,7 @@ Once in the graph view, we can repeatedly press `p` in order to change the amoun
 
 Here we have the big picture of the main function as a graph view of its basic blocks content and interaction, that we will be exploring by parts.
 
-<figure class="align-center" style="width:300px">
+<figure class="align-center" style="width: 50%">
     <a href="/assets/images/posts/sonda_graph_zoom_out.png"><img src="/assets/images/posts/sonda_graph_zoom_out.png"></a>
     <figcaption>Graph view of main function (zoomed out)</figcaption>
 </figure>
@@ -134,7 +134,7 @@ Note that while we are on graph view, we should use colon `:` to be able to inpu
 
 If we observe the flow at the end of first basic block of main function we can see that the input value we provided through the first scanf (remember, the "magic number") is copied from `ecx` into `eax` at `0x92a` (it was copied before into `ecx` after returning from scanf call) and it is compared to the value in `edx` that will contain the result of the previous operations.
 
-<figure class="align-center" style="width:300px">
+<figure class="align-center">
     <a href="/assets/images/posts/sonda_bb_main_1.png"><img src="/assets/images/posts/sonda_bb_main_1.png"></a>
     <figcaption>Graph view of main first basic blocks</figcaption>
 </figure>
@@ -225,7 +225,7 @@ NOOB! Keep trying...
 
 Let's continue by checking the code where we land after the first check for magic number is successfully passed:
 
-<figure class="align-center" style="width:300px">
+<figure class="align-center">
     <a href="/assets/images/posts/sonda_bb_main_2.png"><img src="/assets/images/posts/sonda_bb_main_2.png"></a>
     <figcaption>Graph view of main basic block after correct magic number</figcaption>
 </figure>
@@ -242,7 +242,7 @@ WTF is wrong with u?
 
 Another important thing to note is that the pointer returned by the malloc in this basic block is the same as the pointer that will be accessed to print its value on the basic block that will display the flag value (near the end of main function). Note that the pointer has been automatically renamed to `ptr` by radare2 magic applied on the analysis:
 
-<figure class="align-center" style="width:300px">
+<figure class="align-center">
     <a href="/assets/images/posts/sonda_bb_main_flag.png"><img src="/assets/images/posts/sonda_bb_main_flag.png"></a>
     <figcaption>Graph view of main basic block that will print flag</figcaption>
 </figure>
@@ -254,7 +254,7 @@ You might have noticed that there is only one path to the basic block printing t
 
 We will now explore the last few basic blocks before exiting. Those will be the meaningful ones to be able to discover the appropriate input to get to the flag, as the previous ones after the second input are just setting up some values that will be used later in here.
 
-<figure class="align-center" style="width:300px">
+<figure class="align-center">
     <a href="/assets/images/posts/sonda_bb_main_3.png"><img src="/assets/images/posts/sonda_bb_main_3.png"></a>
     <figcaption>Graph view of main basic blocks reaching end of function</figcaption>
 </figure>

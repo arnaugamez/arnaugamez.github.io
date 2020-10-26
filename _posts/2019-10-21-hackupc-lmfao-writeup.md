@@ -31,7 +31,7 @@ Here you will find my writeup for the *LMFAO* steganography challenge.
 
 We are just provided the following image and random footer:
 
-<figure class="align-center" style="width: 300px">
+<figure class="align-center" style="width: 50%">
     <a href="/assets/images/posts/LMFAO.png"><img src="/assets/images/posts/LMFAO.png"></a>
     <figcaption>I like eggs for breakfast</figcaption>
 </figure>
@@ -44,7 +44,7 @@ We will need some information before starting to randomly move pixels around.
 
 Let's start by applying some filters to the image in order to see if we can find something suspicious. For this, we will use [Stegsolve.jar](http://www.caesum.com/handbook/Stegsolve.jar) utility.
 
-<figure class="align-center" style="width:300px">
+<figure class="align-center" style="width:50%">
     <a href="/assets/images/posts/LMFAO_stegsolve_1.gif"><img src="/assets/images/posts/LMFAO_stegsolve_1.gif"></a>
     <figcaption>Apply filters with Stegsolve</figcaption>
 </figure>
@@ -174,7 +174,7 @@ Observe that we have just added the final line in order to save the resulting im
 
 Now if we just run the code `python lmfao.py` it will produce the resulting image file `LMFAO_solved.png` from where we can extract the flag:
 
-<figure class="align-center" style="width: 300px">
+<figure class="align-center" style="width: 50%">
     <a href="/assets/images/posts/LMFAO_solved.png"><img src="/assets/images/posts/LMFAO_solved.png"></a>
     <figcaption>Recovered original image</figcaption>
 </figure>
