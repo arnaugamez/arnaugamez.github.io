@@ -1,4 +1,262 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-10-26T12:26:37+01:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Arnau Gàmez i Montolio</title><subtitle>Arnau Gàmez i Montolio's (@arnaugamez) personal blog. Hacking, Reverse Engineering and Mathematics</subtitle><author><name>Arnau Gàmez i Montolio</name></author><entry><title type="html">Write-up for FlareOn7 challenge #2 - garbage</title><link href="http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge2/" rel="alternate" type="text/html" title="Write-up for FlareOn7 challenge #2 - garbage" /><published>2020-10-24T00:00:00+02:00</published><updated>2020-10-24T00:00:00+02:00</updated><id>http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge2</id><content type="html" xml:base="http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge2/">&lt;h2 id=&quot;description&quot;&gt;Description&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-11-07T22:02:57+01:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Arnau Gàmez i Montolio</title><subtitle>Arnau Gàmez i Montolio's (@arnaugamez) personal blog. Hacking, Reverse Engineering and Mathematics</subtitle><author><name>Arnau Gàmez i Montolio</name></author><entry><title type="html">Write-up for FlareOn7 challenge #3 - wednesday</title><link href="http://localhost:4000/blog/2020/11/07/writeup-flareon7-challenge3/" rel="alternate" type="text/html" title="Write-up for FlareOn7 challenge #3 - wednesday" /><published>2020-11-07T00:00:00+01:00</published><updated>2020-11-07T00:00:00+01:00</updated><id>http://localhost:4000/blog/2020/11/07/writeup-flareon7-challenge3</id><content type="html" xml:base="http://localhost:4000/blog/2020/11/07/writeup-flareon7-challenge3/">&lt;h2 id=&quot;description&quot;&gt;Description&lt;/h2&gt;
+&lt;p&gt;We are introduced to the challenge with the following message:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Be the wednesday. Unlike challenge 1, you probably won’t be able to beat this game the old fashioned way. Read the README.txt file, it is very important.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;If we open the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;README.txt&lt;/code&gt; file, we find the following:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;                   --- BE THE WEDNESDAY ---
+
+                               S
+                               M
+                               T
+                              DUDE
+                               T
+                               F
+                               S
+
+            --- Enable accelerated graphics in VM ---
+              --- Attach sound card device to VM ---
+                --- Only reverse mydude.exe ---
+                   --- Enjoy it my dudes ---
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;We set up our VM accordingly and start analyzing the file &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mydude.exe&lt;/code&gt; as indicated.&lt;/p&gt;
+
+&lt;h2 id=&quot;analysis&quot;&gt;Analysis&lt;/h2&gt;
+&lt;h3 id=&quot;basic-exploration&quot;&gt;Basic exploration&lt;/h3&gt;
+&lt;p&gt;If we load our binary into &lt;a href=&quot;http://ntinfo.biz/index.html&quot;&gt;Detect It Easy&lt;/a&gt;, we find that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mydude.exe&lt;/code&gt; is a 32-bit PE Windows executable.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch3/die.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch3/die.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Output of Detect It Easy (DIE)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;We launch &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mydude.exe&lt;/code&gt; and are prompted with what appears to be the welcome screen of a weird game called &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Wednesday&lt;/code&gt; starring an amorphous frog.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch3/welcome_screen_game.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch3/welcome_screen_game.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Wednesday's welcome screen&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Clicking into the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DUDE&lt;/code&gt; button will get us into the actual game screen. It appears to be a simple game where we have to avoid the obstacles in order to advance, either by jumping over them or ducking down. If we hit one of the obstacles, the game is automatically reset.&lt;/p&gt;
+
+&lt;p&gt;Moreover, it looks like we do not only need to avoid the obstacles, but also we must do so in a certain fashion for each obstacle (according to its appearing order), either by jumping or ducking.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch3/game.gif&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch3/game.gif&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Wednesday's game screen&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;After a couple minutes playing, we start to discover the pattern that describes the way in which each appearing obstacle has to be dodged. In particular, for the first obstacles, we have:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;_ _ * * _ _ _ * _ * * * _ * _ _ ... jump (*) | duck (_)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;locate-interesting-parts-of-code&quot;&gt;Locate interesting parts of code&lt;/h3&gt;
+
+&lt;p&gt;Let’s load &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mydude.exe&lt;/code&gt; in IDA, and make sure to allow it to load the embedded symbols detected. A ton of functions will be found, most of them having seemingly weird/random suffixes. Such rare function names appear to be related to the fact that the game has been coded in &lt;a href=&quot;https://nim-lang.org/&quot;&gt;Nim&lt;/a&gt; (you can find a bunch of symbols containing “Nim” in it).&lt;/p&gt;
+
+&lt;p&gt;Although we have symbols, we still have a huge amount of functions and code to explore. Thus, in order to locate interesting sections of the code logic, we will use a common trick from the old days of game hacking: finding interesting values in memory for &lt;em&gt;things&lt;/em&gt; whose values change in a predictable and known manner. By locating them, we will be able to track back to meaningul code that references them. In this case, we will use &lt;a href=&quot;https://www.cheatengine.org&quot;&gt;Cheat Engine&lt;/a&gt; to do so.&lt;/p&gt;
+
+&lt;p&gt;One obvious candidate is the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Score&lt;/code&gt; value that gets incremented any time we pass an obstacle. We just need to start the game (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Score = 0&lt;/code&gt;) and inmediately look for memory locations storing the value &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0&lt;/code&gt; with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;New Scan&lt;/code&gt; and a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Value: 0&lt;/code&gt;. After we pass a couple obstacles, we can quickly change the value field to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Value: 2&lt;/code&gt; and clicking &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Next Scan&lt;/code&gt;. This way, we will find memory locations that held a value of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0&lt;/code&gt; during first scan, and a value of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;2&lt;/code&gt; during second scan.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch3/cheat_engine_1.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch3/cheat_engine_1.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Cheat Engine showing the two memory references to Score value&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;We find two interesting memory locations, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x00443D64&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x0044DDB0&lt;/code&gt;, lying within our executable memory region and referencing values having the exact behavior of the score being updated as we pass through obstacles. These memory addresses have been named &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SCORE_REF_1&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SCORE_REF_2&lt;/code&gt; in Cheat Engine for clarity purposes.&lt;/p&gt;
+
+&lt;p&gt;Let’s take a look at the memory address &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x00443D64&lt;/code&gt; in IDA. We find that it is a named symbol starting with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_prev_score&lt;/code&gt;. Also, it gets cross referenced by functions &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@resetEverything__Q1G0...&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@update__Arw3...&lt;/code&gt;.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch3/prev_score_ref.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch3/prev_score_ref.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;IDA's view of first reference to Score value found&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;If we take a quick look into the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@resetEverything__Q1G0...&lt;/code&gt; function, we instantly find in its first basic block a reference to an interesting memory location named &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_obstacles__Xqz...&lt;/code&gt;.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch3/resetEverything_fun_obstacles_highlight.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch3/resetEverything_fun_obstacles_highlight.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;First basic block of @resetEverything__Q1G0... function&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;At its turn, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;obstacles__Xqz...&lt;/code&gt; points to another memory location named &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_TM__V45tF8...&lt;/code&gt;.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch3/obstacles_array.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch3/obstacles_array.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Memory view of _TM__V45tF8... value pointed by obstacles__Xqz...&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;But wait… we observe a «table» of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt;’s and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0&lt;/code&gt;’s describing a familiar pattern:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;_ _ * * _ _ _ * _ * * * _ * _ _
+0 0 1 1 0 0 0 1 0 1 1 1 0 1 0 0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Exactly! We find the same pattern we encountered while playing the game at the very beginning. If we take a closer look, there are &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;296&lt;/code&gt; (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x00000128&lt;/code&gt;) values, either &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0&lt;/code&gt;, conforming this array of bytes.&lt;/p&gt;
+
+&lt;p&gt;Let’s take a look at cross references to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_obstacles_Xqz...&lt;/code&gt;. We find three functions reading it. From these, one appears to be an initialization function and another one is the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@resetEverything__Q1G0...&lt;/code&gt; function where we found it being referenced before.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch3/xrefs_to_obstacles.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch3/xrefs_to_obstacles.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Cross references to _obstacles_Xqz...&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Notice that the third function is &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@update__Arw3...&lt;/code&gt;, the same function that appeared also as a cross reference to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_prev_score&lt;/code&gt; memory location, so it is a good idea to dig deeper into this function.&lt;/p&gt;
+
+&lt;p&gt;But, before exploring this &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@update__Arw3...&lt;/code&gt; function, let’s take a look at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x0044DDB0&lt;/code&gt;, which is the other interesting memory location we found on Cheat Engine. We find that it is a named symbol starting with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_score&lt;/code&gt; and cross referenced by the function &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@onCollide__9byA...&lt;/code&gt;.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch3/score_ref.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch3/score_ref.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;IDA's view of second reference to Score value found&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;If we pull the thread on cross references, we find that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@onCollide__9byA...&lt;/code&gt; is referenced by &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@onCollide__BN6X...&lt;/code&gt;, which is referenced by &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@checkCollisions__P9bT...&lt;/code&gt;, which is referenced by &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@updateScene__rbzI...&lt;/code&gt;.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch3/xrefs_to_1st_oncollide.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch3/xrefs_to_1st_oncollide.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Cross references to @onCollide__9byA...&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch3/xrefs_to_2nd_oncollide.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch3/xrefs_to_2nd_oncollide.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Cross references to @onCollide__BN6X...&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch3/xrefs_to_checkCollisions.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch3/xrefs_to_checkCollisions.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Cross references to @checkCollisions__P9bT...&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Now let’s finally explore &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@update__Arw3...&lt;/code&gt; function. We find that it calls &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@updateScene__rbzI...&lt;/code&gt;, followed by a conditional jump that will lead into a call to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@resetEverything__Q1G0...&lt;/code&gt; in case that the byte value pointed by the memory location stored at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eax+F9&lt;/code&gt; is equal to 1.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch3/update_fun.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch3/update_fun.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;First basic blocks of @update__Arw3... function&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;So, with the information we have obtained so far, we can make an educated guess about the inner working of the game with respect to collision management:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;The game gets constantly updated (for example, frame based updates)&lt;/li&gt;
+  &lt;li&gt;Every time the game updates, it will check for «general collisions» with an obstacle.&lt;/li&gt;
+  &lt;li&gt;Every time the game goes through an obstacle, it will check for «table collisions», i.e. whether the way in which the obstacle is dodged coincides with the correspoinding move, as described on the obstacle’s table.&lt;/li&gt;
+  &lt;li&gt;If either of the two collisions occur, the memory location pointed previously by &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eax+F9&lt;/code&gt; will be set to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt;. Thus, at next update, it will enter into the reset function to restart the game.&lt;/li&gt;
+  &lt;li&gt;After &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;296&lt;/code&gt; obstacles successfully passed, «something» would happen; presumably, the flag should be revealed in some way.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;bypass-collisions&quot;&gt;Bypass collisions&lt;/h2&gt;
+&lt;p&gt;Our objective will be to patch the binary so that we can bypass all kinds of collisions while preserving the game behavior as if we completed it in a &lt;em&gt;legit&lt;/em&gt; way.&lt;/p&gt;
+
+&lt;p&gt;The hasty idea would be to just patch the conditional jump after the comparison &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cmp byte ptr [eax+0F9h], 1&lt;/code&gt; so it never gets into the basic block calling the reset function. However, this does not look like a good idea, as the code logic for recreating and showing the flag could (and indeed, will) be dependant of the actual code flow around the checks that set the memory location pointed by &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eax+F9&lt;/code&gt; to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt; at that point.&lt;/p&gt;
+
+&lt;p&gt;Thus, our approach will be to find where this memory location gets written to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt;, so we can explore the code around and patch effectively without altering the global code flow. To do so, we will use the &lt;a href=&quot;https://x64dbg.com/&quot;&gt;x64dbg&lt;/a&gt; debugger (well, actually the 32-bit version, x32dbg).&lt;/p&gt;
+
+&lt;p&gt;We load &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mydude.exe&lt;/code&gt; on x32dbg and let it run until it shows the welcome screen. Now we place a regular breakpoint at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x433D55&lt;/code&gt; (the location of the previously described comparison) and click on &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DUDE&lt;/code&gt; to start the game.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch3/x64dbg_bp1.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch3/x64dbg_bp1.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Breakpoint set at 0x433D55 in x32dbg&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;The breakpoint will be hit inmediately and pause the execution. Now, let’s get the memory address pointed by &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eax+F9&lt;/code&gt; into the memory dump view by doing: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Right click -&amp;gt; Follow in Dump -&amp;gt; Address: EAX+F9&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Then, we will add a hardware breakpoint on write access (at byte level, as the comparison is done at byte level as well) to this memory location. This can be seen in the following screenshot.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch3/x64dbg_bp2.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch3/x64dbg_bp2.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Set hardware breakpoint on write access to the byte pointed by eax+F9&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;We can now remove (or disable) the previous breakpoint on the comparison. Let’s continue running the program (pressing F9) and observe that the hardware breakpoint is getting hit repeatedly at two different places.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;At &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x43266C&lt;/code&gt; the memory location gets written to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;At &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x432247&lt;/code&gt; the memory location gets written to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;It looks like these writes are used at each game update to control if a «general» collision happened.&lt;/p&gt;
+
+&lt;p&gt;We are only interested in the location where it gets set to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt; (indicating a collision). Thus, in order not to hit the breakpoint for the location that sets the value to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0&lt;/code&gt;, we will modify the hardware breakpoint to be conditional. In particular, we set it not to be triggered whenever the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;EIP&lt;/code&gt; would land into the address &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x432673&lt;/code&gt;, which is the instruction following the write instruction at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x43266C&lt;/code&gt;.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch3/edit_hardware_bp.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch3/edit_hardware_bp.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Edit hardware breakpoint to add condition&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h3 id=&quot;patch-general-collision-check&quot;&gt;Patch general collision check&lt;/h3&gt;
+
+&lt;p&gt;If we take a look at the code flow around this write at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x432247&lt;/code&gt;, we observe that we arrive to the basic block containing it depending on a previous conditional jump &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;js&lt;/code&gt;.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch3/general_collision_check.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch3/general_collision_check.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Code flow around general collision write at 0x432247&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;One quick and naive approach would be to patch this &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt; (indicating collision) into a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0&lt;/code&gt;. However, this would not guarantee that the correct code path is followed. Thus, it is safer to patch the conditional jump to always take the correct path, where the memory location of our interest would not be written to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;We can easily patch this conditional jump into an inconditional jump by modifying the assembly instruction in the debugger, from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;js&lt;/code&gt; into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jmp&lt;/code&gt;.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch3/patch_general_collisions.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch3/patch_general_collisions.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Patch conditional jump to bypass general collision check&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h3 id=&quot;patch-table-collision-check&quot;&gt;Patch table collision check&lt;/h3&gt;
+&lt;p&gt;Now, we allow the game to run, noticing that it does not break instantly as before (the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0&lt;/code&gt; write is not triggered because of the condition in the hardware breakpoint; the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt; write is bypassed  with the previous patch to the conditional jump).&lt;/p&gt;
+
+&lt;p&gt;Indeed, we observe that if we start the game, it will go over the first two obstacles without hitting them and will only trigger the hardware breakpoint when hitting the third obstacle. This makes sense, as this third obstacle is the first one in which we would have to jump over, i.e. we have the first &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt; at third position in the pattern/table we found before.&lt;/p&gt;
+
+&lt;p&gt;This time, the breakpoint will lead us to a write of value &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt; to the memory location we are tracking, ocurring at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x43235E&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;If we take a look at the code flow around this write at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x43235E&lt;/code&gt;, we observe  a similar situation as before: we arrive to the basic block containing the write depending on a previous conditional jump &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jz&lt;/code&gt;.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch3/table_collision_check.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch3/table_collision_check.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Code flow around table collision write at 0x43235E&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;As we did before, instead of patching this &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt; into a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0&lt;/code&gt;, we will patch the conditional jump by changing this &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jz&lt;/code&gt; into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jmp&lt;/code&gt; in the debugger, so it always follows the correct path.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch3/patch_table_collisions.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch3/patch_table_collisions.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Patch conditional jump to bypass table collision check&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h2 id=&quot;retrieve-flag&quot;&gt;Retrieve flag&lt;/h2&gt;
+
+&lt;p&gt;We have patched both conditionals that led to basic blocks containing writes of value &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt; (indicating collision) into the memory location that was checked for restarting the game in case of a collision. Essentially, we have bypassed both «general» and «table» collisions, while preserving as much as possible the control flow followed by the original code.&lt;/p&gt;
+
+&lt;p&gt;Thus, now it is just a matter of letting it run for a while. After 296 obstacles passed, it will show us a victory screen with the string “Winner!” as well as our flag: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1t_i5_wEdn3sd4y_mY_Dud3s@flare-on.com&lt;/code&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch3/flag.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch3/flag.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Wednesday's victory screen showing the flag&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h2 id=&quot;a-quicker-alternative&quot;&gt;A quicker alternative&lt;/h2&gt;
+
+&lt;p&gt;Actually, if we had taken the table of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;296&lt;/code&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt;’s and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0&lt;/code&gt;’s and treated them as binary digits, we could have decoded them and obtained the flag directly without the need to allow the game to be run.&lt;/p&gt;
+
+&lt;p&gt;As an example, a simple python decoding routine is shown below.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;table&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;00110001011101000101111101101001001101010101111101110111010001010110010001101110001100110111001101100100001101000111100101011111011011010101100101011111010001000111010101100100001100110111001101000000011001100110110001100001011100100110010100101101011011110110111000101110011000110110111101101101&quot;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;flag&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_bytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bit_length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'big'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;decode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'ascii'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ python dec.py
+1t_i5_wEdn3sd4y_mY_Dud3s@flare-on.com
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This approach might have saved some time, but also would have spoiled the fun we had during our journey with this fancy frog ;)&lt;/p&gt;
+
+&lt;p&gt;Anyway, we obtained the flag and completed the third challenge!&lt;/p&gt;</content><author><name>Arnau Gàmez i Montolio</name></author><category term="Blog" /><category term="flareon" /><category term="reversing" /><category term="CTF" /><summary type="html">Description We are introduced to the challenge with the following message:</summary></entry><entry><title type="html">Write-up for FlareOn7 challenge #2 - garbage</title><link href="http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge2/" rel="alternate" type="text/html" title="Write-up for FlareOn7 challenge #2 - garbage" /><published>2020-10-24T00:00:00+02:00</published><updated>2020-10-24T00:00:00+02:00</updated><id>http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge2</id><content type="html" xml:base="http://localhost:4000/blog/2020/10/24/writeup-flareon7-challenge2/">&lt;h2 id=&quot;description&quot;&gt;Description&lt;/h2&gt;
 &lt;p&gt;We are introduced to the challenge with the following message:&lt;/p&gt;
 
 &lt;blockquote&gt;

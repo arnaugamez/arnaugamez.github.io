@@ -1,0 +1,921 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Write-up for FlareOn7 challenge #3 - wednesday | Arnau Gàmez i Montolio</title>
+<meta name="description" content="Description We are introduced to the challenge with the following message:">
+
+
+  <meta name="author" content="Arnau Gàmez i Montolio">
+  
+  <meta property="article:author" content="Arnau Gàmez i Montolio">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Arnau Gàmez i Montolio">
+<meta property="og:title" content="Write-up for FlareOn7 challenge #3 - wednesday">
+<meta property="og:url" content="http://localhost:4000/blog/2020/11/07/writeup-flareon7-challenge3/">
+
+
+  <meta property="og:description" content="Description We are introduced to the challenge with the following message:">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/posts/flareon7_ch2/upx_bad.png">
+
+
+
+
+
+  <meta property="article:published_time" content="2020-11-07T00:00:00+01:00">
+
+
+
+
+
+
+<link rel="canonical" href="http://localhost:4000/blog/2020/11/07/writeup-flareon7-challenge3/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Arnau Gàmez i Montolio Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+<link rel="manifest" href="/assets/favicon/site.webmanifest">
+<link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#5bbad5">
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico">
+<meta name="msapplication-TileColor" content="#00aba9">
+<meta name="msapplication-config" content="/assets/favicon/browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/images/logo.png" alt=""></a>
+        
+        <a class="site-title" href="/">
+          ~/
+          <span class="site-subtitle">Hacking · Reversing · Maths</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/">blog</a>
+            </li><li class="masthead__menu-item">
+              <a href="/talks/">talks</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">about</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/images/avatar.jpg" alt="Arnau Gàmez i Montolio" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Arnau Gàmez i Montolio</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p><strong>—</strong><br />👨‍🎓  <em>Maths</em> &amp; <em>CS</em><br />⏪  <em>RE</em> enthusiast<br /><strong>—</strong></p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="https://twitter.com/arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i><span class="label">Twitter</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+            <li><a href="mailto:contact [AT] [thisdomain] [DOT] com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Mail</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Write-up for FlareOn7 challenge #3 - wednesday">
+    <meta itemprop="description" content="DescriptionWe are introduced to the challenge with the following message:">
+    <meta itemprop="datePublished" content="2020-11-07T00:00:00+01:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Write-up for FlareOn7 challenge #3 - wednesday
+</h1>
+          
+          <p class="page__meta">
+            
+              <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-11-07T00:00:00+01:00">Nov 07, 2020 </time>&emsp;
+            
+            
+              <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  10 min
+
+
+            
+          </p>
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> Table of Contents</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#description">Description</a></li>
+  <li><a href="#analysis">Analysis</a>
+    <ul>
+      <li><a href="#basic-exploration">Basic exploration</a></li>
+      <li><a href="#locate-interesting-parts-of-code">Locate interesting parts of code</a></li>
+    </ul>
+  </li>
+  <li><a href="#bypass-collisions">Bypass collisions</a>
+    <ul>
+      <li><a href="#patch-general-collision-check">Patch general collision check</a></li>
+      <li><a href="#patch-table-collision-check">Patch table collision check</a></li>
+    </ul>
+  </li>
+  <li><a href="#retrieve-flag">Retrieve flag</a></li>
+  <li><a href="#a-quicker-alternative">A quicker alternative</a></li>
+</ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="description">Description</h2>
+<p>We are introduced to the challenge with the following message:</p>
+
+<blockquote>
+  <p>Be the wednesday. Unlike challenge 1, you probably won’t be able to beat this game the old fashioned way. Read the README.txt file, it is very important.</p>
+</blockquote>
+
+<p>If we open the <code class="language-plaintext highlighter-rouge">README.txt</code> file, we find the following:</p>
+
+<blockquote>
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                   --- BE THE WEDNESDAY ---
+
+                               S
+                               M
+                               T
+                              DUDE
+                               T
+                               F
+                               S
+
+            --- Enable accelerated graphics in VM ---
+              --- Attach sound card device to VM ---
+                --- Only reverse mydude.exe ---
+                   --- Enjoy it my dudes ---
+</code></pre></div>  </div>
+</blockquote>
+
+<p>We set up our VM accordingly and start analyzing the file <code class="language-plaintext highlighter-rouge">mydude.exe</code> as indicated.</p>
+
+<h2 id="analysis">Analysis</h2>
+<h3 id="basic-exploration">Basic exploration</h3>
+<p>If we load our binary into <a href="http://ntinfo.biz/index.html">Detect It Easy</a>, we find that <code class="language-plaintext highlighter-rouge">mydude.exe</code> is a 32-bit PE Windows executable.</p>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch3/die.png"><img src="/assets/images/posts/flareon7_ch3/die.png" /></a>
+    <figcaption>Output of Detect It Easy (DIE)</figcaption>
+</figure>
+
+<p>We launch <code class="language-plaintext highlighter-rouge">mydude.exe</code> and are prompted with what appears to be the welcome screen of a weird game called <code class="language-plaintext highlighter-rouge">Wednesday</code> starring an amorphous frog.</p>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch3/welcome_screen_game.png"><img src="/assets/images/posts/flareon7_ch3/welcome_screen_game.png" /></a>
+    <figcaption>Wednesday's welcome screen</figcaption>
+</figure>
+
+<p>Clicking into the <code class="language-plaintext highlighter-rouge">DUDE</code> button will get us into the actual game screen. It appears to be a simple game where we have to avoid the obstacles in order to advance, either by jumping over them or ducking down. If we hit one of the obstacles, the game is automatically reset.</p>
+
+<p>Moreover, it looks like we do not only need to avoid the obstacles, but also we must do so in a certain fashion for each obstacle (according to its appearing order), either by jumping or ducking.</p>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch3/game.gif"><img src="/assets/images/posts/flareon7_ch3/game.gif" /></a>
+    <figcaption>Wednesday's game screen</figcaption>
+</figure>
+
+<p>After a couple minutes playing, we start to discover the pattern that describes the way in which each appearing obstacle has to be dodged. In particular, for the first obstacles, we have:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>_ _ * * _ _ _ * _ * * * _ * _ _ ... jump (*) | duck (_)
+</code></pre></div></div>
+
+<h3 id="locate-interesting-parts-of-code">Locate interesting parts of code</h3>
+
+<p>Let’s load <code class="language-plaintext highlighter-rouge">mydude.exe</code> in IDA, and make sure to allow it to load the embedded symbols detected. A ton of functions will be found, most of them having seemingly weird/random suffixes. Such rare function names appear to be related to the fact that the game has been coded in <a href="https://nim-lang.org/">Nim</a> (you can find a bunch of symbols containing “Nim” in it).</p>
+
+<p>Although we have symbols, we still have a huge amount of functions and code to explore. Thus, in order to locate interesting sections of the code logic, we will use a common trick from the old days of game hacking: finding interesting values in memory for <em>things</em> whose values change in a predictable and known manner. By locating them, we will be able to track back to meaningul code that references them. In this case, we will use <a href="https://www.cheatengine.org">Cheat Engine</a> to do so.</p>
+
+<p>One obvious candidate is the <code class="language-plaintext highlighter-rouge">Score</code> value that gets incremented any time we pass an obstacle. We just need to start the game (<code class="language-plaintext highlighter-rouge">Score = 0</code>) and inmediately look for memory locations storing the value <code class="language-plaintext highlighter-rouge">0</code> with <code class="language-plaintext highlighter-rouge">New Scan</code> and a <code class="language-plaintext highlighter-rouge">Value: 0</code>. After we pass a couple obstacles, we can quickly change the value field to <code class="language-plaintext highlighter-rouge">Value: 2</code> and clicking <code class="language-plaintext highlighter-rouge">Next Scan</code>. This way, we will find memory locations that held a value of <code class="language-plaintext highlighter-rouge">0</code> during first scan, and a value of <code class="language-plaintext highlighter-rouge">2</code> during second scan.</p>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch3/cheat_engine_1.png"><img src="/assets/images/posts/flareon7_ch3/cheat_engine_1.png" /></a>
+    <figcaption>Cheat Engine showing the two memory references to Score value</figcaption>
+</figure>
+
+<p>We find two interesting memory locations, <code class="language-plaintext highlighter-rouge">0x00443D64</code> and <code class="language-plaintext highlighter-rouge">0x0044DDB0</code>, lying within our executable memory region and referencing values having the exact behavior of the score being updated as we pass through obstacles. These memory addresses have been named <code class="language-plaintext highlighter-rouge">SCORE_REF_1</code> and <code class="language-plaintext highlighter-rouge">SCORE_REF_2</code> in Cheat Engine for clarity purposes.</p>
+
+<p>Let’s take a look at the memory address <code class="language-plaintext highlighter-rouge">0x00443D64</code> in IDA. We find that it is a named symbol starting with <code class="language-plaintext highlighter-rouge">_prev_score</code>. Also, it gets cross referenced by functions <code class="language-plaintext highlighter-rouge">@resetEverything__Q1G0...</code> and <code class="language-plaintext highlighter-rouge">@update__Arw3...</code>.</p>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch3/prev_score_ref.png"><img src="/assets/images/posts/flareon7_ch3/prev_score_ref.png" /></a>
+    <figcaption>IDA's view of first reference to Score value found</figcaption>
+</figure>
+
+<p>If we take a quick look into the <code class="language-plaintext highlighter-rouge">@resetEverything__Q1G0...</code> function, we instantly find in its first basic block a reference to an interesting memory location named <code class="language-plaintext highlighter-rouge">_obstacles__Xqz...</code>.</p>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch3/resetEverything_fun_obstacles_highlight.png"><img src="/assets/images/posts/flareon7_ch3/resetEverything_fun_obstacles_highlight.png" /></a>
+    <figcaption>First basic block of @resetEverything__Q1G0... function</figcaption>
+</figure>
+
+<p>At its turn, <code class="language-plaintext highlighter-rouge">obstacles__Xqz...</code> points to another memory location named <code class="language-plaintext highlighter-rouge">_TM__V45tF8...</code>.</p>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch3/obstacles_array.png"><img src="/assets/images/posts/flareon7_ch3/obstacles_array.png" /></a>
+    <figcaption>Memory view of _TM__V45tF8... value pointed by obstacles__Xqz...</figcaption>
+</figure>
+
+<p>But wait… we observe a «table» of <code class="language-plaintext highlighter-rouge">1</code>’s and <code class="language-plaintext highlighter-rouge">0</code>’s describing a familiar pattern:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>_ _ * * _ _ _ * _ * * * _ * _ _
+0 0 1 1 0 0 0 1 0 1 1 1 0 1 0 0
+</code></pre></div></div>
+
+<p>Exactly! We find the same pattern we encountered while playing the game at the very beginning. If we take a closer look, there are <code class="language-plaintext highlighter-rouge">296</code> (<code class="language-plaintext highlighter-rouge">0x00000128</code>) values, either <code class="language-plaintext highlighter-rouge">1</code> or <code class="language-plaintext highlighter-rouge">0</code>, conforming this array of bytes.</p>
+
+<p>Let’s take a look at cross references to <code class="language-plaintext highlighter-rouge">_obstacles_Xqz...</code>. We find three functions reading it. From these, one appears to be an initialization function and another one is the <code class="language-plaintext highlighter-rouge">@resetEverything__Q1G0...</code> function where we found it being referenced before.</p>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch3/xrefs_to_obstacles.png"><img src="/assets/images/posts/flareon7_ch3/xrefs_to_obstacles.png" /></a>
+    <figcaption>Cross references to _obstacles_Xqz...</figcaption>
+</figure>
+
+<p>Notice that the third function is <code class="language-plaintext highlighter-rouge">@update__Arw3...</code>, the same function that appeared also as a cross reference to the <code class="language-plaintext highlighter-rouge">_prev_score</code> memory location, so it is a good idea to dig deeper into this function.</p>
+
+<p>But, before exploring this <code class="language-plaintext highlighter-rouge">@update__Arw3...</code> function, let’s take a look at <code class="language-plaintext highlighter-rouge">0x0044DDB0</code>, which is the other interesting memory location we found on Cheat Engine. We find that it is a named symbol starting with <code class="language-plaintext highlighter-rouge">_score</code> and cross referenced by the function <code class="language-plaintext highlighter-rouge">@onCollide__9byA...</code>.</p>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch3/score_ref.png"><img src="/assets/images/posts/flareon7_ch3/score_ref.png" /></a>
+    <figcaption>IDA's view of second reference to Score value found</figcaption>
+</figure>
+
+<p>If we pull the thread on cross references, we find that <code class="language-plaintext highlighter-rouge">@onCollide__9byA...</code> is referenced by <code class="language-plaintext highlighter-rouge">@onCollide__BN6X...</code>, which is referenced by <code class="language-plaintext highlighter-rouge">@checkCollisions__P9bT...</code>, which is referenced by <code class="language-plaintext highlighter-rouge">@updateScene__rbzI...</code>.</p>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch3/xrefs_to_1st_oncollide.png"><img src="/assets/images/posts/flareon7_ch3/xrefs_to_1st_oncollide.png" /></a>
+    <figcaption>Cross references to @onCollide__9byA...</figcaption>
+</figure>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch3/xrefs_to_2nd_oncollide.png"><img src="/assets/images/posts/flareon7_ch3/xrefs_to_2nd_oncollide.png" /></a>
+    <figcaption>Cross references to @onCollide__BN6X...</figcaption>
+</figure>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch3/xrefs_to_checkCollisions.png"><img src="/assets/images/posts/flareon7_ch3/xrefs_to_checkCollisions.png" /></a>
+    <figcaption>Cross references to @checkCollisions__P9bT...</figcaption>
+</figure>
+
+<p>Now let’s finally explore <code class="language-plaintext highlighter-rouge">@update__Arw3...</code> function. We find that it calls <code class="language-plaintext highlighter-rouge">@updateScene__rbzI...</code>, followed by a conditional jump that will lead into a call to <code class="language-plaintext highlighter-rouge">@resetEverything__Q1G0...</code> in case that the byte value pointed by the memory location stored at <code class="language-plaintext highlighter-rouge">eax+F9</code> is equal to 1.</p>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch3/update_fun.png"><img src="/assets/images/posts/flareon7_ch3/update_fun.png" /></a>
+    <figcaption>First basic blocks of @update__Arw3... function</figcaption>
+</figure>
+
+<p>So, with the information we have obtained so far, we can make an educated guess about the inner working of the game with respect to collision management:</p>
+<ul>
+  <li>The game gets constantly updated (for example, frame based updates)</li>
+  <li>Every time the game updates, it will check for «general collisions» with an obstacle.</li>
+  <li>Every time the game goes through an obstacle, it will check for «table collisions», i.e. whether the way in which the obstacle is dodged coincides with the correspoinding move, as described on the obstacle’s table.</li>
+  <li>If either of the two collisions occur, the memory location pointed previously by <code class="language-plaintext highlighter-rouge">eax+F9</code> will be set to <code class="language-plaintext highlighter-rouge">1</code>. Thus, at next update, it will enter into the reset function to restart the game.</li>
+  <li>After <code class="language-plaintext highlighter-rouge">296</code> obstacles successfully passed, «something» would happen; presumably, the flag should be revealed in some way.</li>
+</ul>
+
+<h2 id="bypass-collisions">Bypass collisions</h2>
+<p>Our objective will be to patch the binary so that we can bypass all kinds of collisions while preserving the game behavior as if we completed it in a <em>legit</em> way.</p>
+
+<p>The hasty idea would be to just patch the conditional jump after the comparison <code class="language-plaintext highlighter-rouge">cmp byte ptr [eax+0F9h], 1</code> so it never gets into the basic block calling the reset function. However, this does not look like a good idea, as the code logic for recreating and showing the flag could (and indeed, will) be dependant of the actual code flow around the checks that set the memory location pointed by <code class="language-plaintext highlighter-rouge">eax+F9</code> to <code class="language-plaintext highlighter-rouge">1</code> at that point.</p>
+
+<p>Thus, our approach will be to find where this memory location gets written to <code class="language-plaintext highlighter-rouge">1</code>, so we can explore the code around and patch effectively without altering the global code flow. To do so, we will use the <a href="https://x64dbg.com/">x64dbg</a> debugger (well, actually the 32-bit version, x32dbg).</p>
+
+<p>We load <code class="language-plaintext highlighter-rouge">mydude.exe</code> on x32dbg and let it run until it shows the welcome screen. Now we place a regular breakpoint at <code class="language-plaintext highlighter-rouge">0x433D55</code> (the location of the previously described comparison) and click on <code class="language-plaintext highlighter-rouge">DUDE</code> to start the game.</p>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch3/x64dbg_bp1.png"><img src="/assets/images/posts/flareon7_ch3/x64dbg_bp1.png" /></a>
+    <figcaption>Breakpoint set at 0x433D55 in x32dbg</figcaption>
+</figure>
+
+<p>The breakpoint will be hit inmediately and pause the execution. Now, let’s get the memory address pointed by <code class="language-plaintext highlighter-rouge">eax+F9</code> into the memory dump view by doing: <code class="language-plaintext highlighter-rouge">Right click -&gt; Follow in Dump -&gt; Address: EAX+F9</code></p>
+
+<p>Then, we will add a hardware breakpoint on write access (at byte level, as the comparison is done at byte level as well) to this memory location. This can be seen in the following screenshot.</p>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch3/x64dbg_bp2.png"><img src="/assets/images/posts/flareon7_ch3/x64dbg_bp2.png" /></a>
+    <figcaption>Set hardware breakpoint on write access to the byte pointed by eax+F9</figcaption>
+</figure>
+
+<p>We can now remove (or disable) the previous breakpoint on the comparison. Let’s continue running the program (pressing F9) and observe that the hardware breakpoint is getting hit repeatedly at two different places.</p>
+<ul>
+  <li>At <code class="language-plaintext highlighter-rouge">0x43266C</code> the memory location gets written to <code class="language-plaintext highlighter-rouge">0</code>.</li>
+  <li>At <code class="language-plaintext highlighter-rouge">0x432247</code> the memory location gets written to <code class="language-plaintext highlighter-rouge">1</code>.</li>
+</ul>
+
+<p>It looks like these writes are used at each game update to control if a «general» collision happened.</p>
+
+<p>We are only interested in the location where it gets set to <code class="language-plaintext highlighter-rouge">1</code> (indicating a collision). Thus, in order not to hit the breakpoint for the location that sets the value to <code class="language-plaintext highlighter-rouge">0</code>, we will modify the hardware breakpoint to be conditional. In particular, we set it not to be triggered whenever the <code class="language-plaintext highlighter-rouge">EIP</code> would land into the address <code class="language-plaintext highlighter-rouge">0x432673</code>, which is the instruction following the write instruction at <code class="language-plaintext highlighter-rouge">0x43266C</code>.</p>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch3/edit_hardware_bp.png"><img src="/assets/images/posts/flareon7_ch3/edit_hardware_bp.png" /></a>
+    <figcaption>Edit hardware breakpoint to add condition</figcaption>
+</figure>
+
+<h3 id="patch-general-collision-check">Patch general collision check</h3>
+
+<p>If we take a look at the code flow around this write at <code class="language-plaintext highlighter-rouge">0x432247</code>, we observe that we arrive to the basic block containing it depending on a previous conditional jump <code class="language-plaintext highlighter-rouge">js</code>.</p>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch3/general_collision_check.png"><img src="/assets/images/posts/flareon7_ch3/general_collision_check.png" /></a>
+    <figcaption>Code flow around general collision write at 0x432247</figcaption>
+</figure>
+
+<p>One quick and naive approach would be to patch this <code class="language-plaintext highlighter-rouge">1</code> (indicating collision) into a <code class="language-plaintext highlighter-rouge">0</code>. However, this would not guarantee that the correct code path is followed. Thus, it is safer to patch the conditional jump to always take the correct path, where the memory location of our interest would not be written to <code class="language-plaintext highlighter-rouge">1</code>.</p>
+
+<p>We can easily patch this conditional jump into an inconditional jump by modifying the assembly instruction in the debugger, from <code class="language-plaintext highlighter-rouge">js</code> into <code class="language-plaintext highlighter-rouge">jmp</code>.</p>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch3/patch_general_collisions.png"><img src="/assets/images/posts/flareon7_ch3/patch_general_collisions.png" /></a>
+    <figcaption>Patch conditional jump to bypass general collision check</figcaption>
+</figure>
+
+<h3 id="patch-table-collision-check">Patch table collision check</h3>
+<p>Now, we allow the game to run, noticing that it does not break instantly as before (the <code class="language-plaintext highlighter-rouge">0</code> write is not triggered because of the condition in the hardware breakpoint; the <code class="language-plaintext highlighter-rouge">1</code> write is bypassed  with the previous patch to the conditional jump).</p>
+
+<p>Indeed, we observe that if we start the game, it will go over the first two obstacles without hitting them and will only trigger the hardware breakpoint when hitting the third obstacle. This makes sense, as this third obstacle is the first one in which we would have to jump over, i.e. we have the first <code class="language-plaintext highlighter-rouge">1</code> at third position in the pattern/table we found before.</p>
+
+<p>This time, the breakpoint will lead us to a write of value <code class="language-plaintext highlighter-rouge">1</code> to the memory location we are tracking, ocurring at <code class="language-plaintext highlighter-rouge">0x43235E</code>.</p>
+
+<p>If we take a look at the code flow around this write at <code class="language-plaintext highlighter-rouge">0x43235E</code>, we observe  a similar situation as before: we arrive to the basic block containing the write depending on a previous conditional jump <code class="language-plaintext highlighter-rouge">jz</code>.</p>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch3/table_collision_check.png"><img src="/assets/images/posts/flareon7_ch3/table_collision_check.png" /></a>
+    <figcaption>Code flow around table collision write at 0x43235E</figcaption>
+</figure>
+
+<p>As we did before, instead of patching this <code class="language-plaintext highlighter-rouge">1</code> into a <code class="language-plaintext highlighter-rouge">0</code>, we will patch the conditional jump by changing this <code class="language-plaintext highlighter-rouge">jz</code> into <code class="language-plaintext highlighter-rouge">jmp</code> in the debugger, so it always follows the correct path.</p>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch3/patch_table_collisions.png"><img src="/assets/images/posts/flareon7_ch3/patch_table_collisions.png" /></a>
+    <figcaption>Patch conditional jump to bypass table collision check</figcaption>
+</figure>
+
+<h2 id="retrieve-flag">Retrieve flag</h2>
+
+<p>We have patched both conditionals that led to basic blocks containing writes of value <code class="language-plaintext highlighter-rouge">1</code> (indicating collision) into the memory location that was checked for restarting the game in case of a collision. Essentially, we have bypassed both «general» and «table» collisions, while preserving as much as possible the control flow followed by the original code.</p>
+
+<p>Thus, now it is just a matter of letting it run for a while. After 296 obstacles passed, it will show us a victory screen with the string “Winner!” as well as our flag: <code class="language-plaintext highlighter-rouge">1t_i5_wEdn3sd4y_mY_Dud3s@flare-on.com</code></p>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch3/flag.png"><img src="/assets/images/posts/flareon7_ch3/flag.png" /></a>
+    <figcaption>Wednesday's victory screen showing the flag</figcaption>
+</figure>
+
+<h2 id="a-quicker-alternative">A quicker alternative</h2>
+
+<p>Actually, if we had taken the table of <code class="language-plaintext highlighter-rouge">296</code> <code class="language-plaintext highlighter-rouge">1</code>’s and <code class="language-plaintext highlighter-rouge">0</code>’s and treated them as binary digits, we could have decoded them and obtained the flag directly without the need to allow the game to be run.</p>
+
+<p>As an example, a simple python decoding routine is shown below.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">table</span> <span class="o">=</span> <span class="s">"00110001011101000101111101101001001101010101111101110111010001010110010001101110001100110111001101100100001101000111100101011111011011010101100101011111010001000111010101100100001100110111001101000000011001100110110001100001011100100110010100101101011011110110111000101110011000110110111101101101"</span>
+<span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">flag</span> <span class="o">=</span> <span class="n">n</span><span class="p">.</span><span class="n">to_bytes</span><span class="p">((</span><span class="n">n</span><span class="p">.</span><span class="n">bit_length</span><span class="p">()</span> <span class="o">+</span> <span class="mi">7</span><span class="p">)</span> <span class="o">//</span> <span class="mi">8</span><span class="p">,</span> <span class="s">'big'</span><span class="p">).</span><span class="n">decode</span><span class="p">(</span><span class="s">'ascii'</span><span class="p">)</span>
+<span class="k">print</span> <span class="p">(</span><span class="n">flag</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ python dec.py
+1t_i5_wEdn3sd4y_mY_Dud3s@flare-on.com
+</code></pre></div></div>
+
+<p>This approach might have saved some time, but also would have spoiled the fun we had during our journey with this fancy frog ;)</p>
+
+<p>Anyway, we obtained the flag and completed the third challenge!</p>
+
+        
+
+         <!-- hack to show only on posts, as are the only ones using read_time for this layout -->
+        <p><a href="https://twitter.com/intent/follow?screen_name=arnaugamez"><img src="https://img.shields.io/twitter/follow/arnaugamez?style=social" alt="Twitter Follow"></a></p>
+        
+        
+      </section>
+      <footer class="page__meta">
+        
+        
+
+
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Write-up+for+FlareOn7+challenge+%233+-+wednesday%20http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F11%2F07%2Fwriteup-flareon7-challenge3%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F11%2F07%2Fwriteup-flareon7-challenge3%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F11%2F07%2Fwriteup-flareon7-challenge3%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/blog/2020/10/24/writeup-flareon7-challenge2/" class="pagination--pager" title="Write-up for FlareOn7 challenge #2 - garbage
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/flareon7_ch2/upx_bad.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/blog/2020/10/24/writeup-flareon7-challenge2/" rel="permalink">Write-up for FlareOn7 challenge #2 - garbage
+</a>
+      
+    </h2>
+
+    <p class="page__meta">
+      
+        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-10-24T00:00:00+02:00">Oct 24, 2020 </time>&emsp;
+      
+      
+        <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  5 min
+
+
+      
+    </p>
+
+    <p class="archive__item-excerpt" itemprop="description">Description
+We are introduced to the challenge with the following message:
+
+</p>
+
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/blog/2020/10/23/writeup-flareon7-challenge1/" rel="permalink">Write-up for FlareOn7 challenge #1 - fidler
+</a>
+      
+    </h2>
+
+    <p class="page__meta">
+      
+        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-10-23T00:00:00+02:00">Oct 23, 2020 </time>&emsp;
+      
+      
+        <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 min
+
+
+      
+    </p>
+
+    <p class="archive__item-excerpt" itemprop="description">Description
+We are introduced to the challenge with the following message:
+
+</p>
+
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/lagrange_cutter_6.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/blog/2020/04/12/advent-solve-lagrange-cutter/" rel="permalink">Solving lagrange reversing challenge with Cutter
+</a>
+      
+    </h2>
+
+    <p class="page__meta">
+      
+        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-04-12T00:00:00+02:00">Apr 12, 2020 </time>&emsp;
+      
+      
+        <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  9 min
+
+
+      
+    </p>
+
+    <p class="archive__item-excerpt" itemprop="description">The Lagrange reversing challenge was the 6th problem included in the Advent of Corona CTF platform. The platform was uploading challenges during the first we...</p>
+
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/sonda_bb_main_3.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/blog/2020/04/03/hackupc-sonda-writeup/" rel="permalink">Solving sonda reversing challenge with radare2
+</a>
+      
+    </h2>
+
+    <p class="page__meta">
+      
+        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-04-03T00:00:00+02:00">Apr 03, 2020 </time>&emsp;
+      
+      
+        <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  18 min
+
+
+      
+    </p>
+
+    <p class="archive__item-excerpt" itemprop="description">This was the reversing challenge from the HackUPC TheGame CTF-like competition. A slightly modified version has also been used recently during the Advent of ...</p>
+
+
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow" style="text-align:center">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://twitter.com/arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+        
+      
+        
+          <li><a href="https://github.com/arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="mailto:contact [AT] [thisdomain] [DOT] com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Mail</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright" style="text-align:center">
+
+<small>
+&copy; 2020 Arnau Gàmez i Montolio.
+</small>
+<br>
+
+<small><i>
+Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a> | Icon made by <a href="https://www.freepik.com/home">Freepik</a> from <a href="https://flaticon.com">flaticon.com</a>
+</i></small>
+</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/blog/2020/11/07/writeup-flareon7-challenge3/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/blog/2020/11/07/writeup-flareon7-challenge3"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://arnaugamez.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>
