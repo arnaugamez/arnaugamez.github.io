@@ -8,6 +8,9 @@ tags:
   - flareon
   - reversing
   - CTF
+  - IDA
+  - x64dbg
+  - game
 
 toc: true
 toc_label: "Table of Contents"
@@ -15,7 +18,7 @@ toc_icon: "file-alt"
 toc_sticky: true
 
 header:
-  teaser: /assets/images/posts/flareon7_ch2/upx_bad.png
+  teaser: /assets/images/posts/flareon7_ch3/general_collision_check.png
 ---
 
 ## Description
