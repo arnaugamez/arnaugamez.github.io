@@ -43,7 +43,7 @@ var store = [{
       },{
         "title": "Write-up for FlareOn7 challenge #3 - wednesday",
         "excerpt":"Description We are introduced to the challenge with the following message: Be the wednesday. Unlike challenge 1, you probably won’t be able to beat this game the old fashioned way. Read the README.txt file, it is very important. If we open the README.txt file, we find the following: --- BE...","categories": ["Blog"],
-        "tags": ["flareon","reversing","CTF"],
+        "tags": ["flareon","reversing","CTF","IDA","x64dbg","game"],
         "url": "http://localhost:4000/blog/2020/11/07/writeup-flareon7-challenge3/",
-        "teaser": "http://localhost:4000/assets/images/posts/flareon7_ch2/upx_bad.png"
+        "teaser": "http://localhost:4000/assets/images/posts/flareon7_ch3/general_collision_check.png"
       }]
