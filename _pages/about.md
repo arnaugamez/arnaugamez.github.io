@@ -6,11 +6,12 @@ classes: wide
 
 Hi there! My name is Arnau Gàmez i Montolio, from lovely Barcelona.
 
-I am passionate about hacking and information security since I can remember. Recently I have been particularly interested in the field of reverse (code) engineering, including but not limited to:
+I am passionate about hacking and information security since I can remember. Recently I have been particularly interested in the field of reverse engineering, including but not limited to:
 
 - Code (de)obfuscation
 - Malware analysis
 - Binary formats
+- Cryptography
 - Vulnerability research and exploit development
 
 I also hold a double degree in Mathematics and Computer Engineering.

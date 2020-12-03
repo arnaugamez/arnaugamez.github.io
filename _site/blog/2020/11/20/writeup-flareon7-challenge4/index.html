@@ -1,0 +1,866 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Write-up for FlareOn7 challenge #4 - report | Arnau Gàmez i Montolio</title>
+<meta name="description" content="Description We are introduced to the challenge with the following message:">
+
+
+  <meta name="author" content="Arnau Gàmez i Montolio">
+  
+  <meta property="article:author" content="Arnau Gàmez i Montolio">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Arnau Gàmez i Montolio">
+<meta property="og:title" content="Write-up for FlareOn7 challenge #4 - report">
+<meta property="og:url" content="http://localhost:4000/blog/2020/11/20/writeup-flareon7-challenge4/">
+
+
+  <meta property="og:description" content="Description We are introduced to the challenge with the following message:">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/posts/flareon7_ch4/TODO.png">
+
+
+
+
+
+  <meta property="article:published_time" content="2020-11-20T00:00:00+01:00">
+
+
+
+
+
+
+<link rel="canonical" href="http://localhost:4000/blog/2020/11/20/writeup-flareon7-challenge4/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Arnau Gàmez i Montolio Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+<link rel="manifest" href="/assets/favicon/site.webmanifest">
+<link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#5bbad5">
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico">
+<meta name="msapplication-TileColor" content="#00aba9">
+<meta name="msapplication-config" content="/assets/favicon/browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/images/logo.png" alt=""></a>
+        
+        <a class="site-title" href="/">
+          ~/
+          <span class="site-subtitle">Hacking · Reversing · Maths</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/">blog</a>
+            </li><li class="masthead__menu-item">
+              <a href="/talks/">talks</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">about</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/images/avatar.jpg" alt="Arnau Gàmez i Montolio" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Arnau Gàmez i Montolio</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p><strong>—</strong><br />👨‍🎓  <em>Maths</em> &amp; <em>CS</em><br />⏪  <em>RE</em> enthusiast<br /><strong>—</strong></p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="https://twitter.com/arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i><span class="label">Twitter</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+            <li><a href="mailto:contact [AT] [thisdomain] [DOT] com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Mail</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Write-up for FlareOn7 challenge #4 - report">
+    <meta itemprop="description" content="DescriptionWe are introduced to the challenge with the following message:">
+    <meta itemprop="datePublished" content="2020-11-20T00:00:00+01:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Write-up for FlareOn7 challenge #4 - report
+</h1>
+          
+          <p class="page__meta">
+            
+              <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-11-20T00:00:00+01:00">Nov 20, 2020 </time>&emsp;
+            
+            
+              <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  5 min
+
+
+            
+          </p>
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> Table of Contents</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#description">Description</a></li>
+  <li><a href="#analysis">Analysis</a></li>
+  <li><a href="#reconstruct-document">Reconstruct document</a>
+    <ul>
+      <li><a href="#dump-and-decompile-pcode">Dump and decompile pcode</a></li>
+      <li><a href="#fix-and-clean-decompiled-code">Fix and clean decompiled code</a></li>
+      <li><a href="#bypass-checks-and-protections">Bypass checks and protections</a></li>
+    </ul>
+  </li>
+  <li><a href="#retrieve-flag">Retrieve flag</a></li>
+</ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="description">Description</h2>
+<p>We are introduced to the challenge with the following message:</p>
+
+<blockquote>
+  <p>Nobody likes analysing infected documents, but it pays the bills. Reverse this macro thrill-ride to discover how to get it to show you the key.</p>
+</blockquote>
+
+<p>There is a single file <code class="language-plaintext highlighter-rouge">report.xls</code> to analyze, which is an excel document with the old windows format. From the challenge description and the kind of file we are given, we can be sure that we will have to deal with an excel macro.</p>
+
+<h2 id="analysis">Analysis</h2>
+<p>If we open the document we find the following image within the spreadsheet.</p>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch4/report_initial_image.png"><img src="/assets/images/posts/flareon7_ch4/report_initial_image.png" /></a>
+    <figcaption>AAAA</figcaption>
+</figure>
+
+<p>On a real scenario, the contents of this image would serve the purpose of tricking the victim into executing the embedded macro containing malicious code.</p>
+
+<p>I don’t usually have to deal with macros on my reversing adventures, so I wanted to get the <em>full experience</em> from this challenge. Thus, I will actually allow it to run the embedded macro to see what happens.</p>
+
+<blockquote>
+  <p>WARNING: Never run an office macro outside a controled and isolated environment.</p>
+</blockquote>
+
+<p>So, let’s enable macros and allow to run. It will inmediately throw an error.</p>
+
+<figure class="align-center" style="width: 50%">
+    <a href="/assets/images/posts/flareon7_ch4/error_macro_launch.png"><img src="/assets/images/posts/flareon7_ch4/error_macro_launch.png" /></a>
+    <figcaption>AAAA</figcaption>
+</figure>
+
+<p>From the title of this window, it appears that the embedded macro which is failing to run is coded in <a href="https://en.wikipedia.org/wiki/Visual_Basic_for_Applications">Visual Basic for Applications (VBA)</a>. Clicking in the <code class="language-plaintext highlighter-rouge">Ok</code> button will bring us into a fancy internal VBA IDE where we can explore all the components of the macro.</p>
+
+<figure class="align-center" style="width: 50%">
+    <a href="/assets/images/posts/flareon7_ch4/report_VBAProject.png"><img src="/assets/images/posts/flareon7_ch4/report_VBAProject.png" /></a>
+    <figcaption>AAAA</figcaption>
+</figure>
+
+<p>There is some code in <code class="language-plaintext highlighter-rouge">Sheet1</code> which appears to not work correctly. Also, we find the intersting form <code class="language-plaintext highlighter-rouge">F</code> with very suspicious data inside. We will export the <code class="language-plaintext highlighter-rouge">F</code> form for later usage (<code class="language-plaintext highlighter-rouge">Right click</code> -&gt; <code class="language-plaintext highlighter-rouge">Export File...</code>).</p>
+
+<figure class="align-center" style="width: 50%">
+    <a href="/assets/images/posts/flareon7_ch4/Forms_F.png"><img src="/assets/images/posts/flareon7_ch4/Forms_F.png" /></a>
+    <figcaption>AAAA</figcaption>
+</figure>
+
+<p>If we google for a couple minutes about VBA macros related to malware spread, we quickly find some <em>recent</em> information about a technique known as VBA stomping. Essentially, this technique leverages a mismatch between the <a href="https://en.wikipedia.org/wiki/Microsoft_P-Code">p-code</a> (the compiled <a href="https://en.wikipedia.org/wiki/Intermediate_representation">intermediate represenation</a> bytecode of the VBA macro) and the code that is presented in clear text on the editor.</p>
+
+<p>If you are interested, you can read more about VBA stomping in the following references:</p>
+<ul>
+  <li><a href="https://github.com/outflanknl/EvilClippy">https://github.com/outflanknl/EvilClippy</a></li>
+  <li><a href="https://medium.com/walmartglobaltech/vba-stomping-advanced-maldoc-techniques-612c484ab278">https://medium.com/walmartglobaltech/vba-stomping-advanced-maldoc-techniques-612c484ab278</a></li>
+  <li><a href="https://vbastomp.com/">https://vbastomp.com/</a></li>
+</ul>
+
+<p>This really appears to be what is going on with <code class="language-plaintext highlighter-rouge">report.xls</code>. Thus, we will continue by dumping the real p-code and obtaining its actual VBA representation so we can analyze/run it.</p>
+
+<h2 id="reconstruct-document">Reconstruct document</h2>
+<p>I decided to (re)construct a valid document to embed and launch the fixed VBA macro.</p>
+
+<p>Create a new document. Will need to enable developer tab on excel: https://support.microsoft.com/en-us/office/show-the-developer-tab-e1192344-5e56-4d45-931b-e5fd9bea2d45</p>
+
+<p>Go to developer tab and click the first icon on VBA.</p>
+
+<p>Import the figure (Right click on project. Import File… -&gt; F.frm)
+Copy-paste contents from/to ThisWorkBook:</p>
+
+<h3 id="dump-and-decompile-pcode">Dump and decompile pcode</h3>
+<p>Dump pcode with <a href="https://github.com/bontchev/pcodedmp">pcodedmp</a> into <code class="language-plaintext highlighter-rouge">macro.pcode</code> file.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pcodedmp -o macro.pcode report.xls
+</code></pre></div></div>
+
+<p>Among other info, the file <code class="language-plaintext highlighter-rouge">macro.pcode</code> contains the following pcode formatted output for the embedded macro:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>snippet of macro.pcode
+</code></pre></div></div>
+
+<p>Now we can <em>decompile</em> the pcode back into VBA with <a href="https://pypi.org/project/pcode2code/">pcode2code</a>.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pcode2code -p macro.pcode &gt; decompiled
+</code></pre></div></div>
+
+<p>If we take a look into the decompiled code we will see some bits that have not been sucessfully decompiled. Despite that, there is some significant difference with the code presented to us initially, so it confirms our hypothesis of mismatching between high level language representation and the embeded maco pcode. Namely <code class="language-plaintext highlighter-rouge">folderol</code> function now has a buffer variable and some new code that plays with it.</p>
+
+<p>Also there are some minor errors in data types and so that we will need to fix if we want it to run. So, let’s copy the decompiled code into Sheet1 (the corresponding) in the newly created document and we will fix in there as we go.</p>
+
+<h3 id="fix-and-clean-decompiled-code">Fix and clean decompiled code</h3>
+
+<ul>
+  <li>
+    <p>Remove <code class="language-plaintext highlighter-rouge">id_FFFE</code> parameter from rigmarole.</p>
+  </li>
+  <li>Remove <code class="language-plaintext highlighter-rouge">id_FFFE</code> parameter from folderol.
+-On folderol, in the usage of <code class="language-plaintext highlighter-rouge">wabbit</code> and <code class="language-plaintext highlighter-rouge">onzo</code> we see that they need to be array based types, so we just add a pair of missing parentheses to them on its declaration.</li>
+  <li>xertz is no longer used, so we can remove its declaration and assignment.</li>
+  <li>The following body that failed to decompile is the corresponding to Line #68 in the pcode above.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Ld fn 
+Sharp 
+LitDefault 
+Ld wabbit 
+PutRec
+</code></pre></div>    </div>
+    <p>which essentially translates to <code class="language-plaintext highlighter-rouge">Put #fn, , wabbit</code>.</p>
+  </li>
+  <li>Remove <code class="language-plaintext highlighter-rouge">id_FFFE</code> parameter from canoodle.</li>
+  <li>Now <code class="language-plaintext highlighter-rouge">canoodle</code> function needs to return <code class="language-plaintext highlighter-rouge">byte()</code> instead of <code class="language-plaintext highlighter-rouge">Append</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">kerfuffle</code> variable needs to be array as well so we add parentheses.</li>
+</ul>
+
+<blockquote>
+  <p>Note: Without knowing too much about VBA or pcode, we can guess most fixes from the contents of the vba code displayed in the original file, and just check that the corresponding pcode makes sense.</p>
+</blockquote>
+
+<h3 id="bypass-checks-and-protections">Bypass checks and protections</h3>
+<ul>
+  <li>
+    <p>Remove everything before <code class="language-plaintext highlighter-rouge">rigmarole</code> function. We do not worry of internet checks and names, as we will bypass it.</p>
+  </li>
+  <li>
+    <p>Entire remove the <code class="language-plaintext highlighter-rouge">If</code> that sets and checks <code class="language-plaintext highlighter-rouge">GetInternetConnectedState</code> and ends if not connection.</p>
+  </li>
+  <li>
+    <p>Then, it seems a vm check routine. As nothing that comes from it is used, we can literally remove it as well.</p>
+  </li>
+  <li>
+    <p>Now we see <code class="language-plaintext highlighter-rouge">firkin</code> variable created being compared into the string resulting from the call <code class="language-plaintext highlighter-rouge">rigmarole(onzo(3))</code>. We could be tempted to bypass the conditional that leads to close again, but we see that <code class="language-plaintext highlighter-rouge">firkin</code> is used before, so we better get this value right by simply assigning to it the correct value <code class="language-plaintext highlighter-rouge">firkin = rigmarole(onzo(3))</code></p>
+  </li>
+</ul>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch4/bypass_protections.png"><img src="/assets/images/posts/flareon7_ch4/bypass_protections.png" /></a>
+    <figcaption>AAAA</figcaption>
+</figure>
+
+<p>MAYBE SAY SOMETHING ABOUT THE VM CHECKS WHAT IT CHECKS AGAINST.
+ALSO SOMETHING ABOUT THE RIGHT VALUE OF THE FIRKIN</p>
+
+<h2 id="retrieve-flag">Retrieve flag</h2>
+
+<p>Now the code is fixed and we bypassed all checks.</p>
+
+<p>The resulting code is here:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Function rigmarole(es As String) As String
+  Dim furphy As String
+  Dim c As Integer
+  Dim s As String
+  Dim cc As Integer
+  furphy = ""
+  For i = 1 To Len(es) Step 4
+    c = CDec("&amp;H" &amp; Mid(es, i, 2))
+    s = CDec("&amp;H" &amp; Mid(es, i + 2, 2))
+    cc = c - s
+    furphy = furphy + Chr(cc)
+  Next i
+  rigmarole = furphy
+End Function
+      
+Function folderol()
+  Dim wabbit() As Byte
+  Dim fn As Integer: fn = FreeFile
+  Dim onzo() As String
+  Dim mf As String
+  Dim buff(0 To 7) As Byte
+  
+  onzo = Split(F.L, ".")
+  
+  firkin = rigmarole(onzo(3))
+  
+  n = Len(firkin)
+  For i = 1 To n
+    buff(n - i) = Asc(Mid$(firkin, i, 1))
+  Next
+  
+  wabbit = canoodle(F.T.Text, 2, 285729, buff)
+  mf = Environ(rigmarole(onzo(0))) &amp; rigmarole(onzo(11))
+  Open mf For Binary Lock Read Write As #fn
+    Put #fn, , wabbit
+  Close #fn
+  
+  Set panuding = Sheet1.Shapes.AddPicture(mf, False, True, 12, 22, 600, 310)
+End Function
+      
+Function canoodle(panjandrum As String, ardylo As Integer, s As Long, bibble As Variant) As Byte()
+  Dim quean As Long
+  Dim cattywampus As Long
+  Dim kerfuffle() As Byte
+  ReDim kerfuffle(s)
+  quean = 0
+  For cattywampus = 1 To Len(panjandrum) Step 4
+    kerfuffle(quean) = CByte("&amp;H" &amp; Mid(panjandrum, cattywampus + ardylo, 2)) Xor bibble(quean Mod (UBound(bibble) + 1))
+    quean = quean + 1
+    If quean = UBound(kerfuffle) Then
+      Exit For
+    End If
+  Next cattywampus
+  canoodle = kerfuffle
+End Function
+</code></pre></div></div>
+
+<p>If we now run the macro, we will get in the spreadsheet the resulting image with the flag:</p>
+
+<figure class="align-center">
+    <a href="/assets/images/posts/flareon7_ch4/flag.png"><img src="/assets/images/posts/flareon7_ch4/flag.png" /></a>
+    <figcaption>AAAA</figcaption>
+</figure>
+
+<p>Thus, we obtained the flag <code class="language-plaintext highlighter-rouge">thi5_cou1d_h4v3_b33n_b4d@flare-on.com</code> and completed the challenge.</p>
+
+        
+
+         <!-- hack to show only on posts, as are the only ones using read_time for this layout -->
+        <p><a href="https://twitter.com/intent/follow?screen_name=arnaugamez"><img src="https://img.shields.io/twitter/follow/arnaugamez?style=social" alt="Twitter Follow"></a></p>
+        
+        
+      </section>
+      <footer class="page__meta">
+        
+        
+
+
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Write-up+for+FlareOn7+challenge+%234+-+report%20http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F11%2F20%2Fwriteup-flareon7-challenge4%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F11%2F20%2Fwriteup-flareon7-challenge4%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fblog%2F2020%2F11%2F20%2Fwriteup-flareon7-challenge4%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/blog/2020/11/07/writeup-flareon7-challenge3/" class="pagination--pager" title="Write-up for FlareOn7 challenge #3 - wednesday
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/flareon7_ch3/general_collision_check.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/blog/2020/11/07/writeup-flareon7-challenge3/" rel="permalink">Write-up for FlareOn7 challenge #3 - wednesday
+</a>
+      
+    </h2>
+
+    <p class="page__meta">
+      
+        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-11-07T00:00:00+01:00">Nov 07, 2020 </time>&emsp;
+      
+      
+        <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  10 min
+
+
+      
+    </p>
+
+    <p class="archive__item-excerpt" itemprop="description">Description
+We are introduced to the challenge with the following message:
+
+</p>
+
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/flareon7_ch2/upx_bad.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/blog/2020/10/24/writeup-flareon7-challenge2/" rel="permalink">Write-up for FlareOn7 challenge #2 - garbage
+</a>
+      
+    </h2>
+
+    <p class="page__meta">
+      
+        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-10-24T00:00:00+02:00">Oct 24, 2020 </time>&emsp;
+      
+      
+        <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  5 min
+
+
+      
+    </p>
+
+    <p class="archive__item-excerpt" itemprop="description">Description
+We are introduced to the challenge with the following message:
+
+</p>
+
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/blog/2020/10/23/writeup-flareon7-challenge1/" rel="permalink">Write-up for FlareOn7 challenge #1 - fidler
+</a>
+      
+    </h2>
+
+    <p class="page__meta">
+      
+        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-10-23T00:00:00+02:00">Oct 23, 2020 </time>&emsp;
+      
+      
+        <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 min
+
+
+      
+    </p>
+
+    <p class="archive__item-excerpt" itemprop="description">Description
+We are introduced to the challenge with the following message:
+
+</p>
+
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/lagrange_cutter_6.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/blog/2020/04/12/advent-solve-lagrange-cutter/" rel="permalink">Solving lagrange reversing challenge with Cutter
+</a>
+      
+    </h2>
+
+    <p class="page__meta">
+      
+        <i class="fa fa-fw fa-calendar-alt" aria-hidden="true"></i> <time datetime="2020-04-12T00:00:00+02:00">Apr 12, 2020 </time>&emsp;
+      
+      
+        <i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  9 min
+
+
+      
+    </p>
+
+    <p class="archive__item-excerpt" itemprop="description">The Lagrange reversing challenge was the 6th problem included in the Advent of Corona CTF platform. The platform was uploading challenges during the first we...</p>
+
+
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow" style="text-align:center">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://twitter.com/arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+        
+      
+        
+          <li><a href="https://github.com/arnaugamez" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="mailto:contact [AT] [thisdomain] [DOT] com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Mail</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright" style="text-align:center">
+
+<small>
+&copy; 2020 Arnau Gàmez i Montolio.
+</small>
+<br>
+
+<small><i>
+Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a> | Icon made by <a href="https://www.freepik.com/home">Freepik</a> from <a href="https://flaticon.com">flaticon.com</a>
+</i></small>
+</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/blog/2020/11/20/writeup-flareon7-challenge4/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/blog/2020/11/20/writeup-flareon7-challenge4"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://arnaugamez.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>
