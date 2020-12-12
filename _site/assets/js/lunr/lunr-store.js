@@ -50,6 +50,6 @@ var store = [{
         "title": "Write-up for FlareOn7 challenge #4 - report",
         "excerpt":"Description We are introduced to the challenge with the following message: Nobody likes analysing infected documents, but it pays the bills. Reverse this macro thrill-ride to discover how to get it to show you the key. There is a single file report.xls to analyze, which is an excel document with...","categories": ["Blog"],
         "tags": ["flareon","reversing","CTF","macros","excel"],
-        "url": "http://localhost:4000/blog/2020/11/20/writeup-flareon7-challenge4/",
-        "teaser": "http://localhost:4000/assets/images/posts/flareon7_ch4/TODO.png"
+        "url": "http://localhost:4000/blog/2020/12/12/writeup-flareon7-challenge4/",
+        "teaser": "http://localhost:4000/assets/images/posts/flareon7_ch4/bypass_protections.png"
       }]

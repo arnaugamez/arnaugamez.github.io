@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-11-18T19:48:25+01:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Arnau Gàmez i Montolio</title><subtitle>Arnau Gàmez i Montolio's (@arnaugamez) personal blog. Hacking, Reverse Engineering and Mathematics</subtitle><author><name>Arnau Gàmez i Montolio</name></author><entry><title type="html">Write-up for FlareOn7 challenge #4 - report</title><link href="http://localhost:4000/blog/2020/11/20/writeup-flareon7-challenge4/" rel="alternate" type="text/html" title="Write-up for FlareOn7 challenge #4 - report" /><published>2020-11-20T00:00:00+01:00</published><updated>2020-11-20T00:00:00+01:00</updated><id>http://localhost:4000/blog/2020/11/20/writeup-flareon7-challenge4</id><content type="html" xml:base="http://localhost:4000/blog/2020/11/20/writeup-flareon7-challenge4/">&lt;h2 id=&quot;description&quot;&gt;Description&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-12-12T17:10:12+01:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Arnau Gàmez i Montolio</title><subtitle>Arnau Gàmez i Montolio's (@arnaugamez) personal blog. Hacking, Reverse Engineering and Mathematics</subtitle><author><name>Arnau Gàmez i Montolio</name></author><entry><title type="html">Write-up for FlareOn7 challenge #4 - report</title><link href="http://localhost:4000/blog/2020/12/12/writeup-flareon7-challenge4/" rel="alternate" type="text/html" title="Write-up for FlareOn7 challenge #4 - report" /><published>2020-12-12T00:00:00+01:00</published><updated>2020-12-12T00:00:00+01:00</updated><id>http://localhost:4000/blog/2020/12/12/writeup-flareon7-challenge4</id><content type="html" xml:base="http://localhost:4000/blog/2020/12/12/writeup-flareon7-challenge4/">&lt;h2 id=&quot;description&quot;&gt;Description&lt;/h2&gt;
 &lt;p&gt;We are introduced to the challenge with the following message:&lt;/p&gt;
 
 &lt;blockquote&gt;
@@ -12,10 +12,10 @@
 
 &lt;figure class=&quot;align-center&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/flareon7_ch4/report_initial_image.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch4/report_initial_image.png&quot; /&gt;&lt;/a&gt;
-    &lt;figcaption&gt;AAAA&lt;/figcaption&gt;
+    &lt;figcaption&gt;Image asking to enable macros when opening report.xls&lt;/figcaption&gt;
 &lt;/figure&gt;
 
-&lt;p&gt;On a real scenario, the contents of this image would serve the purpose of tricking the victim into executing the embedded macro containing malicious code.&lt;/p&gt;
+&lt;p&gt;On a real scenario, the contents of this image would serve the purpose of tricking the victim into enabling and executing the embedded macro containing malicious code.&lt;/p&gt;
 
 &lt;p&gt;I don’t usually have to deal with macros on my reversing adventures, so I wanted to get the &lt;em&gt;full experience&lt;/em&gt; from this challenge. Thus, I will actually allow it to run the embedded macro to see what happens.&lt;/p&gt;
 
@@ -27,21 +27,28 @@
 
 &lt;figure class=&quot;align-center&quot; style=&quot;width: 50%&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/flareon7_ch4/error_macro_launch.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch4/error_macro_launch.png&quot; /&gt;&lt;/a&gt;
-    &lt;figcaption&gt;AAAA&lt;/figcaption&gt;
+    &lt;figcaption&gt;Error produced when attempting to launch macro&lt;/figcaption&gt;
 &lt;/figure&gt;
 
-&lt;p&gt;From the title of this window, it appears that the embedded macro which is failing to run is coded in &lt;a href=&quot;https://en.wikipedia.org/wiki/Visual_Basic_for_Applications&quot;&gt;Visual Basic for Applications (VBA)&lt;/a&gt;. Clicking in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Ok&lt;/code&gt; button will bring us into a fancy internal VBA IDE where we can explore all the components of the macro.&lt;/p&gt;
+&lt;p&gt;From the title of this window, it appears that the embedded macro failing to run is coded in &lt;a href=&quot;https://en.wikipedia.org/wiki/Visual_Basic_for_Applications&quot;&gt;Visual Basic for Applications (VBA)&lt;/a&gt;. Clicking in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Ok&lt;/code&gt; button will bring us into a fancy internal VBA IDE where we can explore all the components of the macro.&lt;/p&gt;
 
 &lt;figure class=&quot;align-center&quot; style=&quot;width: 50%&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/flareon7_ch4/report_VBAProject.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch4/report_VBAProject.png&quot; /&gt;&lt;/a&gt;
-    &lt;figcaption&gt;AAAA&lt;/figcaption&gt;
+    &lt;figcaption&gt;Project structure of report.xls VBA macro&lt;/figcaption&gt;
 &lt;/figure&gt;
 
-&lt;p&gt;There is some code in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Sheet1&lt;/code&gt; which appears to not work correctly. Also, we find the intersting form &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;F&lt;/code&gt; with very suspicious data inside. We will export the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;F&lt;/code&gt; form for later usage (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Right click&lt;/code&gt; -&amp;gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Export File...&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;The object &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ThisWorkbook&lt;/code&gt; contains very little code that just jumps into the function &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;folderol&lt;/code&gt; within &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Sheet1&lt;/code&gt;, which contains some amount of non-trivial code.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch4/original_vba.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch4/original_vba.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Sheet1 code initially found&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Also, we find the intersting form &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;F&lt;/code&gt; with very suspicious data inside that appears to be used within &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Sheet1&lt;/code&gt;. We will export the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;F&lt;/code&gt; form for later usage (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Right click&lt;/code&gt; -&amp;gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Export File...&lt;/code&gt;).&lt;/p&gt;
 
 &lt;figure class=&quot;align-center&quot; style=&quot;width: 50%&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/flareon7_ch4/Forms_F.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch4/Forms_F.png&quot; /&gt;&lt;/a&gt;
-    &lt;figcaption&gt;AAAA&lt;/figcaption&gt;
+    &lt;figcaption&gt;Form F containing interesting data&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;If we google for a couple minutes about VBA macros related to malware spread, we quickly find some &lt;em&gt;recent&lt;/em&gt; information about a technique known as VBA stomping. Essentially, this technique leverages a mismatch between the &lt;a href=&quot;https://en.wikipedia.org/wiki/Microsoft_P-Code&quot;&gt;p-code&lt;/a&gt; (the compiled &lt;a href=&quot;https://en.wikipedia.org/wiki/Intermediate_representation&quot;&gt;intermediate represenation&lt;/a&gt; bytecode of the VBA macro) and the code that is presented in clear text on the editor.&lt;/p&gt;
@@ -56,58 +63,61 @@
 &lt;p&gt;This really appears to be what is going on with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;report.xls&lt;/code&gt;. Thus, we will continue by dumping the real p-code and obtaining its actual VBA representation so we can analyze/run it.&lt;/p&gt;
 
 &lt;h2 id=&quot;reconstruct-document&quot;&gt;Reconstruct document&lt;/h2&gt;
-&lt;p&gt;I decided to (re)construct a valid document to embed and launch the fixed VBA macro.&lt;/p&gt;
+&lt;p&gt;I decided to (re)construct a valid document to embed and launch the fixed VBA macro within &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Sheet1&lt;/code&gt;. First of all, we create a new document, go to developer tab (will need to &lt;a href=&quot;https://support.microsoft.com/en-us/office/show-the-developer-tab-e1192344-5e56-4d45-931b-e5fd9bea2d45&quot;&gt;enable developer tab on excel&lt;/a&gt;) and click the first icon &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Visual Basic&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;Create a new document. Will need to enable developer tab on excel: https://support.microsoft.com/en-us/office/show-the-developer-tab-e1192344-5e56-4d45-931b-e5fd9bea2d45&lt;/p&gt;
+&lt;p&gt;Now, we import the figure &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;F&lt;/code&gt; saved before (Right click on project -&amp;gt; Import File… -&amp;gt; F.frm)
+and copy-paste the contents of previous &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ThisWorkBook&lt;/code&gt; into the newly created one.&lt;/p&gt;
 
-&lt;p&gt;Go to developer tab and click the first icon on VBA.&lt;/p&gt;
-
-&lt;p&gt;Import the figure (Right click on project. Import File… -&amp;gt; F.frm)
-Copy-paste contents from/to ThisWorkBook:&lt;/p&gt;
-
-&lt;h3 id=&quot;dump-and-decompile-pcode&quot;&gt;Dump and decompile pcode&lt;/h3&gt;
-&lt;p&gt;Dump pcode with &lt;a href=&quot;https://github.com/bontchev/pcodedmp&quot;&gt;pcodedmp&lt;/a&gt; into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;macro.pcode&lt;/code&gt; file.&lt;/p&gt;
+&lt;h3 id=&quot;dump-and-decompile-p-code&quot;&gt;Dump and decompile p-code&lt;/h3&gt;
+&lt;p&gt;We dump the embedded p-code with &lt;a href=&quot;https://github.com/bontchev/pcodedmp&quot;&gt;pcodedmp&lt;/a&gt; into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;macro.pcode&lt;/code&gt; file.&lt;/p&gt;
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pcodedmp -o macro.pcode report.xls
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Among other info, the file &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;macro.pcode&lt;/code&gt; contains the following pcode formatted output for the embedded macro:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;snippet of macro.pcode
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Now we can &lt;em&gt;decompile&lt;/em&gt; the pcode back into VBA with &lt;a href=&quot;https://pypi.org/project/pcode2code/&quot;&gt;pcode2code&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Among other info, the file &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;macro.pcode&lt;/code&gt; contains the p-code formatted output for the code in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Sheet1&lt;/code&gt;. Now we can &lt;em&gt;decompile&lt;/em&gt; the p-code back into VBA with &lt;a href=&quot;https://pypi.org/project/pcode2code/&quot;&gt;pcode2code&lt;/a&gt;.&lt;/p&gt;
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pcode2code -p macro.pcode &amp;gt; decompiled
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;If we take a look into the decompiled code we will see some bits that have not been sucessfully decompiled. Despite that, there is some significant difference with the code presented to us initially, so it confirms our hypothesis of mismatching between high level language representation and the embeded maco pcode. Namely &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;folderol&lt;/code&gt; function now has a buffer variable and some new code that plays with it.&lt;/p&gt;
+&lt;p&gt;If we take a look into the decompiled code we will see some small parts that have not been sucessfully decompiled. Despite that, we observe enough difference with the code presented to us initially, confirming our hypothesis of mismatching between the high level language representation and the embedded p-code. Essentially, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;folderol&lt;/code&gt; function now has a new buffer variable and some new code that plays with it.&lt;/p&gt;
 
-&lt;p&gt;Also there are some minor errors in data types and so that we will need to fix if we want it to run. So, let’s copy the decompiled code into Sheet1 (the corresponding) in the newly created document and we will fix in there as we go.&lt;/p&gt;
+&lt;p&gt;There are also some minor errors in data types that we will need to fix if we want it to run. Moreover, we find a bunch of checks and protections that will have to be bypassed in order for the code to properly execute. Thus, let’s copy the decompiled code into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Sheet1&lt;/code&gt; in the newly created document and fix stuff as we go.&lt;/p&gt;
+
+&lt;figure class=&quot;align-center&quot;&gt;
+    &lt;a href=&quot;/assets/images/posts/flareon7_ch4/raw_decompiled.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch4/raw_decompiled.png&quot; /&gt;&lt;/a&gt;
+    &lt;figcaption&gt;Sheet1 code raw decompiled from embedded p-code&lt;/figcaption&gt;
+&lt;/figure&gt;
 
 &lt;h3 id=&quot;fix-and-clean-decompiled-code&quot;&gt;Fix and clean decompiled code&lt;/h3&gt;
 
+&lt;p&gt;From &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rigmarole&lt;/code&gt; function:&lt;/p&gt;
 &lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;Remove &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;id_FFFE&lt;/code&gt; parameter from rigmarole.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Remove &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;id_FFFE&lt;/code&gt; parameter from folderol.
--On folderol, in the usage of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wabbit&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;onzo&lt;/code&gt; we see that they need to be array based types, so we just add a pair of missing parentheses to them on its declaration.&lt;/li&gt;
-  &lt;li&gt;xertz is no longer used, so we can remove its declaration and assignment.&lt;/li&gt;
-  &lt;li&gt;The following body that failed to decompile is the corresponding to Line #68 in the pcode above.
+  &lt;li&gt;Remove &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;id_FFFE&lt;/code&gt; parameter.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;From &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;folderol&lt;/code&gt; function:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Remove &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;id_FFFE&lt;/code&gt; parameter.&lt;/li&gt;
+  &lt;li&gt;In the usage of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wabbit&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;onzo&lt;/code&gt; we see that they need to be array based types, so we just add a pair of missing parentheses to their type in its declaration.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;xertz&lt;/code&gt; is no longer used, so we can remove its declaration and assignment.&lt;/li&gt;
+  &lt;li&gt;The following body that failed to decompile:
     &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Ld fn 
 Sharp 
 LitDefault 
 Ld wabbit 
 PutRec
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;p&gt;which essentially translates to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Put #fn, , wabbit&lt;/code&gt;.&lt;/p&gt;
+    &lt;p&gt;essentially translates to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Put #fn, , wabbit&lt;/code&gt;.&lt;/p&gt;
   &lt;/li&gt;
-  &lt;li&gt;Remove &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;id_FFFE&lt;/code&gt; parameter from canoodle.&lt;/li&gt;
-  &lt;li&gt;Now &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;canoodle&lt;/code&gt; function needs to return &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;byte()&lt;/code&gt; instead of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Append&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;kerfuffle&lt;/code&gt; variable needs to be array as well so we add parentheses.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;From &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;canoodle&lt;/code&gt; function:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Remove &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;id_FFFE&lt;/code&gt; parameter.&lt;/li&gt;
+  &lt;li&gt;Return type has to be &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;byte()&lt;/code&gt; instead of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Append&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;kerfuffle&lt;/code&gt; variable needs to be an array as well, so we add parentheses to its type.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;Note: Without knowing too much about VBA or pcode, we can guess most fixes from the contents of the vba code displayed in the original file, and just check that the corresponding pcode makes sense.&lt;/p&gt;
+  &lt;p&gt;Note: Without knowing &lt;del&gt;nothing&lt;/del&gt; too much about VBA or p-code, we can guess most fixes from the contents of the VBA code displayed in the original file, and just check that the corresponding p-code makes sense.&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;h3 id=&quot;bypass-checks-and-protections&quot;&gt;Bypass checks and protections&lt;/h3&gt;
@@ -116,29 +126,29 @@ PutRec
     &lt;p&gt;Remove everything before &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rigmarole&lt;/code&gt; function. We do not worry of internet checks and names, as we will bypass it.&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;Entire remove the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;If&lt;/code&gt; that sets and checks &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;GetInternetConnectedState&lt;/code&gt; and ends if not connection.&lt;/p&gt;
+    &lt;p&gt;Entirely remove the condition using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;GetInternetConnectedState&lt;/code&gt; to check for internet connection.&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;Then, it seems a vm check routine. As nothing that comes from it is used, we can literally remove it as well.&lt;/p&gt;
+    &lt;p&gt;Then, we have a routine that appears to be doing some simple anti-vm checks. As nothing coming out from this part will be used, we can literally remove it entirely as well.&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;Now we see &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;firkin&lt;/code&gt; variable created being compared into the string resulting from the call &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rigmarole(onzo(3))&lt;/code&gt;. We could be tempted to bypass the conditional that leads to close again, but we see that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;firkin&lt;/code&gt; is used before, so we better get this value right by simply assigning to it the correct value &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;firkin = rigmarole(onzo(3))&lt;/code&gt;&lt;/p&gt;
+    &lt;p&gt;Now we see &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;firkin&lt;/code&gt; variable being loaded (with device name) and compared to the string returned by calling &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rigmarole(onzo(3))&lt;/code&gt;. We could be tempted to bypass the conditional, but we see that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;firkin&lt;/code&gt; is actually used afterwards, so we better get this value right by simply assigning to it the correct value &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;firkin = rigmarole(onzo(3))&lt;/code&gt;&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;figure class=&quot;align-center&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/flareon7_ch4/bypass_protections.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch4/bypass_protections.png&quot; /&gt;&lt;/a&gt;
-    &lt;figcaption&gt;AAAA&lt;/figcaption&gt;
+    &lt;figcaption&gt;Bypass of checks and protections on decompiled folderol function&lt;/figcaption&gt;
 &lt;/figure&gt;
 
-&lt;p&gt;MAYBE SAY SOMETHING ABOUT THE VM CHECKS WHAT IT CHECKS AGAINST.
-ALSO SOMETHING ABOUT THE RIGHT VALUE OF THE FIRKIN&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;If you are curious, you could play with the integrated debugger to see what values are actually used and expected for the anti-vm checks and the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;firkin&lt;/code&gt; variable. Indeed, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;firkin&lt;/code&gt; will be loaded with the string &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;FLARE-ON&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
 
 &lt;h2 id=&quot;retrieve-flag&quot;&gt;Retrieve flag&lt;/h2&gt;
 
-&lt;p&gt;Now the code is fixed and we bypassed all checks.&lt;/p&gt;
+&lt;p&gt;After we have cleaned and fixed everything, as well as bypassing all the checks, we obtain the resulting code for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Sheet1&lt;/code&gt;:&lt;/p&gt;
 
-&lt;p&gt;The resulting code is here:&lt;/p&gt;
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Function rigmarole(es As String) As String
   Dim furphy As String
   Dim c As Integer
@@ -196,11 +206,13 @@ Function canoodle(panjandrum As String, ardylo As Integer, s As Long, bibble As 
 End Function
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;If we now run the macro, we will get in the spreadsheet the resulting image with the flag:&lt;/p&gt;
+&lt;p&gt;Taking a quick look at the code, it is clear that the data present in the form &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;F&lt;/code&gt; is being decrypted into a buffer that eventually gets written as an image into the spreadsheet itself.&lt;/p&gt;
+
+&lt;p&gt;One approach could have been to reimplement this decrypting algorithm externally, but as we already fixed the actual decompiled code and bypassed all checks, we will be able to simply run it and let it do all the work for us. Therefore, if we now just run the macro, we will get in the spreadsheet the resulting image with the flag:&lt;/p&gt;
 
 &lt;figure class=&quot;align-center&quot;&gt;
     &lt;a href=&quot;/assets/images/posts/flareon7_ch4/flag.png&quot;&gt;&lt;img src=&quot;/assets/images/posts/flareon7_ch4/flag.png&quot; /&gt;&lt;/a&gt;
-    &lt;figcaption&gt;AAAA&lt;/figcaption&gt;
+    &lt;figcaption&gt;Decrypted image containing the flag&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Thus, we obtained the flag &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;thi5_cou1d_h4v3_b33n_b4d@flare-on.com&lt;/code&gt; and completed the challenge.&lt;/p&gt;</content><author><name>Arnau Gàmez i Montolio</name></author><category term="Blog" /><category term="flareon" /><category term="reversing" /><category term="CTF" /><category term="macros" /><category term="excel" /><summary type="html">Description We are introduced to the challenge with the following message:</summary></entry><entry><title type="html">Write-up for FlareOn7 challenge #3 - wednesday</title><link href="http://localhost:4000/blog/2020/11/07/writeup-flareon7-challenge3/" rel="alternate" type="text/html" title="Write-up for FlareOn7 challenge #3 - wednesday" /><published>2020-11-07T00:00:00+01:00</published><updated>2020-11-07T00:00:00+01:00</updated><id>http://localhost:4000/blog/2020/11/07/writeup-flareon7-challenge3</id><content type="html" xml:base="http://localhost:4000/blog/2020/11/07/writeup-flareon7-challenge3/">&lt;h2 id=&quot;description&quot;&gt;Description&lt;/h2&gt;
