@@ -52,4 +52,10 @@ var store = [{
         "tags": ["flareon","reversing","CTF","macros","excel"],
         "url": "http://localhost:4000/blog/2020/12/12/writeup-flareon7-challenge4/",
         "teaser": "http://localhost:4000/assets/images/posts/flareon7_ch4/bypass_protections.png"
+      },{
+        "title": "Write-up for FlareOn7 challenge #5 - TKApp",
+        "excerpt":"Description  We are introduced to the challenge with the following message:      Now you can play Flare-On on your watch! As long as you still have an arm left to put a watch on, or emulate the watch’s operating system with sophisticated developer tools.    Analysis   Retrieve flag  ","categories": ["Blog"],
+        "tags": ["flareon","reversing","CTF","dotPeek",".NET"],
+        "url": "http://localhost:4000/blog/2020/12/18/writeup-flareon7-challenge5/",
+        "teaser": "http://localhost:4000/assets/images/posts/flareon7_ch5/TODO.png"
       }]
