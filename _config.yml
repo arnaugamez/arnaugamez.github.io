@@ -63,7 +63,7 @@ plugins:
 author:
   name   : "Arnau Gàmez i Montolio"
   avatar : "/assets/images/avatar.jpg"
-  bio    : "_Reverse Engineer_ and _Mathematician_<br/>__---__"
+  bio    : "_Hacker, Reverse Engineer & Mathematician_<br/>__---__"
   links:
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
@@ -71,9 +71,9 @@ author:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/arnaugamez"
-    - label: "Mail"
-      icon: "fas fa-fw fa-envelope-square"
-      url: "mailto:contact [AT] [thisdomain] [DOT] com"
+#    - label: "Mail"
+#      icon: "fas fa-fw fa-envelope-square"
+#      url: "mailto:contact [AT] [thisdomain] [DOT] com"
 
 footer:
   links:
@@ -83,9 +83,9 @@ footer:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/arnaugamez"
-    - label: "Mail"
-      icon: "fas fa-fw fa-envelope-square"
-      url: "mailto:contact [AT] [thisdomain] [DOT] com"
+#    - label: "Mail"
+#      icon: "fas fa-fw fa-envelope-square"
+#      url: "mailto:contact [AT] [thisdomain] [DOT] com"
 
 defaults:
   # _posts
@@ -96,8 +96,8 @@ defaults:
       layout: single
       author_profile: true
       read_time: true
-      comments: true
-      share: true
+      #comments: true
+      #share: true
       related: true
   # _pages
   - scope:
@@ -107,10 +107,11 @@ defaults:
       layout: single
       author_profile: true
 
-comments:
-  provider: "disqus"
-  disqus:
-    shortname: "arnaugamez"
+
+#comments:
+#  provider: "disqus"
+#  disqus:
+#    shortname: "arnaugamez"
 
 
 #category_archive:

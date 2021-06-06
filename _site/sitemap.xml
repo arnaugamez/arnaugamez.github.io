@@ -61,4 +61,8 @@
 <url>
 <loc>http://localhost:4000/page2/</loc>
 </url>
+<url>
+<loc>http://localhost:4000/assets/cv.pdf</loc>
+<lastmod>2021-03-26T14:07:20+01:00</lastmod>
+</url>
 </urlset>
